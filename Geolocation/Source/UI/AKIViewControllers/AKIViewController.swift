@@ -1,5 +1,5 @@
 //
-//  AKILocationViewController.swift
+//  AKIViewController.swift
 //  Geolocation
 //
 //  Created by Alexey Khomych on 2/2/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AKILocationViewController: AKIViewController {
+class AKIViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,9 +18,10 @@ class AKILocationViewController: AKIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-
+    func pushToViewController(_ controller: UIViewController) {
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 
 }

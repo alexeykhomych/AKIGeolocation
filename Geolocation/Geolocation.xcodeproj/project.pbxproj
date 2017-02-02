@@ -25,6 +25,10 @@
 		C95263331E438A250021124E /* AKIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263321E438A250021124E /* AKIContext.swift */; };
 		C952633F1E438E5D0021124E /* AKIFacebookContext in Resources */ = {isa = PBXBuildFile; fileRef = C952633D1E438E5D0021124E /* AKIFacebookContext */; };
 		C95263401E438E5D0021124E /* AKIFirebaseContext in Resources */ = {isa = PBXBuildFile; fileRef = C952633E1E438E5D0021124E /* AKIFirebaseContext */; };
+		C95263441E4390E60021124E /* AKISignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263431E4390E60021124E /* AKISignUpView.swift */; };
+		C95263471E4390F50021124E /* AKISignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263451E4390F50021124E /* AKISignUpViewController.swift */; };
+		C95263481E4390F50021124E /* AKISignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C95263461E4390F50021124E /* AKISignUpViewController.xib */; };
+		C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263491E4392BF0021124E /* AKIViewController.swift */; };
 		EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +55,10 @@
 		C95263321E438A250021124E /* AKIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContext.swift; sourceTree = "<group>"; };
 		C952633D1E438E5D0021124E /* AKIFacebookContext */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AKIFacebookContext; sourceTree = "<group>"; };
 		C952633E1E438E5D0021124E /* AKIFirebaseContext */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AKIFirebaseContext; sourceTree = "<group>"; };
+		C95263431E4390E60021124E /* AKISignUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKISignUpView.swift; sourceTree = "<group>"; };
+		C95263451E4390F50021124E /* AKISignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKISignUpViewController.swift; sourceTree = "<group>"; };
+		C95263461E4390F50021124E /* AKISignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKISignUpViewController.xib; sourceTree = "<group>"; };
+		C95263491E4392BF0021124E /* AKIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIViewController.swift; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,8 +147,10 @@
 		C95263111E43591F0021124E /* AKIViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				C95263411E4390BE0021124E /* AKISignUpViewController */,
 				C952631C1E43651B0021124E /* AKILocationViewController */,
 				C95263121E4359350021124E /* AKILoginViewController */,
+				C95263491E4392BF0021124E /* AKIViewController.swift */,
 			);
 			path = AKIViewControllers;
 			sourceTree = "<group>";
@@ -218,6 +228,24 @@
 			path = AKIContext;
 			sourceTree = "<group>";
 		};
+		C95263411E4390BE0021124E /* AKISignUpViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C95263421E4390D30021124E /* AKISignUpView */,
+				C95263451E4390F50021124E /* AKISignUpViewController.swift */,
+				C95263461E4390F50021124E /* AKISignUpViewController.xib */,
+			);
+			path = AKISignUpViewController;
+			sourceTree = "<group>";
+		};
+		C95263421E4390D30021124E /* AKISignUpView */ = {
+			isa = PBXGroup;
+			children = (
+				C95263431E4390E60021124E /* AKISignUpView.swift */,
+			);
+			path = AKISignUpView;
+			sourceTree = "<group>";
+		};
 		E755E22969CB975467F66C79 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +319,7 @@
 			files = (
 				C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */,
 				C95263071E4356CE0021124E /* LaunchScreen.storyboard in Resources */,
+				C95263481E4390F50021124E /* AKISignUpViewController.xib in Resources */,
 				C952633F1E438E5D0021124E /* AKIFacebookContext in Resources */,
 				C95263041E4356CE0021124E /* Assets.xcassets in Resources */,
 				C95263211E4365460021124E /* AKILocationViewController.xib in Resources */,
@@ -357,8 +386,11 @@
 			files = (
 				C95263151E43594C0021124E /* AKILoginViewController.swift in Sources */,
 				C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */,
+				C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */,
+				C95263471E4390F50021124E /* AKISignUpViewController.swift in Sources */,
 				C95263191E4359640021124E /* AKILoginView.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
+				C95263441E4390E60021124E /* AKISignUpView.swift in Sources */,
 				C95263231E4365580021124E /* AKILocationView.swift in Sources */,
 				C95263331E438A250021124E /* AKIContext.swift in Sources */,
 			);

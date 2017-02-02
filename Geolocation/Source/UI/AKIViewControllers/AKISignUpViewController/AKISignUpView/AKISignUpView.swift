@@ -1,5 +1,5 @@
 //
-//  AKILoginView.swift
+//  AKISignUpView.swift
 //  Geolocation
 //
 //  Created by Alexey Khomych on 2/2/17.
@@ -8,11 +8,9 @@
 
 import UIKit
 
-class AKILoginView: UIView {
+class AKISignUpView: UIView {
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     
-    @IBOutlet var loginButton: UIButton?
-    @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
 }

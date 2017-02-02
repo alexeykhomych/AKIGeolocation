@@ -17,7 +17,7 @@ let kAKIAllertTitleOk = "Ok"
 let kAKIAllertTitleError = "Error"
 let kAKIAllertMessage = ""
 
-class AKILoginViewController: UIViewController {
+class AKILoginViewController: AKIViewController {
     
     var model: AnyObject?
     
@@ -57,8 +57,7 @@ class AKILoginViewController: UIViewController {
         } else {
             FIRAuth.auth()?.signIn(withEmail: email!, password: password!, completion: { (user, error) in
                 if error == nil {
-                    let controller = AKILocationViewController()
-                    self.navigationController?.pushViewController(controller, animated: true)
+                    self.pushToViewController(AKILocationViewController())
                 } else {
                     let alertController = UIAlertController(title: kAKIAllertTitleError, message: kAKIAllertMessage, preferredStyle: .alert)
                     
@@ -67,6 +66,10 @@ class AKILoginViewController: UIViewController {
                 }
             })
         }
+    }
+    
+    @IBAction func signUpButton(_ sender: UIButton) {
+        self.pushToViewController(AKISignUpViewController())
     }
     
     func presentAllert(_ title: String, message: String, preferredStyle: UIAlertControllerStyle) {

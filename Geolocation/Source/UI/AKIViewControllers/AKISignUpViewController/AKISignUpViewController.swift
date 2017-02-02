@@ -1,5 +1,5 @@
 //
-//  AKILocationViewController.swift
+//  AKISignUpViewController.swift
 //  Geolocation
 //
 //  Created by Alexey Khomych on 2/2/17.
@@ -8,19 +8,22 @@
 
 import UIKit
 
-class AKILocationViewController: AKIViewController {
+class AKISignUpViewController: AKIViewController {
+    
+    func getView<R>() -> R? {
+        return self.viewIfLoaded.flatMap { $0 as? R }
+    }
+    
+    var loginView: AKILoginView? {
+        return self.getView()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
-
 
 }
