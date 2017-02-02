@@ -8,6 +8,8 @@
 
 import UIKit
 
+import FBSDKLoginKit
+
 class AKILoginViewController: UIViewController {
     
     var model: AnyObject?
@@ -18,10 +20,23 @@ class AKILoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let facebookLoginButton = FBSDKLoginButton.init()
+        facebookLoginButton.center = self.view.center
+        self.view.addSubview(facebookLoginButton)
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func loginFBButton(_ sender: UIButton) {
+        
+    }
+    
+    @IBAction func loginButton(_ sender: UIButton) {
+        
     }
 
 }

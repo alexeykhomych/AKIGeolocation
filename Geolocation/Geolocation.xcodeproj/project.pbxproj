@@ -17,6 +17,10 @@
 		C95263201E4365460021124E /* AKILocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C952631E1E4365460021124E /* AKILocationViewController.swift */; };
 		C95263211E4365460021124E /* AKILocationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C952631F1E4365460021124E /* AKILocationViewController.xib */; };
 		C95263231E4365580021124E /* AKILocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263221E4365580021124E /* AKILocationView.swift */; };
+		C95263291E4368EB0021124E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263251E4368EB0021124E /* Bolts.framework */; };
+		C952632A1E4368EB0021124E /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263261E4368EB0021124E /* FBSDKCoreKit.framework */; };
+		C952632B1E4368EB0021124E /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263271E4368EB0021124E /* FBSDKLoginKit.framework */; };
+		C952632C1E4368EC0021124E /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263281E4368EB0021124E /* FBSDKShareKit.framework */; };
 		EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +39,10 @@
 		C952631E1E4365460021124E /* AKILocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILocationViewController.swift; sourceTree = "<group>"; };
 		C952631F1E4365460021124E /* AKILocationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKILocationViewController.xib; sourceTree = "<group>"; };
 		C95263221E4365580021124E /* AKILocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILocationView.swift; sourceTree = "<group>"; };
+		C95263251E4368EB0021124E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		C95263261E4368EB0021124E /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C95263271E4368EB0021124E /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C95263281E4368EB0021124E /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,6 +52,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */,
+				C952632A1E4368EB0021124E /* FBSDKCoreKit.framework in Frameworks */,
+				C952632C1E4368EC0021124E /* FBSDKShareKit.framework in Frameworks */,
+				C952632B1E4368EB0021124E /* FBSDKLoginKit.framework in Frameworks */,
+				C95263291E4368EB0021124E /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,9 +171,21 @@
 			path = AKILocationView;
 			sourceTree = "<group>";
 		};
+		C95263241E4368B80021124E /* FacebookFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C95263251E4368EB0021124E /* Bolts.framework */,
+				C95263261E4368EB0021124E /* FBSDKCoreKit.framework */,
+				C95263271E4368EB0021124E /* FBSDKLoginKit.framework */,
+				C95263281E4368EB0021124E /* FBSDKShareKit.framework */,
+			);
+			path = FacebookFrameworks;
+			sourceTree = "<group>";
+		};
 		E755E22969CB975467F66C79 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C95263241E4368B80021124E /* FacebookFrameworks */,
 				1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */,
 			);
 			name = Frameworks;
@@ -420,6 +444,10 @@
 			baseConfigurationReference = D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FacebookFrameworks",
+				);
 				INFOPLIST_FILE = Geolocation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = AKI.Geolocation;
@@ -433,6 +461,10 @@
 			baseConfigurationReference = 8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FacebookFrameworks",
+				);
 				INFOPLIST_FILE = Geolocation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = AKI.Geolocation;
