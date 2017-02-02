@@ -14,9 +14,12 @@
 		C95263151E43594C0021124E /* AKILoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263131E43594C0021124E /* AKILoginViewController.swift */; };
 		C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C95263141E43594C0021124E /* AKILoginViewController.xib */; };
 		C95263191E4359640021124E /* AKILoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263181E4359640021124E /* AKILoginView.swift */; };
+		EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Geolocation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.release.xcconfig"; sourceTree = "<group>"; };
 		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKIAppDelegate.swift; sourceTree = "<group>"; };
 		C95263011E4356CE0021124E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -26,6 +29,7 @@
 		C95263131E43594C0021124E /* AKILoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginViewController.swift; sourceTree = "<group>"; };
 		C95263141E43594C0021124E /* AKILoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKILoginViewController.xib; sourceTree = "<group>"; };
 		C95263181E4359640021124E /* AKILoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginView.swift; sourceTree = "<group>"; };
+		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,12 +37,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2710C36E3625ECE7F19DB137 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */,
+				8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C95262F01E4356CE0021124E = {
 			isa = PBXGroup;
 			children = (
@@ -46,6 +60,8 @@
 				C952630F1E4358F90021124E /* Source */,
 				C95262FB1E4356CE0021124E /* Geolocation */,
 				C95262FA1E4356CE0021124E /* Products */,
+				2710C36E3625ECE7F19DB137 /* Pods */,
+				E755E22969CB975467F66C79 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +134,14 @@
 			path = AKILoginView;
 			sourceTree = "<group>";
 		};
+		E755E22969CB975467F66C79 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -125,9 +149,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C952630B1E4356CE0021124E /* Build configuration list for PBXNativeTarget "Geolocation" */;
 			buildPhases = (
+				19812A9D110D1E1435C1A973 /* [CP] Check Pods Manifest.lock */,
 				C95262F51E4356CE0021124E /* Sources */,
 				C95262F61E4356CE0021124E /* Frameworks */,
 				C95262F71E4356CE0021124E /* Resources */,
+				44675C5BB848C7C02A537050 /* [CP] Embed Pods Frameworks */,
+				1C4C0274038A5A575ADF6076 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -185,6 +212,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		19812A9D110D1E1435C1A973 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		1C4C0274038A5A575ADF6076 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		44675C5BB848C7C02A537050 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C95262F51E4356CE0021124E /* Sources */ = {
@@ -314,6 +389,7 @@
 		};
 		C952630C1E4356CE0021124E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Geolocation/Info.plist;
@@ -326,6 +402,7 @@
 		};
 		C952630D1E4356CE0021124E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Geolocation/Info.plist;
@@ -355,6 +432,7 @@
 				C952630D1E4356CE0021124E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
