@@ -1,0 +1,362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */; };
+		C95263021E4356CE0021124E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C95263001E4356CE0021124E /* Main.storyboard */; };
+		C95263041E4356CE0021124E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C95263031E4356CE0021124E /* Assets.xcassets */; };
+		C95263071E4356CE0021124E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C95263051E4356CE0021124E /* LaunchScreen.storyboard */; };
+		C95263151E43594C0021124E /* AKILoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263131E43594C0021124E /* AKILoginViewController.swift */; };
+		C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C95263141E43594C0021124E /* AKILoginViewController.xib */; };
+		C95263191E4359640021124E /* AKILoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263181E4359640021124E /* AKILoginView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKIAppDelegate.swift; sourceTree = "<group>"; };
+		C95263011E4356CE0021124E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C95263031E4356CE0021124E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C95263061E4356CE0021124E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C95263081E4356CE0021124E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C95263131E43594C0021124E /* AKILoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginViewController.swift; sourceTree = "<group>"; };
+		C95263141E43594C0021124E /* AKILoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKILoginViewController.xib; sourceTree = "<group>"; };
+		C95263181E4359640021124E /* AKILoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C95262F61E4356CE0021124E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C95262F01E4356CE0021124E = {
+			isa = PBXGroup;
+			children = (
+				C952630E1E4358E30021124E /* Library */,
+				C952630F1E4358F90021124E /* Source */,
+				C95262FB1E4356CE0021124E /* Geolocation */,
+				C95262FA1E4356CE0021124E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C95262FA1E4356CE0021124E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C95262F91E4356CE0021124E /* Geolocation.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C95262FB1E4356CE0021124E /* Geolocation */ = {
+			isa = PBXGroup;
+			children = (
+				C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */,
+				C95263001E4356CE0021124E /* Main.storyboard */,
+				C95263031E4356CE0021124E /* Assets.xcassets */,
+				C95263051E4356CE0021124E /* LaunchScreen.storyboard */,
+				C95263081E4356CE0021124E /* Info.plist */,
+			);
+			path = Geolocation;
+			sourceTree = "<group>";
+		};
+		C952630E1E4358E30021124E /* Library */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		C952630F1E4358F90021124E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				C95263101E4359080021124E /* UI */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		C95263101E4359080021124E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				C95263111E43591F0021124E /* AKIViewControllers */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		C95263111E43591F0021124E /* AKIViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				C95263121E4359350021124E /* AKILoginViewController */,
+			);
+			path = AKIViewControllers;
+			sourceTree = "<group>";
+		};
+		C95263121E4359350021124E /* AKILoginViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C95263171E4359500021124E /* AKILoginView */,
+				C95263131E43594C0021124E /* AKILoginViewController.swift */,
+				C95263141E43594C0021124E /* AKILoginViewController.xib */,
+			);
+			path = AKILoginViewController;
+			sourceTree = "<group>";
+		};
+		C95263171E4359500021124E /* AKILoginView */ = {
+			isa = PBXGroup;
+			children = (
+				C95263181E4359640021124E /* AKILoginView.swift */,
+			);
+			path = AKILoginView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C95262F81E4356CE0021124E /* Geolocation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C952630B1E4356CE0021124E /* Build configuration list for PBXNativeTarget "Geolocation" */;
+			buildPhases = (
+				C95262F51E4356CE0021124E /* Sources */,
+				C95262F61E4356CE0021124E /* Frameworks */,
+				C95262F71E4356CE0021124E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Geolocation;
+			productName = Geolocation;
+			productReference = C95262F91E4356CE0021124E /* Geolocation.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C95262F11E4356CE0021124E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "Alexey Khomych";
+				TargetAttributes = {
+					C95262F81E4356CE0021124E = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C95262F41E4356CE0021124E /* Build configuration list for PBXProject "Geolocation" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C95262F01E4356CE0021124E;
+			productRefGroup = C95262FA1E4356CE0021124E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C95262F81E4356CE0021124E /* Geolocation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C95262F71E4356CE0021124E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */,
+				C95263071E4356CE0021124E /* LaunchScreen.storyboard in Resources */,
+				C95263041E4356CE0021124E /* Assets.xcassets in Resources */,
+				C95263021E4356CE0021124E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C95262F51E4356CE0021124E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C95263151E43594C0021124E /* AKILoginViewController.swift in Sources */,
+				C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */,
+				C95263191E4359640021124E /* AKILoginView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C95263001E4356CE0021124E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C95263011E4356CE0021124E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		C95263051E4356CE0021124E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C95263061E4356CE0021124E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C95263091E4356CE0021124E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C952630A1E4356CE0021124E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C952630C1E4356CE0021124E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Geolocation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AKI.Geolocation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		C952630D1E4356CE0021124E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Geolocation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AKI.Geolocation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C95262F41E4356CE0021124E /* Build configuration list for PBXProject "Geolocation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C95263091E4356CE0021124E /* Debug */,
+				C952630A1E4356CE0021124E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C952630B1E4356CE0021124E /* Build configuration list for PBXNativeTarget "Geolocation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C952630C1E4356CE0021124E /* Debug */,
+				C952630D1E4356CE0021124E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C95262F11E4356CE0021124E /* Project object */;
+}
