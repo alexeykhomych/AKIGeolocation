@@ -21,6 +21,7 @@
 		C952632A1E4368EB0021124E /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263261E4368EB0021124E /* FBSDKCoreKit.framework */; };
 		C952632B1E4368EB0021124E /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263271E4368EB0021124E /* FBSDKLoginKit.framework */; };
 		C952632C1E4368EC0021124E /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263281E4368EB0021124E /* FBSDKShareKit.framework */; };
+		C952632E1E4381AF0021124E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C952632D1E4381AF0021124E /* GoogleService-Info.plist */; };
 		EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		C95263261E4368EB0021124E /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C95263271E4368EB0021124E /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C95263281E4368EB0021124E /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		C952632D1E4381AF0021124E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */,
+				C952632D1E4381AF0021124E /* GoogleService-Info.plist */,
 				C95263001E4356CE0021124E /* Main.storyboard */,
 				C95263031E4356CE0021124E /* Assets.xcassets */,
 				C95263051E4356CE0021124E /* LaunchScreen.storyboard */,
@@ -258,6 +261,7 @@
 				C95263041E4356CE0021124E /* Assets.xcassets in Resources */,
 				C95263211E4365460021124E /* AKILocationViewController.xib in Resources */,
 				C95263021E4356CE0021124E /* Main.storyboard in Resources */,
+				C952632E1E4381AF0021124E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,6 +10,13 @@ import UIKit
 
 import FBSDKLoginKit
 
+import Firebase
+import FirebaseAuth
+
+let kAKIAllertTitleOk = "Ok"
+let kAKIAllertTitleError = "Error"
+let kAKIAllertMessage = ""
+
 class AKILoginViewController: UIViewController {
     
     var model: AnyObject?
@@ -17,14 +24,17 @@ class AKILoginViewController: UIViewController {
     func getView<R>() -> R? {
         return self.viewIfLoaded.flatMap { $0 as? R }
     }
+    
+    var loginView: AKILoginView? {
+        return self.getView()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let facebookLoginButton = FBSDKLoginButton.init()
-        facebookLoginButton.center = self.view.center
-        self.view.addSubview(facebookLoginButton)
-        
+//        let facebookLoginButton = FBSDKLoginButton.init()
+//        facebookLoginButton.center = self.view.center
+//        self.view.addSubview(facebookLoginButton)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +46,33 @@ class AKILoginViewController: UIViewController {
     }
     
     @IBAction func loginButton(_ sender: UIButton) {
+        let email = self.loginView?.emailTextField?.text
+        let password = self.loginView?.passwordTextField?.text
         
+        if email == "" || password == "" {
+            let alertController = UIAlertController(title: kAKIAllertTitleError, message: kAKIAllertMessage, preferredStyle: .alert)
+            
+            alertController.addAction(UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+        } else {
+            FIRAuth.auth()?.signIn(withEmail: email!, password: password!, completion: { (user, error) in
+                if error == nil {
+                    let controller = AKILocationViewController()
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+                    let alertController = UIAlertController(title: kAKIAllertTitleError, message: kAKIAllertMessage, preferredStyle: .alert)
+                    
+                    alertController.addAction(UIAlertAction(title: kAKIAllertTitleError, style: .cancel, handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            })
+        }
     }
-
+    
+    func presentAllert(_ title: String, message: String, preferredStyle: UIAlertControllerStyle) {
+//        let alertController = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
+//        
+//        alertController.addAction(UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil))
+//        self.present(alertController, animated: true, completion: nil)
+    }
 }

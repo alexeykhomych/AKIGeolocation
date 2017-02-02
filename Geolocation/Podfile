@@ -3,4 +3,5 @@
 
 target 'Geolocation' do
   pod 'Firebase/Core'
+  pod 'Firebase/Auth'
 end
