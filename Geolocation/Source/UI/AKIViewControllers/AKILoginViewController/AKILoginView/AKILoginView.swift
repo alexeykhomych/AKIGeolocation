@@ -9,9 +9,6 @@
 import UIKit
 
 class AKILoginView: UIView {
-    @IBOutlet var emailLabel: UILabel?
-    @IBOutlet var passwordLabel: UILabel?
-    
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     

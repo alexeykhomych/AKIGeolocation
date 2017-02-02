@@ -20,14 +20,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZG7-gc-PkK">
-                    <rect key="frame" x="16" y="247" width="343" height="30"/>
+                    <rect key="frame" x="16" y="285" width="343" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tLE-Iu-tAu">
-                    <rect key="frame" x="16" y="294" width="343" height="30"/>
+                    <rect key="frame" x="16" y="332" width="343" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -38,39 +38,31 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Login with FB"/>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yE5-Yy-OhU">
-                    <rect key="frame" x="46" y="172" width="42" height="21"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I7K-BC-1la">
-                    <rect key="frame" x="7" y="479" width="81" height="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="drS-4g-MEC">
-                    <rect key="frame" x="222" y="358" width="137" height="36"/>
+                    <rect key="frame" x="16" y="397" width="343" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.64423688918183686" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
                     <state key="normal" title="Login">
                         <color key="titleColor" red="1" green="0.9698557177983318" blue="0.0004047529727226884" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="geolocation" translatesAutoresizingMaskIntoConstraints="NO" id="EID-51-jNv">
+                    <rect key="frame" x="16" y="61" width="343" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
-                <outlet property="emailLabel" destination="yE5-Yy-OhU" id="B6e-xl-kKC"/>
                 <outlet property="emailTextField" destination="ZG7-gc-PkK" id="yTQ-7m-3mX"/>
                 <outlet property="loginButton" destination="drS-4g-MEC" id="KWY-Ix-qhS"/>
                 <outlet property="loginWithFBButton" destination="mvd-ob-Rbd" id="kzt-pC-x6a"/>
-                <outlet property="passwordLabel" destination="I7K-BC-1la" id="BhG-Gy-jto"/>
                 <outlet property="passwordTextField" destination="tLE-Iu-tAu" id="me7-ng-4IC"/>
             </connections>
+            <point key="canvasLocation" x="26.5" y="52.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="geolocation" width="150" height="150"/>
+    </resources>
 </document>
