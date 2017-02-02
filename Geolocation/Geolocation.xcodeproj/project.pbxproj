@@ -22,6 +22,9 @@
 		C952632B1E4368EB0021124E /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263271E4368EB0021124E /* FBSDKLoginKit.framework */; };
 		C952632C1E4368EC0021124E /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C95263281E4368EB0021124E /* FBSDKShareKit.framework */; };
 		C952632E1E4381AF0021124E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C952632D1E4381AF0021124E /* GoogleService-Info.plist */; };
+		C95263331E438A250021124E /* AKIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263321E438A250021124E /* AKIContext.swift */; };
+		C952633F1E438E5D0021124E /* AKIFacebookContext in Resources */ = {isa = PBXBuildFile; fileRef = C952633D1E438E5D0021124E /* AKIFacebookContext */; };
+		C95263401E438E5D0021124E /* AKIFirebaseContext in Resources */ = {isa = PBXBuildFile; fileRef = C952633E1E438E5D0021124E /* AKIFirebaseContext */; };
 		EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +48,9 @@
 		C95263271E4368EB0021124E /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		C95263281E4368EB0021124E /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		C952632D1E4381AF0021124E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C95263321E438A250021124E /* AKIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContext.swift; sourceTree = "<group>"; };
+		C952633D1E438E5D0021124E /* AKIFacebookContext */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AKIFacebookContext; sourceTree = "<group>"; };
+		C952633E1E438E5D0021124E /* AKIFirebaseContext */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AKIFirebaseContext; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,6 +115,7 @@
 		C952630E1E4358E30021124E /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				C952632F1E4389710021124E /* Classes */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -185,6 +192,32 @@
 			path = FacebookFrameworks;
 			sourceTree = "<group>";
 		};
+		C952632F1E4389710021124E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C95263301E43898D0021124E /* Models */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		C95263301E43898D0021124E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C95263311E438A110021124E /* AKIContext */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C95263311E438A110021124E /* AKIContext */ = {
+			isa = PBXGroup;
+			children = (
+				C952633D1E438E5D0021124E /* AKIFacebookContext */,
+				C952633E1E438E5D0021124E /* AKIFirebaseContext */,
+				C95263321E438A250021124E /* AKIContext.swift */,
+			);
+			path = AKIContext;
+			sourceTree = "<group>";
+		};
 		E755E22969CB975467F66C79 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,8 +291,10 @@
 			files = (
 				C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */,
 				C95263071E4356CE0021124E /* LaunchScreen.storyboard in Resources */,
+				C952633F1E438E5D0021124E /* AKIFacebookContext in Resources */,
 				C95263041E4356CE0021124E /* Assets.xcassets in Resources */,
 				C95263211E4365460021124E /* AKILocationViewController.xib in Resources */,
+				C95263401E438E5D0021124E /* AKIFirebaseContext in Resources */,
 				C95263021E4356CE0021124E /* Main.storyboard in Resources */,
 				C952632E1E4381AF0021124E /* GoogleService-Info.plist in Resources */,
 			);
@@ -325,6 +360,7 @@
 				C95263191E4359640021124E /* AKILoginView.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
 				C95263231E4365580021124E /* AKILocationView.swift in Sources */,
+				C95263331E438A250021124E /* AKIContext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
