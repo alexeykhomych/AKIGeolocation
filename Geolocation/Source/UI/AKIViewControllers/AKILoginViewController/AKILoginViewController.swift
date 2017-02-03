@@ -13,10 +13,6 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
-let kAKIAllertTitleOk = "Ok"
-let kAKIAllertTitleError = "Error"
-let kAKIAllertMessage = ""
-
 class AKILoginViewController: AKIViewController {
     
     var model: AnyObject?
@@ -49,20 +45,12 @@ class AKILoginViewController: AKIViewController {
         let email = self.loginView?.emailTextField?.text
         let password = self.loginView?.passwordTextField?.text
         
-        if email == "" || password == "" {
-            let alertController = UIAlertController(title: kAKIAllertTitleError, message: kAKIAllertMessage, preferredStyle: .alert)
-            
-            alertController.addAction(UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil))
-            self.present(alertController, animated: true, completion: nil)
-        } else {
+        if self.validateFields(email!, password: password!) {
             FIRAuth.auth()?.signIn(withEmail: email!, password: password!, completion: { (user, error) in
                 if error == nil {
                     self.pushToViewController(AKILocationViewController())
                 } else {
-                    let alertController = UIAlertController(title: kAKIAllertTitleError, message: kAKIAllertMessage, preferredStyle: .alert)
-                    
-                    alertController.addAction(UIAlertAction(title: kAKIAllertTitleError, style: .cancel, handler: nil))
-                    self.present(alertController, animated: true, completion: nil)
+                    self.presentAlertErrorMessage(kAKIAllertMessage, style: .alert)
                 }
             })
         }
@@ -70,12 +58,5 @@ class AKILoginViewController: AKIViewController {
     
     @IBAction func signUpButton(_ sender: UIButton) {
         self.pushToViewController(AKISignUpViewController())
-    }
-    
-    func presentAllert(_ title: String, message: String, preferredStyle: UIAlertControllerStyle) {
-//        let alertController = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
-//        
-//        alertController.addAction(UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil))
-//        self.present(alertController, animated: true, completion: nil)
     }
 }
