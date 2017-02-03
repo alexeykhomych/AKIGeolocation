@@ -13,5 +13,6 @@ class AKILoginView: UIView {
     @IBOutlet var passwordTextField: UITextField?
     
     @IBOutlet var loginButton: UIButton?
-    @IBOutlet var loginWithFBButton: UIButton?    
+    @IBOutlet var loginWithFBButton: UIButton?
+    @IBOutlet var signUpButton: UIButton?
 }

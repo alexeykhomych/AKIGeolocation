@@ -10,21 +10,27 @@ import UIKit
 
 import FBSDKLoginKit
 
-class AKILoginViewController: UIViewController {
+import Firebase
+import FirebaseAuth
+
+class AKILoginViewController: AKIViewController {
     
     var model: AnyObject?
     
     func getView<R>() -> R? {
         return self.viewIfLoaded.flatMap { $0 as? R }
     }
+    
+    var loginView: AKILoginView? {
+        return self.getView()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let facebookLoginButton = FBSDKLoginButton.init()
-        facebookLoginButton.center = self.view.center
-        self.view.addSubview(facebookLoginButton)
-        
+//        let facebookLoginButton = FBSDKLoginButton.init()
+//        facebookLoginButton.center = self.view.center
+//        self.view.addSubview(facebookLoginButton)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +42,21 @@ class AKILoginViewController: UIViewController {
     }
     
     @IBAction func loginButton(_ sender: UIButton) {
+        let email = self.loginView?.emailTextField?.text
+        let password = self.loginView?.passwordTextField?.text
         
+        if self.validateFields(email!, password: password!) {
+            FIRAuth.auth()?.signIn(withEmail: email!, password: password!, completion: { (user, error) in
+                if error == nil {
+                    self.pushToViewController(AKILocationViewController())
+                } else {
+                    self.presentAlertErrorMessage(kAKIAllertMessage, style: .alert)
+                }
+            })
+        }
     }
-
+    
+    @IBAction func signUpButton(_ sender: UIButton) {
+        self.pushToViewController(AKISignUpViewController())
+    }
 }
