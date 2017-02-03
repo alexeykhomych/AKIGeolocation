@@ -12,6 +12,8 @@ let kAKIAllertTitleOk = "Ok"
 let kAKIAllertTitleError = "Error"
 let kAKIAllertMessage = ""
 
+let kAKIGoogleAPIKey = "AIzaSyDhCTlo2o_D_SDwFUWdtf8C1t_2i-ksHdA"
+
 class AKIConstants: NSObject {
 
 }

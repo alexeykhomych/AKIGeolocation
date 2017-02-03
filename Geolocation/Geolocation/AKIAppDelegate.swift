@@ -12,6 +12,8 @@ import FBSDKCoreKit
 
 import Firebase
 
+import GoogleMaps
+
 @UIApplicationMain
 class AKIAppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -29,6 +31,8 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         window.makeKeyAndVisible()
         
         FIRApp.configure()
+        
+        GMSServices.provideAPIKey(kAKIGoogleAPIKey)
         
         return true
     }

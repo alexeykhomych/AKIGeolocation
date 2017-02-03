@@ -61,6 +61,7 @@
 		C95263461E4390F50021124E /* AKISignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKISignUpViewController.xib; sourceTree = "<group>"; };
 		C95263491E4392BF0021124E /* AKIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIViewController.swift; sourceTree = "<group>"; };
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
+		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +113,7 @@
 		C95262FB1E4356CE0021124E /* Geolocation */ = {
 			isa = PBXGroup;
 			children = (
+				C994D58E1E44E8730096C8AA /* Geolocation.entitlements */,
 				C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */,
 				C952632D1E4381AF0021124E /* GoogleService-Info.plist */,
 				C95263001E4356CE0021124E /* Main.storyboard */,
@@ -301,7 +303,13 @@
 				TargetAttributes = {
 					C95262F81E4356CE0021124E = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = M2WK6CS22K;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -528,6 +536,8 @@
 			baseConfigurationReference = D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Geolocation/Geolocation.entitlements;
+				DEVELOPMENT_TEAM = M2WK6CS22K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookFrameworks",
@@ -545,6 +555,8 @@
 			baseConfigurationReference = 8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Geolocation/Geolocation.entitlements;
+				DEVELOPMENT_TEAM = M2WK6CS22K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookFrameworks",

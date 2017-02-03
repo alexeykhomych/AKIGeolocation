@@ -13,7 +13,7 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
-class AKILoginViewController: AKIViewController {
+class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     
     var model: AnyObject?
     
@@ -28,9 +28,10 @@ class AKILoginViewController: AKIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let facebookLoginButton = FBSDKLoginButton.init()
-//        facebookLoginButton.center = self.view.center
-//        self.view.addSubview(facebookLoginButton)
+        let facebookLoginButton = FBSDKLoginButton()
+        facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
+        facebookLoginButton.delegate = self
+        self.view.addSubview(facebookLoginButton)
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,6 +55,18 @@ class AKILoginViewController: AKIViewController {
                 }
             })
         }
+    }
+    
+    public func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+        if error != nil {
+            print (error)
+            return
+        }
+        
+        print("Successfully logged in with facebook")
+    }
+    public func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        print("Did log out of facebook")
     }
     
     @IBAction func signUpButton(_ sender: UIButton) {
