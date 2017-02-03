@@ -10,5 +10,5 @@ import UIKit
 import MapKit
 
 class AKILocationView: UIView {
-    @IBOutlet weak var mapView: MKMapView?
+    
 }
