@@ -14,6 +14,8 @@ import Firebase
 
 import GoogleMaps
 
+import IQKeyboardManagerSwift
+
 @UIApplicationMain
 class AKIAppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -33,6 +35,8 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         FIRApp.configure()
         
         GMSServices.provideAPIKey(kAKIGoogleAPIKey)
+        
+        IQKeyboardManager.sharedManager().enable = true
         
         return true
     }

@@ -5,4 +5,6 @@ target 'Geolocation' do
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'GoogleMaps'
+  pod 'IQKeyboardManagerSwift'
+  use_frameworks!
 end

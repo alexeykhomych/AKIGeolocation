@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		164C9780D044AB12E9912C0C /* Pods_Geolocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 523A570F04911F530045D246 /* Pods_Geolocation.framework */; };
 		C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */; };
 		C95263021E4356CE0021124E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C95263001E4356CE0021124E /* Main.storyboard */; };
 		C95263041E4356CE0021124E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C95263031E4356CE0021124E /* Assets.xcassets */; };
@@ -30,11 +31,10 @@
 		C95263481E4390F50021124E /* AKISignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C95263461E4390F50021124E /* AKISignUpViewController.xib */; };
 		C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263491E4392BF0021124E /* AKIViewController.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
-		EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Geolocation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		523A570F04911F530045D246 /* Pods_Geolocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geolocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.release.xcconfig"; sourceTree = "<group>"; };
 		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKIAppDelegate.swift; sourceTree = "<group>"; };
@@ -70,11 +70,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE9D794790C9994FB7E9C859 /* libPods-Geolocation.a in Frameworks */,
 				C952632A1E4368EB0021124E /* FBSDKCoreKit.framework in Frameworks */,
 				C952632C1E4368EC0021124E /* FBSDKShareKit.framework in Frameworks */,
 				C952632B1E4368EB0021124E /* FBSDKLoginKit.framework in Frameworks */,
 				C95263291E4368EB0021124E /* Bolts.framework in Frameworks */,
+				164C9780D044AB12E9912C0C /* Pods_Geolocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +263,7 @@
 			isa = PBXGroup;
 			children = (
 				C95263241E4368B80021124E /* FacebookFrameworks */,
-				1AE74006E1973A3FD1ABB09D /* libPods-Geolocation.a */,
+				523A570F04911F530045D246 /* Pods_Geolocation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
