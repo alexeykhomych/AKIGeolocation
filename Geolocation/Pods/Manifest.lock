@@ -40,12 +40,17 @@ PODS:
   - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
   - GTMSessionFetcher/Core (1.1.8)
   - IQKeyboardManagerSwift (4.0.8)
+  - RxCocoa (3.2.0):
+    - RxSwift (~> 3.1)
+  - RxSwift (3.2.0)
 
 DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - GoogleMaps
   - IQKeyboardManagerSwift
+  - RxCocoa
+  - RxSwift
 
 SPEC CHECKSUMS:
   Firebase: 8e99eb1ff553ad5bcc6072cc3d925bb89c1244d6
@@ -59,7 +64,9 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   GTMSessionFetcher: 6f8d8b28b7e345549ac471071608170b31cb4977
   IQKeyboardManagerSwift: c04bc9f68473823f825eb44d958fce98d921bead
+  RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
+  RxSwift: 46574f70d416b7923c237195939cc488a7fbf3a0
 
-PODFILE CHECKSUM: f292ae0628cf97e67cc38b3145a7f942c0ae508e
+PODFILE CHECKSUM: 3b9152c2d754fffc752446eca698d3f8dad8682b
 
 COCOAPODS: 1.0.1

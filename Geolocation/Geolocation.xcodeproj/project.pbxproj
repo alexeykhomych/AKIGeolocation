@@ -369,6 +369,7 @@
 					C95262F81E4356CE0021124E = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = M2WK6CS22K;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
