@@ -31,6 +31,8 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         let facebookLoginButton = FBSDKLoginButton()
         facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
         facebookLoginButton.delegate = self
+        facebookLoginButton.readPermissions = ["email", "public_profile"]
+        
         self.view.addSubview(facebookLoginButton)
     }
 
@@ -49,7 +51,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         if self.validateFields(email!, password: password!) {
             FIRAuth.auth()?.signIn(withEmail: email!, password: password!, completion: { (user, error) in
                 if error == nil {
-                    self.pushToViewController(AKILocationViewController())
+                    self.userDidLogin()
                 } else {
                     self.presentAlertErrorMessage(kAKIAllertMessage, style: .alert)
                 }
@@ -64,12 +66,17 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         }
         
         print("Successfully logged in with facebook")
+        self.userDidLogin()
     }
     public func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         print("Did log out of facebook")
     }
     
     @IBAction func signUpButton(_ sender: UIButton) {
-        self.pushToViewController(AKISignUpViewController())
+        self.userDidLogin()
+    }
+    
+    func userDidLogin() {
+        self.pushToViewController(AKILocationViewController())
     }
 }

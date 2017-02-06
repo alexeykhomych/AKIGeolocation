@@ -36,14 +36,21 @@ class AKISignUpViewController: AKIViewController {
         let email = self.signUpView?.emailTextField?.text
         let password = self.signUpView?.passwordTextField?.text
         if self.validateFields(email!, password: password!) {
-            FIRAuth.auth()?.createUser(withEmail: email!, password: password!) { (user, error) in
-                if error == nil {
-                    print(self.kAKISuccessfullySignUp)
-                    _ = self.navigationController?.popViewController(animated: true)
-                } else {
-                    self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
-                }
-            }
+//            FIRAuth.auth()?.createUser(withEmail: email!, password: password!) { (user, error) in
+//                if error == nil {
+//                    print(self.kAKISuccessfullySignUp)
+//                    _ = self.navigationController?.popViewController(animated: true)
+//                } else {
+//                    self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
+//                }
+//            }
+            self.signUpContext()
         }
+    }
+    
+    func signUpContext() {
+        let context = AKISignUpContext()
+        context.model = self.model
+        context.performExecute()
     }
 }
