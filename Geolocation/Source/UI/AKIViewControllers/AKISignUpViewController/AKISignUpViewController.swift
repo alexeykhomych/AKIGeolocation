@@ -13,9 +13,6 @@ import FirebaseAuth
 
 class AKISignUpViewController: AKIViewController {
     
-    let kAKIAllertErrorMessage = "Enter your email and password"
-    let kAKISuccessfullySignUp = "successfully signed up"
-    
     func getView<R>() -> R? {
         return self.viewIfLoaded.flatMap { $0 as? R }
     }

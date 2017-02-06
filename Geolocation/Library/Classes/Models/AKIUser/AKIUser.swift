@@ -10,13 +10,13 @@ import UIKit
 
 class AKIUser: NSObject {
     
-    var login: String?
+    var email: String?
     var password: String?
     var firstName: String?
     var lastName: String?
     
-    init(_ login: String, password: String, firstName: String, lastName: String) {
-        self.login = login
+    init(_ email: String, password: String, firstName: String, lastName: String) {
+        self.email = email
         self.password = password
         self.firstName = firstName
         self.lastName = lastName

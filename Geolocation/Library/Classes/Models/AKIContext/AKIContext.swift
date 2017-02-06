@@ -10,7 +10,7 @@ import UIKit
 
 class AKIContext: NSObject {
     
-    var model: AnyObject?
+    var model: AnyObject? = nil
     
     func performExecute() {
         

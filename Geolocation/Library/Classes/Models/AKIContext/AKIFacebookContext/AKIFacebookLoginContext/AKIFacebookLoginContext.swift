@@ -8,8 +8,32 @@
 
 import UIKit
 
+import FBSDKLoginKit
+
 class AKIFacebookLoginContext: AKIContext {
     
-    func 
+    var accessToken: FBSDKAccessToken? {
+        return FBSDKAccessToken.current()
+    }
+    
+    var parameters: [AnyHashable : Any] {
+        return [kAKIFacebookRequestFields : "\(kAKIFacebookRequestID), \(kAKIFacebookRequestName), \(kAKIFacebookRequestEmail)"]
+    }
+    
+    override func performExecute() {
+        FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start {
+            (connection, result, error) in
+            
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            print(result)
+            let model = self.model as? AKIUser
+            
+            
+        }
+    }
     
 }

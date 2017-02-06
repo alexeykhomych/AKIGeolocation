@@ -15,8 +15,6 @@ import FirebaseAuth
 
 class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     
-    var model: AnyObject?
-    
     func getView<R>() -> R? {
         return self.viewIfLoaded.flatMap { $0 as? R }
     }
@@ -31,7 +29,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         let facebookLoginButton = FBSDKLoginButton()
         facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
         facebookLoginButton.delegate = self
-        facebookLoginButton.readPermissions = ["email", "public_profile"]
+        facebookLoginButton.readPermissions = [kAKIFacebookPermissionEmail, kAKIFacebookPermissionPublicProfile]
         
         self.view.addSubview(facebookLoginButton)
     }
@@ -49,13 +47,9 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         let password = self.loginView?.passwordTextField?.text
         
         if self.validateFields(email!, password: password!) {
-            FIRAuth.auth()?.signIn(withEmail: email!, password: password!, completion: { (user, error) in
-                if error == nil {
-                    self.userDidLogin()
-                } else {
-                    self.presentAlertErrorMessage(kAKIAllertMessage, style: .alert)
-                }
-            })
+            self.loginWithFirebase()
+            self.userDidLogin()
+//            self.presentAlertErrorMessage(kAKIAllertMessage, style: .alert)
         }
     }
     
@@ -74,6 +68,12 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     
     @IBAction func signUpButton(_ sender: UIButton) {
         self.userDidLogin()
+    }
+    
+    func loginWithFirebase() {
+        let context = AKILoginContext()
+        context.model = self.model
+        context.execute()
     }
     
     func userDidLogin() {

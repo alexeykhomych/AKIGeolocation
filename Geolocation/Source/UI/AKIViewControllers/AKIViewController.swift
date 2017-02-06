@@ -12,6 +12,8 @@ import Firebase
 import FirebaseAuth
 
 class AKIViewController: UIViewController {
+    
+    var model: AnyObject? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
