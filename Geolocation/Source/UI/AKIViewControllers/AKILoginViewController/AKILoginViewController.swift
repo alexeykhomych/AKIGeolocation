@@ -38,36 +38,32 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func loginFBButton(_ sender: UIButton) {
-        
-    }
-    
     @IBAction func loginButton(_ sender: UIButton) {
         let email = self.loginView?.emailTextField?.text
         let password = self.loginView?.passwordTextField?.text
         
         if self.validateFields(email!, password: password!) {
             self.loginWithFirebase()
-            self.userDidLogin()
-//            self.presentAlertErrorMessage(kAKIAllertMessage, style: .alert)
         }
     }
     
-    public func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         if error != nil {
             print (error)
             return
         }
         
         print("Successfully logged in with facebook")
-        self.userDidLogin()
+        self.loginWithFacebook()
+        
     }
-    public func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         print("Did log out of facebook")
     }
     
     @IBAction func signUpButton(_ sender: UIButton) {
-        self.userDidLogin()
+        self.loginWithFirebase()
     }
     
     func loginWithFirebase() {
@@ -76,14 +72,18 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.setObserver(context)
     }
     
-    func userDidLogin() {
-        self.pushToViewController(AKILocationViewController())
+    func loginWithFacebook() {
+        let context = AKIFacebookLoginContext()
+        context.model = self.model
+        self.setObserver(context)
     }
     
     override func modelDidLoad() {
         DispatchQueue.main.async {
-            self.userDidLogin()
+            self.pushViewController(AKILocationViewController(), model: self.model)
         }
     }
+    
+    
     
 }

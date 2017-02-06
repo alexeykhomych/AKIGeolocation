@@ -14,6 +14,7 @@
 		C94CF2A81E48966400D467BA /* AKILogOutContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A01E48966400D467BA /* AKILogOutContext.swift */; };
 		C94CF2A91E48966400D467BA /* AKISignUpContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A21E48966400D467BA /* AKISignUpContext.swift */; };
 		C94CF2AA1E48966400D467BA /* AKIUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A41E48966400D467BA /* AKIUser.swift */; };
+		C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2AC1E48C0E200D467BA /* AKICurrentPositionContext.swift */; };
 		C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */; };
 		C95263021E4356CE0021124E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C95263001E4356CE0021124E /* Main.storyboard */; };
 		C95263041E4356CE0021124E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C95263031E4356CE0021124E /* Assets.xcassets */; };
@@ -45,6 +46,7 @@
 		C94CF2A01E48966400D467BA /* AKILogOutContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILogOutContext.swift; sourceTree = "<group>"; };
 		C94CF2A21E48966400D467BA /* AKISignUpContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKISignUpContext.swift; sourceTree = "<group>"; };
 		C94CF2A41E48966400D467BA /* AKIUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIUser.swift; sourceTree = "<group>"; };
+		C94CF2AC1E48C0E200D467BA /* AKICurrentPositionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKICurrentPositionContext.swift; sourceTree = "<group>"; };
 		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKIAppDelegate.swift; sourceTree = "<group>"; };
 		C95263011E4356CE0021124E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		C94CF29C1E48966400D467BA /* AKIFirebaseContext */ = {
 			isa = PBXGroup;
 			children = (
+				C94CF2AB1E48C0CE00D467BA /* AKICurrentPositionContext */,
 				C94CF29D1E48966400D467BA /* AKILoginContext */,
 				C94CF29F1E48966400D467BA /* AKILogOutContext */,
 				C94CF2A11E48966400D467BA /* AKISignUpContext */,
@@ -171,6 +174,14 @@
 				C94CF2A41E48966400D467BA /* AKIUser.swift */,
 			);
 			path = AKIUser;
+			sourceTree = "<group>";
+		};
+		C94CF2AB1E48C0CE00D467BA /* AKICurrentPositionContext */ = {
+			isa = PBXGroup;
+			children = (
+				C94CF2AC1E48C0E200D467BA /* AKICurrentPositionContext.swift */,
+			);
+			path = AKICurrentPositionContext;
 			sourceTree = "<group>";
 		};
 		C95262F01E4356CE0021124E = {
@@ -479,6 +490,7 @@
 				C94CF2A71E48966400D467BA /* AKILoginContext.swift in Sources */,
 				C94CF2A81E48966400D467BA /* AKILogOutContext.swift in Sources */,
 				C95263191E4359640021124E /* AKILoginView.swift in Sources */,
+				C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
 				C95263441E4390E60021124E /* AKISignUpView.swift in Sources */,
 				C95263231E4365580021124E /* AKILocationView.swift in Sources */,

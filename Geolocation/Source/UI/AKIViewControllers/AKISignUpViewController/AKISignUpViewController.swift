@@ -11,8 +11,6 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-
-
 class AKISignUpViewController: AKIViewController {
     
     func getView<R>() -> R? {
@@ -48,7 +46,7 @@ class AKISignUpViewController: AKIViewController {
     override func modelDidLoad() {
         DispatchQueue.main.async {
             print(kAKISuccessfullySignUp)
-            _ = self.navigationController?.popViewController(animated: true)
+            self.pushViewController(AKILocationViewController(), model: self.model)
         }
     }
 }

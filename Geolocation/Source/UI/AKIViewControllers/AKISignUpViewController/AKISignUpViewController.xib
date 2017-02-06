@@ -61,12 +61,19 @@
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <gestureRecognizers/>
             <connections>
                 <outlet property="emailTextField" destination="RLD-Is-psA" id="8q8-5K-jSz"/>
                 <outlet property="passwordTextField" destination="1z7-Ob-ukc" id="Pme-M6-FWS"/>
                 <outlet property="signUpButton" destination="4eJ-4d-IAO" id="qIy-1c-cBv"/>
+                <outletCollection property="gestureRecognizers" destination="6dT-Rd-WgH" appends="YES" id="GV4-4z-GRt"/>
             </connections>
             <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>
+        <tapGestureRecognizer id="6dT-Rd-WgH">
+            <connections>
+                <action selector="tapGestureRecognizerWithSender:" destination="-1" id="JXg-fk-xBb"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>

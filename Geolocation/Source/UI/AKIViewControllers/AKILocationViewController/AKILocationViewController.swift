@@ -11,7 +11,10 @@ import UIKit
 import GoogleMaps
 
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
-    let kAKIGoogleMapsDefaultZoom = 10.0
+    
+    let kAKILogout = "Logout"
+    
+    let kAKIGoogleMapsDefaultZoom: Float = 15.0
     let kAKIGoogmeMapsDefaultLatitude = -33.86
     let kAKIGoogleMapsDefaultLongitude = 151.20
     
@@ -32,6 +35,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         self.view = mapView
         self.currentLocation()
         self.mapView = mapView
+        
+        self.initRightBarButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,15 +81,31 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last
-        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 10)
+        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: kAKIGoogleMapsDefaultZoom)
         self.mapView?.animate(to: camera)
-        self.locationManager.stopUpdatingLocation()
+//        self.locationManager.stopUpdatingLocation()
     }
     
     override func modelDidLoad() {
         DispatchQueue.main.async {
             
         }
+    }
+    
+    private func initRightBarButtonItem() {
+        let logoutButton = UIBarButtonItem.init(title: kAKILogout,
+                                                style: UIBarButtonItemStyle.plain,
+                                                target: self,
+                                                action: #selector(logout))
+        
+        self.navigationItem.setRightBarButton(logoutButton, animated: true)
+    }
+    
+    func logout() {
+        let context = AKILogOutContext()
+        context.model = self.model
+        context.execute()
+        _ = self.navigationController?.popToRootViewController(animated: true)
     }
 
 }

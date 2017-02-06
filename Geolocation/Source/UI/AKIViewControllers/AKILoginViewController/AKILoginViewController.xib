@@ -37,9 +37,6 @@
                     <rect key="frame" x="124" y="617" width="126" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <state key="normal" title="Login with FB"/>
-                    <connections>
-                        <action selector="loginFBButton:" destination="-1" eventType="touchUpInside" id="TlB-EA-GZe"/>
-                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="drS-4g-MEC">
                     <rect key="frame" x="16" y="459" width="165" height="32"/>
@@ -76,15 +73,23 @@
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <gestureRecognizers/>
             <connections>
                 <outlet property="emailTextField" destination="ZG7-gc-PkK" id="yTQ-7m-3mX"/>
                 <outlet property="loginButton" destination="drS-4g-MEC" id="KWY-Ix-qhS"/>
                 <outlet property="loginWithFBButton" destination="mvd-ob-Rbd" id="kzt-pC-x6a"/>
                 <outlet property="passwordTextField" destination="tLE-Iu-tAu" id="me7-ng-4IC"/>
                 <outlet property="signUpButton" destination="8aq-vk-iiD" id="Itc-KQ-8z9"/>
+                <outlet property="tapGestureRecognizer" destination="Fh6-WK-RYK" id="y8t-Xh-ukc"/>
+                <outletCollection property="gestureRecognizers" destination="Fh6-WK-RYK" appends="YES" id="gCA-L0-Va8"/>
             </connections>
             <point key="canvasLocation" x="26.5" y="52.5"/>
         </view>
+        <tapGestureRecognizer id="Fh6-WK-RYK">
+            <connections>
+                <action selector="tapGestureRecognizerWithSender:" destination="-1" id="fQy-Zn-DrA"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="geolocation" width="150" height="150"/>

@@ -12,13 +12,11 @@ class AKIUser: NSObject {
     
     var email: String?
     var password: String?
-    var firstName: String?
-    var lastName: String?
+    var name: String?
     
-    init(_ email: String, password: String, firstName: String, lastName: String) {
+    init(_ email: String, password: String, name: String) {
         self.email = email
         self.password = password
-        self.firstName = firstName
-        self.lastName = lastName
+        self.name = name
     }
 }

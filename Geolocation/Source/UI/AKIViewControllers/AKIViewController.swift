@@ -33,8 +33,8 @@ class AKIViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    func pushToViewController(_ controller: UIViewController) {
-        self.navigationController?.pushViewController(controller, animated: true)
+    @IBAction func tapGestureRecognizer(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
     
     func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle) {
@@ -80,6 +80,13 @@ class AKIViewController: UIViewController {
     
     func modelWillLoading() {
         
+    }
+    
+    func pushViewController(_ viewController: AKIViewController, model: AnyObject?) {
+        DispatchQueue.main.async {
+            viewController.model = model
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
     }
 
 }

@@ -29,11 +29,32 @@ class AKIFacebookLoginContext: AKIContext {
                 return
             }
             
-            print(result)
-            let model = self.model as? AKIUser
+            self.parseJSON(result)
             
-            
+            self.contextCompleted()
         }
     }
     
+    func contextCompleted() {
+        AKIViewController.observer?.onCompleted()
+    }
+    
+    func parseJSON(_ json: Any) {
+        if let json = json as? NSDictionary {
+            guard let data = json[0] as? [String: Any] else {
+                return
+            }
+            
+            let model = self.model as? AKIUser
+            model?.name = json["name"] as! String
+            model?.name
+            
+//            guard let dictionary = data[0] as? [String: Any] else { return }
+            
+            
+        }
+        
+        
+        
+    }
 }
