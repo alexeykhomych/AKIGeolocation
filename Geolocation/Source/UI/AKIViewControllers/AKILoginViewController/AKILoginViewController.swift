@@ -73,10 +73,17 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     func loginWithFirebase() {
         let context = AKILoginContext()
         context.model = self.model
-        context.execute()
+        self.setObserver(context)
     }
     
     func userDidLogin() {
         self.pushToViewController(AKILocationViewController())
     }
+    
+    override func modelDidLoad() {
+        DispatchQueue.main.async {
+            self.userDidLogin()
+        }
+    }
+    
 }

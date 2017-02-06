@@ -80,5 +80,11 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         self.mapView?.animate(to: camera)
         self.locationManager.stopUpdatingLocation()
     }
+    
+    override func modelDidLoad() {
+        DispatchQueue.main.async {
+            
+        }
+    }
 
 }

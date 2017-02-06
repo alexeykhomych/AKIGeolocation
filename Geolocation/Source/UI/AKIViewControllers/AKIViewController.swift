@@ -11,7 +11,15 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKIViewController: UIViewController {
+    
+    static var observer: PublishSubject<AKIContext>?
+    
+    let disposeBag = DisposeBag()
+    var context: AKIContext?
     
     var model: AnyObject? = nil
 
@@ -43,6 +51,35 @@ class AKIViewController: UIViewController {
             self.presentAlertErrorMessage("Input your email and password", style: .alert)
             return false
         }
+    }
+    
+    func setObserver(_ context: AKIContext) {
+        AKIViewController.observer = PublishSubject<AKIContext>()
+        AKIViewController.observer?.subscribe(onNext: { context in
+            self.modelWillLoading()
+            context.execute()
+        }, onError: { error in
+            self.presentAlertErrorMessage(context.errorMessage!, style: .alert)
+            self.modelDidFailLoading()
+        }, onCompleted: {
+            self.modelDidLoad()
+        }, onDisposed: {
+            
+        }).addDisposableTo(self.disposeBag)
+        
+        AKIViewController.observer?.onNext(context)
+    }
+    
+    func modelDidLoad() {
+        
+    }
+    
+    func modelDidFailLoading() {
+        
+    }
+    
+    func modelWillLoading() {
+        
     }
 
 }

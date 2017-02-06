@@ -10,6 +10,8 @@ import UIKit
 
 class AKIContext: NSObject {
     
+    var errorMessage: String?
+    
     var model: AnyObject? = nil
     
     func performExecute() {
@@ -17,7 +19,9 @@ class AKIContext: NSObject {
     }
     
     func execute() {
-        
+        DispatchQueue.global().async {
+            self.performExecute()
+        }
     }
 
 }

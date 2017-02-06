@@ -25,7 +25,7 @@ class AKIFacebookLoginContext: AKIContext {
             (connection, result, error) in
             
             if error != nil {
-                print(error)
+                self.errorMessage = error?.localizedDescription
                 return
             }
             
