@@ -13,9 +13,6 @@ import FirebaseAuth
 
 class AKISignUpViewController: AKIViewController {
     
-    let kAKIAllertErrorMessage = "Enter your email and password"
-    let kAKISuccessfullySignUp = "successfully signed up"
-    
     func getView<R>() -> R? {
         return self.viewIfLoaded.flatMap { $0 as? R }
     }
@@ -36,14 +33,20 @@ class AKISignUpViewController: AKIViewController {
         let email = self.signUpView?.emailTextField?.text
         let password = self.signUpView?.passwordTextField?.text
         if self.validateFields(email!, password: password!) {
-            FIRAuth.auth()?.createUser(withEmail: email!, password: password!) { (user, error) in
-                if error == nil {
-                    print(self.kAKISuccessfullySignUp)
-                    _ = self.navigationController?.popViewController(animated: true)
-                } else {
-                    self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
-                }
-            }
+            self.signUpContext()
+        }
+    }
+    
+    func signUpContext() {
+        let context = AKISignUpContext()
+        context.model = self.model
+        self.setObserver(context)
+    }
+    
+    override func modelDidLoad() {
+        DispatchQueue.main.async {
+            print(kAKISuccessfullySignUp)
+            self.pushViewController(AKILocationViewController(), model: self.model)
         }
     }
 }

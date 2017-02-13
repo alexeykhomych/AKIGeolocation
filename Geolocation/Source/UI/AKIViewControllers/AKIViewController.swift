@@ -11,7 +11,17 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKIViewController: UIViewController {
+    
+    static var observer: PublishSubject<AKIContext>?
+    
+    let disposeBag = DisposeBag()
+    var context: AKIContext?
+    
+    var model: AnyObject? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +33,8 @@ class AKIViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    func pushToViewController(_ controller: UIViewController) {
-        self.navigationController?.pushViewController(controller, animated: true)
+    @IBAction func tapGestureRecognizer(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
     
     func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle) {
@@ -40,6 +50,42 @@ class AKIViewController: UIViewController {
         } else {
             self.presentAlertErrorMessage("Input your email and password", style: .alert)
             return false
+        }
+    }
+    
+    func setObserver(_ context: AKIContext) {
+        AKIViewController.observer = PublishSubject<AKIContext>()
+        AKIViewController.observer?.subscribe(onNext: { context in
+            self.modelWillLoading()
+            context.execute()
+        }, onError: { error in
+            self.presentAlertErrorMessage(context.errorMessage!, style: .alert)
+            self.modelDidFailLoading()
+        }, onCompleted: {
+            self.modelDidLoad()
+        }, onDisposed: {
+            
+        }).addDisposableTo(self.disposeBag)
+        
+        AKIViewController.observer?.onNext(context)
+    }
+    
+    func modelDidLoad() {
+        
+    }
+    
+    func modelDidFailLoading() {
+        
+    }
+    
+    func modelWillLoading() {
+        
+    }
+    
+    func pushViewController(_ viewController: AKIViewController, model: AnyObject?) {
+        DispatchQueue.main.async {
+            viewController.model = model
+            self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
 

@@ -14,6 +14,18 @@ let kAKIAllertMessage = ""
 
 let kAKIGoogleAPIKey = "AIzaSyDhCTlo2o_D_SDwFUWdtf8C1t_2i-ksHdA"
 
+let kAKIFacebookPermissionEmail = "email"
+let kAKIFacebookPermissionPublicProfile = "public_profile"
+
+let kAKIFacebookRequestMe = "/me"
+let kAKIFacebookRequestFields = "fields"
+let kAKIFacebookRequestID = "id"
+let kAKIFacebookRequestName = "name"
+let kAKIFacebookRequestEmail = "email"
+
+let kAKIAllertErrorMessage = "Enter your email and password"
+let kAKISuccessfullySignUp = "successfully signed up"
+
 class AKIConstants: NSObject {
 
 }

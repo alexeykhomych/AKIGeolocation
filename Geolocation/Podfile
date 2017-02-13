@@ -6,5 +6,7 @@ target 'Geolocation' do
   pod 'Firebase/Auth'
   pod 'GoogleMaps'
   pod 'IQKeyboardManagerSwift'
+  pod 'RxSwift'
+  pod 'RxCocoa'
   use_frameworks!
 end

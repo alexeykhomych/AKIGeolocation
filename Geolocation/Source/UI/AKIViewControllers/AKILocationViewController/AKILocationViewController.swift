@@ -11,55 +11,44 @@ import UIKit
 import GoogleMaps
 
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
-    let kAKIGoogleMapsDefaultZoom = 10.0
-    let kAKIGoogmeMapsDefaultLatitude = -33.86
-    let kAKIGoogleMapsDefaultLongitude = 151.20
     
-    var previousLatitude: CLLocationDegrees?
-    var previousLongitude: CLLocationDegrees?
+    let kAKILogout = "Logout"
+    
+    let kAKIGoogleMapsDefaultZoom: Float = 15.0
+    let kAKIGoogmeMapsDefaultLatitude = 0.0
+    let kAKIGoogleMapsDefaultLongitude = 0.0
     
     let locationManager = CLLocationManager()
-    var mapView: GMSMapView? = nil
+    var camera = GMSCameraPosition()
+    
+    func getView<R>() -> R? {
+        return self.viewIfLoaded.flatMap { $0 as? R }
+    }
+    
+    var locationView: AKILocationView? {
+        return self.getView()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.addGoogleMapToViewController()
-        let camera = GMSCameraPosition.camera(withLatitude: kAKIGoogmeMapsDefaultLatitude,
-                                              longitude: kAKIGoogleMapsDefaultLongitude,
-                                              zoom: Float(kAKIGoogleMapsDefaultZoom))
-        let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
-        mapView.isMyLocationEnabled = true
-        self.view = mapView
-        self.currentLocation()
-        self.mapView = mapView
+        self.initLocationManager()
+        
+        self.initRightBarButtonItem()
+        
+        let mapView = self.locationView?.mapView
+        mapView?.isMyLocationEnabled = true
+        mapView?.settings.myLocationButton = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func addGoogleMapToViewController() {
-        let camera = GMSCameraPosition.camera(withLatitude: kAKIGoogmeMapsDefaultLatitude,
-                                              longitude: kAKIGoogleMapsDefaultLongitude,
-                                              zoom: Float(kAKIGoogleMapsDefaultZoom))
-        
-        let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
-        mapView.isMyLocationEnabled = true
-        self.view = mapView
-        
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2DMake(-33.86, 151.20)
-        marker.title = "Sydney"
-        marker.snippet = "Australia"
-        marker.map = mapView
-
-        self.mapView = mapView
-    }
-    
-    func currentLocation() {
+    func initLocationManager() {
         let locationManager = self.locationManager
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
+        locationManager.distanceFilter = 100
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -67,6 +56,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
         }        
     }
+    
+    //MARK: CLLocationManagerDelegate
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
@@ -76,9 +67,39 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last
-        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 10)
-        self.mapView?.animate(to: camera)
-        self.locationManager.stopUpdatingLocation()
+        let coordinate = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
+                                                longitude: (location?.coordinate.longitude)!)
+        
+        let mapView = self.locationView?.mapView
+        mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: kAKIGoogleMapsDefaultZoom))
+    }
+    
+    //MARK: Observ
+    
+    override func modelDidLoad() {
+        DispatchQueue.main.async {
+            
+        }
+    }
+    
+    private func initRightBarButtonItem() {
+        let logoutButton = UIBarButtonItem.init(title: kAKILogout,
+                                                style: UIBarButtonItemStyle.plain,
+                                                target: self,
+                                                action: #selector(logout))
+        
+        self.navigationItem.setRightBarButton(logoutButton, animated: true)
+    }
+    
+    func logout() {
+        let context = AKILogOutContext()
+        context.model = self.model
+        context.execute()
+        _ = self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func writeLocationToDB(_ locations: [CLLocation]) {
+        
     }
 
 }

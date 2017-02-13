@@ -9,6 +9,8 @@
 import UIKit
 
 class AKISignUpView: UIView {
+    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
+    
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     
