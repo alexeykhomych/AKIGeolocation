@@ -26,6 +26,8 @@ let kAKIFacebookRequestEmail = "email"
 let kAKIAllertErrorMessage = "Enter your email and password"
 let kAKISuccessfullySignUp = "successfully signed up"
 
+let kAKIFirebaseURL = "https://test-ec520.firebaseio.com/"
+
 class AKIConstants: NSObject {
 
 }

@@ -32,7 +32,11 @@ class AKISignUpViewController: AKIViewController {
     @IBAction func signUpButton(_ sender: UIButton) {
         let email = self.signUpView?.emailTextField?.text
         let password = self.signUpView?.passwordTextField?.text
+        let name = self.signUpView?.nameTextField?.text
+        
         if self.validateFields(email!, password: password!) {
+            let model = AKIUser(email!, password: password!, name: name!)
+            self.model = model
             self.signUpContext()
         }
     }

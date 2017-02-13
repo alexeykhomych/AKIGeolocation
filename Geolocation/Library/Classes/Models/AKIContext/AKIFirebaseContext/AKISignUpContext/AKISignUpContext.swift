@@ -21,11 +21,26 @@ class AKISignUpContext: AKIContext {
         }
         
         FIRAuth.auth()?.createUser(withEmail: (model?.email!)!, password: (model?.password!)!) { (user, error) in
-            if error == nil {
-                print(kAKISuccessfullySignUp)
-            } else {
-//                self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
+            if error != nil {
+                //                self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
             }
+            
+            guard let uid = user?.uid else {
+                return
+            }
+            
+            print(kAKISuccessfullySignUp)
+            let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
+            let userReference = reference.child("users").child((user?.uid)!)
+            let values = ["name": model?.name, "email": model?.email, "password": model?.password]
+            userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
+                if error != nil {
+                    print(error?.localizedDescription ?? "default warning")
+                    return
+                }
+                
+                print("SAVED")
+            })
         }
     }
 }

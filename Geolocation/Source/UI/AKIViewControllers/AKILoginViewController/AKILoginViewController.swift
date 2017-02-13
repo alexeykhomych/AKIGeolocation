@@ -63,7 +63,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     }
     
     @IBAction func signUpButton(_ sender: UIButton) {
-        self.loginWithFirebase()
+        self.pushViewController(AKISignUpViewController(), model: self.model)
     }
     
     func loginWithFirebase() {
