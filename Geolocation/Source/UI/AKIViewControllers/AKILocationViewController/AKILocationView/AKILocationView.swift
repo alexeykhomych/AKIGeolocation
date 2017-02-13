@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import MapKit
+
+import GoogleMaps
 
 class AKILocationView: UIView {
-    
+    @IBOutlet var mapView: GMSMapView?
 }
