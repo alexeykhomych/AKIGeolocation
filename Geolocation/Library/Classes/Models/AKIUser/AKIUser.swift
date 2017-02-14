@@ -13,6 +13,7 @@ class AKIUser: NSObject {
     var email: String?
     var password: String?
     var name: String?
+    var id: String?
     
     init(_ email: String, password: String, name: String) {
         self.email = email

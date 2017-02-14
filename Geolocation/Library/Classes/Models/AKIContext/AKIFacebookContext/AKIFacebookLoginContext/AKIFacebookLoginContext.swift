@@ -17,7 +17,7 @@ class AKIFacebookLoginContext: AKIContext {
     }
     
     var parameters: [AnyHashable : Any] {
-        return [kAKIFacebookRequestFields : "\(kAKIFacebookRequestID), \(kAKIFacebookRequestName), \(kAKIFacebookRequestEmail)"]
+        return [kAKIRequestFields : "\(kAKIRequestID), \(kAKIRequestName), \(kAKIRequestEmail)"]
     }
     
     override func performExecute() {
@@ -29,8 +29,7 @@ class AKIFacebookLoginContext: AKIContext {
                 return
             }
             
-            self.parseJSON(result)
-            
+            self.parseJSON(result!)
             self.contextCompleted()
         }
     }
@@ -42,8 +41,8 @@ class AKIFacebookLoginContext: AKIContext {
     func parseJSON(_ json: Any) {
         if let dictionary = json as? NSDictionary {
             let model = self.model as? AKIUser
-            model?.name = dictionary[kAKIFacebookRequestName] as? String
-            model?.email = dictionary[kAKIFacebookRequestEmail] as? String
+            model?.name = dictionary[kAKIRequestName] as? String
+            model?.email = dictionary[kAKIRequestEmail] as? String
         }
     }
 }

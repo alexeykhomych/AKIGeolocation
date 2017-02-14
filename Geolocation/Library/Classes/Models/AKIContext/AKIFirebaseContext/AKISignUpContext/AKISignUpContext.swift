@@ -14,33 +14,45 @@ import FirebaseAuth
 class AKISignUpContext: AKIContext {
     
     override func performExecute() {
-        let model = self.model as? AKIUser
-        
-        if model == nil {
+        guard let model = self.model as? AKIUser else {
             return
         }
-        
-        FIRAuth.auth()?.createUser(withEmail: (model?.email!)!, password: (model?.password!)!) { (user, error) in
+
+        FIRAuth.auth()?.createUser(withEmail: model.email!, password: model.password!, completion: self.createUserCompletionHandler())
+    }
+    
+    func createUserCompletionHandler() -> (FIRUser?, Error?) -> () {
+        return { (user, error) in
             if error != nil {
-                //                self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
+//                self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
             }
+            
+            let model = self.model as? AKIUser
             
             guard let uid = user?.uid else {
                 return
             }
             
-            print(kAKISuccessfullySignUp)
+            model?.id = uid
+            
             let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
-            let userReference = reference.child("users").child((user?.uid)!)
-            let values = ["name": model?.name, "email": model?.email, "password": model?.password]
-            userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-                if error != nil {
-                    print(error?.localizedDescription ?? "default warning")
-                    return
-                }
-                
-                print("SAVED")
-            })
+            let userReference = reference.child(kAKIRequestUsers).child(uid)
+            let values = [kAKIRequestName: model?.name, kAKIRequestEmail: model?.email, kAKIRequestPassword: model?.password]
+            userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
+            self.contextCompleted()
         }
+    }
+    
+    func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
+        return { (error, reference) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                return
+            }
+        }
+    }
+    
+    func contextCompleted() {
+        AKIViewController.observer?.onCompleted()
     }
 }
