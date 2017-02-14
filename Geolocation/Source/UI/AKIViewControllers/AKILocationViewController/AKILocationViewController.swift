@@ -21,10 +21,6 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     var camera = GMSCameraPosition()
     
-    func getView<R>() -> R? {
-        return self.viewIfLoaded.flatMap { $0 as? R }
-    }
-    
     var locationView: AKILocationView? {
         return self.getView()
     }

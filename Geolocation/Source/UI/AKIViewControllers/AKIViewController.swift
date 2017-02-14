@@ -22,11 +22,13 @@ class AKIViewController: UIViewController {
     var context: AKIContext?
     
     var model: AnyObject? = nil
+    
+    func getView<R>() -> R? {
+        return self.viewIfLoaded.flatMap { $0 as? R }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {

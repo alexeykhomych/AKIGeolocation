@@ -10,6 +10,9 @@ import UIKit
 
 import FBSDKLoginKit
 
+import Firebase
+import FirebaseAuth
+
 class AKIFacebookLoginContext: AKIContext {
     
     var accessToken: FBSDKAccessToken? {
@@ -21,6 +24,21 @@ class AKIFacebookLoginContext: AKIContext {
     }
     
     override func performExecute() {
+        let accessToken = FBSDKAccessToken.current()
+        guard let accessTokenString = accessToken?.tokenString else {
+            return
+        }
+        
+        let credentials = FIRFacebookAuthProvider.credential(withAccessToken: accessTokenString)
+        FIRAuth.auth()?.signIn(with: credentials, completion: { (user, error) in
+            if error != nil {
+                return
+            }
+            
+            let model = self.model as? AKIUser
+            model?.id = user?.uid
+        })
+        
         FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start {
             (connection, result, error) in
             
@@ -40,9 +58,10 @@ class AKIFacebookLoginContext: AKIContext {
     
     func parseJSON(_ json: Any) {
         if let dictionary = json as? NSDictionary {
-            let model = self.model as? AKIUser
-            model?.name = dictionary[kAKIRequestName] as? String
-            model?.email = dictionary[kAKIRequestEmail] as? String
+//            let model = self.model as? AKIUser
+            self.model = AKIUser((dictionary[kAKIRequestEmail] as? String)!,
+                                 password: kAKIEmptyString,
+                                 name: (dictionary[kAKIRequestName] as? String)!)
         }
     }
 }

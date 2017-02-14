@@ -15,6 +15,13 @@ class AKIUser: NSObject {
     var name: String?
     var id: String?
     
+    override init() {
+        self.email = kAKIEmptyString
+        self.password = kAKIEmptyString
+        self.name = kAKIEmptyString
+        self.id = kAKIEmptyString
+    }
+    
     init(_ email: String, password: String, name: String) {
         self.email = email
         self.password = password

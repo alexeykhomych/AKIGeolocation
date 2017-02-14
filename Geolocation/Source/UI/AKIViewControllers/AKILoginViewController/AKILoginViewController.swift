@@ -15,16 +15,23 @@ import FirebaseAuth
 
 class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     
-    func getView<R>() -> R? {
-        return self.viewIfLoaded.flatMap { $0 as? R }
-    }
-    
     var loginView: AKILoginView? {
         return self.getView()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let accessToken = FBSDKAccessToken.current()
+        if accessToken != nil {
+            let user = AKIUser()
+//            user.id = accessToken?.userID
+            user.id = FIRFacebookAuthProviderID
+            self.model = user
+            self.modelDidLoad()
+        } else {
+            self.model = AKIUser()
+        }
         
         let facebookLoginButton = FBSDKLoginButton()
         facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
@@ -83,7 +90,4 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             self.pushViewController(AKILocationViewController(), model: self.model)
         }
     }
-    
-    
-    
 }

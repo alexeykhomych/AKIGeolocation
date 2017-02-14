@@ -13,10 +13,6 @@ import FirebaseAuth
 
 class AKISignUpViewController: AKIViewController {
     
-    func getView<R>() -> R? {
-        return self.viewIfLoaded.flatMap { $0 as? R }
-    }
-    
     var signUpView: AKISignUpView? {
         return self.getView()
     }
