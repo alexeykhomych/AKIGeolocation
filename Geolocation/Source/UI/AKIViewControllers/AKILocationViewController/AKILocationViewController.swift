@@ -10,9 +10,15 @@ import UIKit
 
 import GoogleMaps
 
+import FBSDKLoginKit
+
+import Firebase
+import FirebaseAuth
+
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     let kAKILogout = "Logout"
+    let kAKIDistanceFilter:CLLocationDistance = 50
     
     let kAKIGoogleMapsDefaultZoom: Float = 15.0
     let kAKIGoogmeMapsDefaultLatitude = 0.0
@@ -29,7 +35,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         super.viewDidLoad()
         self.initLocationManager()
         
-        self.initRightBarButtonItem()
+        self.initLeftBarButtonItem()
         
         let mapView = self.locationView?.mapView
         mapView?.isMyLocationEnabled = true
@@ -44,7 +50,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         let locationManager = self.locationManager
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
-        locationManager.distanceFilter = 100
+        locationManager.distanceFilter = kAKIDistanceFilter
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -80,19 +86,19 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         }
     }
     
-    private func initRightBarButtonItem() {
+    private func initLeftBarButtonItem() {
         let logoutButton = UIBarButtonItem.init(title: kAKILogout,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(logout))
         
-        self.navigationItem.setRightBarButton(logoutButton, animated: true)
+        self.navigationItem.setLeftBarButton(logoutButton, animated: true)
     }
     
     func logout() {
-        let context = AKILogOutContext()
-        context.model = self.model
-        context.execute()
+        FBSDKLoginManager().logOut()
+        try! FIRAuth.auth()?.signOut()
+
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     

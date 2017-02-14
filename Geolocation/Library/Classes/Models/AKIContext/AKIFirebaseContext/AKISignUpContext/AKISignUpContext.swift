@@ -28,17 +28,13 @@ class AKISignUpContext: AKIContext {
             }
             
             let model = self.model as? AKIUser
-            
-            guard let uid = user?.uid else {
-                return
-            }
-            
-            model?.id = uid
+//            model?.id = user?.uid
             
             let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
-            let userReference = reference.child(kAKIRequestUsers).child(uid)
+            let userReference = reference.child(kAKIRequestUsers).child(kAKIRequestUsers)
             let values = [kAKIRequestName: model?.name, kAKIRequestEmail: model?.email, kAKIRequestPassword: model?.password]
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
+            
             self.contextCompleted()
         }
     }

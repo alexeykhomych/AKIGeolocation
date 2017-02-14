@@ -25,8 +25,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         let accessToken = FBSDKAccessToken.current()
         if accessToken != nil {
             let user = AKIUser()
-//            user.id = accessToken?.userID
-            user.id = FIRFacebookAuthProviderID
+            user.id = accessToken?.userID
             self.model = user
             self.modelDidLoad()
         } else {
