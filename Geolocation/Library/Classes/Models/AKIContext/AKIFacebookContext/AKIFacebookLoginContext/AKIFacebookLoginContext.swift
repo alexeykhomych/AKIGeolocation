@@ -68,7 +68,6 @@ class AKIFacebookLoginContext: AKIContext {
             let model = self.model as? AKIUser
             model?.email = dictionary[kAKIRequestEmail] as? String
             model?.name = dictionary[kAKIRequestName] as? String
-            model?.password = dictionary[kAKIRequestPassword] as? String
         }
     }
 }
