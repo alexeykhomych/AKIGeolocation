@@ -13,6 +13,19 @@ import FirebaseAuth
 
 class AKISignUpViewController: AKIViewController {
     
+    let kAKIPredicateEmailFormat = "SELF MATCHES %@"
+    let kAKIPredicatePasswordFormat = "%d >= %d"
+    
+    let kAKIPredicateEmailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    let kAKIPredicateMinimalPasswordLength = 6
+    
+    let kAKIErrorMessageEnterYourEmail = "Enter your email"
+    let kAKIErrorMessageEnterYourPassword = "Enter your password"
+    let kAKIErrorMessageEnterYourName = "Enter your name"
+    
+    let kAKIErrorMessageEmailIncorrect = "Email is incorrect"
+    let kAKIErrorMessagePasswordIncorect = "Password is incorrect"
+    
     var signUpView: AKISignUpView? {
         return self.getView()
     }
@@ -26,18 +39,39 @@ class AKISignUpViewController: AKIViewController {
     }
     
     @IBAction func signUpButton(_ sender: UIButton) {
-        let email = self.signUpView?.emailTextField?.text
-        let password = self.signUpView?.passwordTextField?.text
-        let name = self.signUpView?.nameTextField?.text
+        let signUpView = self.signUpView
         
-        if self.validateStringWithPredicate(email!, predicate: NSPredicate(format: "SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")) &&
-            self.validateStringWithPredicate(password!, predicate: NSPredicate(format: "%d >= 6", password!.characters.count)) {
-            let model = AKIUser(email!, password: password!, name: name!)
-            self.model = model
-            self.signUpContext()
-        } else {
-            self.presentAlertErrorMessage("Ahtung!", style: .alert)
+        guard let email = signUpView?.emailTextField?.text else {
+            self.presentAlertErrorMessage(kAKIErrorMessageEnterYourEmail, style: .alert)
+            return
         }
+        
+        guard let password = signUpView?.passwordTextField?.text else {
+            self.presentAlertErrorMessage(kAKIErrorMessageEnterYourPassword, style: .alert)
+            return
+        }
+        
+        guard let name = signUpView?.nameTextField?.text else {
+            self.presentAlertErrorMessage(kAKIErrorMessageEnterYourName, style: .alert)
+            return
+        }
+        
+        if !self.validateStringWithPredicate(email, predicate: NSPredicate(format: kAKIPredicateEmailFormat, kAKIPredicateEmailRegex)) {
+            self.presentAlertErrorMessage(kAKIErrorMessageEmailIncorrect, style: .alert)
+            return
+        }
+        
+        if !self.validateStringWithPredicate(password, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
+                                                                              password.characters.count,
+                                                                              kAKIPredicateMinimalPasswordLength))
+        {
+            self.presentAlertErrorMessage(kAKIErrorMessagePasswordIncorect, style: .alert)
+            return
+        }
+        
+        let model = AKIUser(email, password: password, name: name)
+        self.model = model
+        self.signUpContext()
     }
     
     func signUpContext() {
