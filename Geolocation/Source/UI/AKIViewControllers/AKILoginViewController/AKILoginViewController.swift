@@ -45,12 +45,13 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     }
     
     @IBAction func loginButton(_ sender: UIButton) {
-        let email = self.loginView?.emailTextField?.text
-        let password = self.loginView?.passwordTextField?.text
+        let view = self.loginView
+        let model = self.model as? AKIUser
         
-        if self.validateFields(email!, password: password!) {
-            self.loginWithFirebase()
-        }
+        model?.email = view?.emailTextField?.text
+        model?.password = view?.passwordTextField?.text
+        
+        self.loginWithFirebase()
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
@@ -59,13 +60,11 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             return
         }
         
-        print("Successfully logged in with facebook")
         self.loginWithFacebook()
-        
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        print("Did log out of facebook")
+//        print("Did log out of facebook")
     }
     
     @IBAction func signUpButton(_ sender: UIButton) {

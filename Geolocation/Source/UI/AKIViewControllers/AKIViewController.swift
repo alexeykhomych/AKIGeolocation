@@ -14,7 +14,34 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKIViewController: UIViewController {
+extension presentErrorMessage where Self: UIViewController {
+    func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle) {
+        let alertController = UIAlertController(title: kAKIAllertTitleError, message: message, preferredStyle: style)
+        let defaultAction = UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil)
+        alertController.addAction(defaultAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+protocol presentErrorMessage {
+    func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle)
+}
+
+protocol validateStringWithPredicate {
+    func validateStringWithPredicate(_ string: String, predicate: NSPredicate) -> Bool
+}
+
+extension validateStringWithPredicate {
+    func validateStringWithPredicate(_ string: String, predicate: NSPredicate) -> Bool {
+        return predicate.evaluate(with: string)
+    }
+}
+
+@objc protocol validateString {
+    func validateString(_ string: String)
+}
+
+class AKIViewController: UIViewController, presentErrorMessage, validateStringWithPredicate {
     
     static var observer: PublishSubject<AKIContext>?
     
@@ -37,22 +64,6 @@ class AKIViewController: UIViewController {
     
     @IBAction func tapGestureRecognizer(sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
-    }
-    
-    func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle) {
-        let alertController = UIAlertController(title: kAKIAllertTitleError, message: message, preferredStyle: style)
-        let defaultAction = UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil)
-        alertController.addAction(defaultAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    func validateFields(_ email: String, password: String) -> Bool {        
-        if !email.isEmpty || !password.isEmpty {
-            return true
-        } else {
-            self.presentAlertErrorMessage("Input your email and password", style: .alert)
-            return false
-        }
     }
     
     func setObserver(_ context: AKIContext) {

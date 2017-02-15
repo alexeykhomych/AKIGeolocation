@@ -30,10 +30,13 @@ class AKISignUpViewController: AKIViewController {
         let password = self.signUpView?.passwordTextField?.text
         let name = self.signUpView?.nameTextField?.text
         
-        if self.validateFields(email!, password: password!) {
+        if self.validateStringWithPredicate(email!, predicate: NSPredicate(format: "SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")) &&
+            self.validateStringWithPredicate(password!, predicate: NSPredicate(format: "%d >= 6", password!.characters.count)) {
             let model = AKIUser(email!, password: password!, name: name!)
             self.model = model
             self.signUpContext()
+        } else {
+            self.presentAlertErrorMessage("Ahtung!", style: .alert)
         }
     }
     
