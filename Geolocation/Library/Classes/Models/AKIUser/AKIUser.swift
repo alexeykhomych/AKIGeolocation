@@ -13,6 +13,14 @@ class AKIUser: NSObject {
     var email: String?
     var password: String?
     var name: String?
+    var id: String?
+    
+    override init() {
+        self.email = kAKIEmptyString
+        self.password = kAKIEmptyString
+        self.name = kAKIEmptyString
+        self.id = kAKIEmptyString
+    }
     
     init(_ email: String, password: String, name: String) {
         self.email = email

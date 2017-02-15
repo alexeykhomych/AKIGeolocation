@@ -25,6 +25,8 @@ class AKILoginContext: AKIContext {
                 return
             }
             
+            model.id = user?.uid
+            
             AKIViewController.observer?.onCompleted()
         })
     }

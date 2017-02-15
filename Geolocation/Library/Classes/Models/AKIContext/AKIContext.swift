@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AKIContext: NSObject {
+class AKIContext {
     
     var errorMessage: String?
     

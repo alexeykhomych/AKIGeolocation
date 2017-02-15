@@ -13,10 +13,6 @@ import FirebaseAuth
 
 class AKISignUpViewController: AKIViewController {
     
-    func getView<R>() -> R? {
-        return self.viewIfLoaded.flatMap { $0 as? R }
-    }
-    
     var signUpView: AKISignUpView? {
         return self.getView()
     }
@@ -32,7 +28,11 @@ class AKISignUpViewController: AKIViewController {
     @IBAction func signUpButton(_ sender: UIButton) {
         let email = self.signUpView?.emailTextField?.text
         let password = self.signUpView?.passwordTextField?.text
+        let name = self.signUpView?.nameTextField?.text
+        
         if self.validateFields(email!, password: password!) {
+            let model = AKIUser(email!, password: password!, name: name!)
+            self.model = model
             self.signUpContext()
         }
     }
