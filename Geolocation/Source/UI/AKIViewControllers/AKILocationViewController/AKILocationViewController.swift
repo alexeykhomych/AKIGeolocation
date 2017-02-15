@@ -80,10 +80,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     //MARK: Observ
     
-    override func modelDidLoad() {
-        DispatchQueue.main.async {
-            print("coordinates saved")
-        }
+    override func contextDidLoad() {
+        print("coordinates saved")
     }
     
     private func initLeftBarButtonItem() {

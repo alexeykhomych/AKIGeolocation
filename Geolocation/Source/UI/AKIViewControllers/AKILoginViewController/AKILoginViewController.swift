@@ -27,7 +27,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             let user = AKIUser()
             user.id = accessToken?.userID
             self.model = user
-            self.modelDidLoad()
+            self.contextDidLoad()
         } else {
             self.model = AKIUser()
         }
@@ -83,9 +83,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.setObserver(context)
     }
     
-    override func modelDidLoad() {
-        DispatchQueue.main.async {
-            self.pushViewController(AKILocationViewController(), model: self.model)
-        }
+    override func contextDidLoad() {
+        self.pushViewController(AKILocationViewController(), model: self.model)
     }
 }

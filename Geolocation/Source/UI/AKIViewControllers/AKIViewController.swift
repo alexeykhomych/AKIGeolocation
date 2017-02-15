@@ -69,13 +69,15 @@ class AKIViewController: UIViewController, presentErrorMessage, validateStringWi
     func setObserver(_ context: AKIContext) {
         AKIViewController.observer = PublishSubject<AKIContext>()
         AKIViewController.observer?.subscribe(onNext: { context in
-            self.modelWillLoading()
+            self.contextWillLoading()
             context.execute()
         }, onError: { error in
             self.presentAlertErrorMessage(context.errorMessage!, style: .alert)
-            self.modelDidFailLoading()
+            self.contextDidFailLoading()
         }, onCompleted: {
-            self.modelDidLoad()
+            DispatchQueue.main.async {
+                self.contextDidLoad()
+            }
         }, onDisposed: {
             
         }).addDisposableTo(self.disposeBag)
@@ -83,15 +85,15 @@ class AKIViewController: UIViewController, presentErrorMessage, validateStringWi
         AKIViewController.observer?.onNext(context)
     }
     
-    func modelDidLoad() {
+    func contextDidLoad() {
         
     }
     
-    func modelDidFailLoading() {
+    func contextDidFailLoading() {
         
     }
     
-    func modelWillLoading() {
+    func contextWillLoading() {
         
     }
     

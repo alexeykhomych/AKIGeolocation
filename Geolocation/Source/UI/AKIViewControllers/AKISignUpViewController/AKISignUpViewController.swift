@@ -80,10 +80,8 @@ class AKISignUpViewController: AKIViewController {
         self.setObserver(context)
     }
     
-    override func modelDidLoad() {
-        DispatchQueue.main.async {
-            print(kAKISuccessfullySignUp)
-            self.pushViewController(AKILocationViewController(), model: self.model)
-        }
+    override func contextDidLoad() {
+        print(kAKISuccessfullySignUp)
+        self.pushViewController(AKILocationViewController(), model: self.model)
     }
 }
