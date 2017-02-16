@@ -32,46 +32,52 @@ class AKISignUpViewController: AKIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.initSignUpButton()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func signUpButton(_ sender: UIButton) {
-        let signUpView = self.signUpView
-        
-        guard let email = signUpView?.emailTextField?.text else {
-            self.presentAlertErrorMessage(kAKIErrorMessageEnterYourEmail, style: .alert)
-            return
-        }
-        
-        guard let password = signUpView?.passwordTextField?.text else {
-            self.presentAlertErrorMessage(kAKIErrorMessageEnterYourPassword, style: .alert)
-            return
-        }
-        
-        guard let name = signUpView?.nameTextField?.text else {
-            self.presentAlertErrorMessage(kAKIErrorMessageEnterYourName, style: .alert)
-            return
-        }
-        
-        if !self.validateStringWithPredicate(email, predicate: NSPredicate(format: kAKIPredicateEmailFormat, kAKIPredicateEmailRegex)) {
-            self.presentAlertErrorMessage(kAKIErrorMessageEmailIncorrect, style: .alert)
-            return
-        }
-        
-        if !self.validateStringWithPredicate(password, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
-                                                                              password.characters.count,
-                                                                              kAKIPredicateMinimalPasswordLength))
-        {
-            self.presentAlertErrorMessage(kAKIErrorMessagePasswordIncorect, style: .alert)
-            return
-        }
-        
-        let model = AKIUser(email, password: password, name: name)
-        self.model = model
-        self.signUpContext()
+    func initSignUpButton() {
+        self.signUpView?.signUpButton?.rx.tap
+            .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                let signUpView = self.signUpView
+                
+                guard let email = signUpView?.emailTextField?.text else {
+                    self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourEmail, style: .alert)
+                    return
+                }
+                
+                guard let password = signUpView?.passwordTextField?.text else {
+                    self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourPassword, style: .alert)
+                    return
+                }
+                
+                guard let name = signUpView?.nameTextField?.text else {
+                    self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourName, style: .alert)
+                    return
+                }
+                
+                if !self.validateStringWithPredicate(email, predicate: NSPredicate(format: self.kAKIPredicateEmailFormat, self.kAKIPredicateEmailRegex)) {
+                    self.presentAlertErrorMessage(self.kAKIErrorMessageEmailIncorrect, style: .alert)
+                    return
+                }
+                
+                if !self.validateStringWithPredicate(password, predicate: NSPredicate(format: self.kAKIPredicatePasswordFormat,
+                                                                                      password.characters.count,
+                                                                                      self.kAKIPredicateMinimalPasswordLength))
+                {
+                    self.presentAlertErrorMessage(self.kAKIErrorMessagePasswordIncorect, style: .alert)
+                    return
+                }
+                
+                let model = AKIUser(email, password: password, name: name)
+                self.model = model
+                self.signUpContext()
+            }).disposed(by: self.disposeBag)
     }
     
     func signUpContext() {

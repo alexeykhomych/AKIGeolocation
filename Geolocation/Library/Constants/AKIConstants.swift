@@ -8,6 +8,8 @@
 
 import UIKit
 
+let kAKIDebounceOneSecond = 1.0
+
 let kAKIAllertTitleOk = "Ok"
 let kAKIAllertTitleError = "Error"
 let kAKIAllertMessage = ""

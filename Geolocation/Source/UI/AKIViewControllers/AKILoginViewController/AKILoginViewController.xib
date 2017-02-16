@@ -45,9 +45,6 @@
                     <state key="normal" title="Login">
                         <color key="titleColor" red="1" green="0.9698557177983318" blue="0.0004047529727226884" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
-                    <connections>
-                        <action selector="loginButton:" destination="-1" eventType="touchUpInside" id="jiw-Pt-xu7"/>
-                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8aq-vk-iiD">
                     <rect key="frame" x="194" y="459" width="165" height="32"/>
@@ -57,9 +54,6 @@
                     <state key="normal" title="SignUp">
                         <color key="titleColor" red="1" green="0.96985571780000002" blue="0.0004047529727" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
-                    <connections>
-                        <action selector="signUpButton:" destination="-1" eventType="touchUpInside" id="fAw-BU-EwB"/>
-                    </connections>
                 </button>
                 <navigationBar contentMode="scaleToFill" id="vdY-qt-JBU">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
