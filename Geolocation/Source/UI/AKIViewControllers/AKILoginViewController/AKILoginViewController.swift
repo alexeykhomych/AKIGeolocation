@@ -8,6 +8,8 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
 
 import FBSDKLoginKit
 
@@ -15,8 +17,6 @@ import Firebase
 import FirebaseAuth
 
 class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
-    
-    let disposeBag = DisposeBag()
     
     var loginView: AKILoginView? {
         return self.getView()
