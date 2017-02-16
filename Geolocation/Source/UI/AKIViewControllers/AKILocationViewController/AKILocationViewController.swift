@@ -21,11 +21,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     let kAKIDistanceFilter:CLLocationDistance = 50
     
     let kAKIGoogleMapsDefaultZoom: Float = 15.0
-    let kAKIGoogmeMapsDefaultLatitude = 0.0
-    let kAKIGoogleMapsDefaultLongitude = 0.0
     
     let locationManager = CLLocationManager()
-    var camera = GMSCameraPosition()
     
     var locationView: AKILocationView? {
         return self.getView()
@@ -33,17 +30,20 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.initLocationManager()
-        
         self.initLeftBarButtonItem()
-        
-        let mapView = self.locationView?.mapView
-        mapView?.isMyLocationEnabled = true
-        mapView?.settings.myLocationButton = true
+        self.initMapView()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func initMapView() {
+        let mapView = self.locationView?.mapView
+        mapView?.isMyLocationEnabled = true
+        mapView?.settings.myLocationButton = true
     }
     
     func initLocationManager() {
@@ -56,7 +56,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
-        }        
+        }
     }
     
     //MARK: CLLocationManagerDelegate

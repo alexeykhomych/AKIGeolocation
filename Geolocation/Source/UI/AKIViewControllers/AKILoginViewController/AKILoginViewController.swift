@@ -8,12 +8,15 @@
 
 import UIKit
 
+
 import FBSDKLoginKit
 
 import Firebase
 import FirebaseAuth
 
 class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
+    
+    let disposeBag = DisposeBag()
     
     var loginView: AKILoginView? {
         return self.getView()
@@ -36,6 +39,19 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
         facebookLoginButton.delegate = self
         facebookLoginButton.readPermissions = [kAKIFacebookPermissionEmail, kAKIFacebookPermissionPublicProfile]
+        
+        let button = self.loginView?.loginButton
+        
+        button?
+            .rx.text
+            .orEmpty
+            .debounce(0.5, scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .filter({ !$0.isEmpty })
+            .subscribe(onNext: { [unowned self] query in // Here we will be notified of every new value
+                self.loginWithFirebase()
+            })
+            .addDisposableTo(disposeBag)
         
         self.view.addSubview(facebookLoginButton)
     }
