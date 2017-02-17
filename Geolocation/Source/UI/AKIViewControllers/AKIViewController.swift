@@ -66,19 +66,6 @@ class AKIViewController: UIViewController, presentErrorMessage, validateStringWi
         self.view.endEditing(true)
     }
     
-    func observeContext(_ context: AKIContext, model: AKIModel) {
-        let observer = context.execute()
-        _ = observer.subscribe(onNext: { _ in
-            
-        },onError: { error in
-            
-        },onCompleted: { result in
-            DispatchQueue.main.async {
-                self.contextDidLoad(context)
-            }
-        },onDisposed: nil)
-    }
-    
     func contextDidLoad(_ context: AKIContext) {
         
     }

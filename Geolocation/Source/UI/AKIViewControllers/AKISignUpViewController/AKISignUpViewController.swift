@@ -79,18 +79,26 @@ class AKISignUpViewController: AKIViewController {
                 
                 let model = AKIUser(email, password: password, name: name)
                 self.model = model
-                self.signUpContext(self.model!)
+                self.observeCurrentPositionContext(AKISignUpContext(self.model!))
             }).disposed(by: self.disposeBag)
     }
     
-    func signUpContext(_ model: AKIModel) {
-        let context = AKISignUpContext()
-        context.model = model
-        self.setObserver(context)
+    override func contextDidLoad(_ context: AKIContext) {
+        self.pushViewController(AKILocationViewController(), model: context.model)
     }
     
-    override func contextDidLoad(_ context: AKIContext, model: AKIModel) {
-        print(kAKISuccessfullySignUp)
-        self.pushViewController(AKILocationViewController(), model: self.model)
+    func observeCurrentPositionContext(_ context: AKISignUpContext) {
+        let observer = context.signUp(model!)
+        _ = observer.subscribe(onNext: { _ in
+            
+        },onError: { error in
+            DispatchQueue.main.async {
+                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }
+        },onCompleted: { result in
+            DispatchQueue.main.async {
+                self.contextDidLoad(context)
+            }
+        },onDisposed: nil)
     }
 }

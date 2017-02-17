@@ -78,7 +78,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         let mapView = self.locationView?.mapView
         mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: kAKIGoogleMapsDefaultZoom))
         
-        self.writeLocationToDB(coordinate, self.model!)
+        self.observeCurrentPositionContext(AKICurrentPositionContext(self.model!, coordinates: coordinate))
     }
     
     //MARK: Observ
@@ -103,11 +103,18 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func writeLocationToDB(_ coordinates: CLLocationCoordinate2D, _ model: AKIModel) {
-        let context = AKICurrentPositionContext()
-        context.coordinates = coordinates
-        context.model = model
-        self.setObserver(context)
+    func observeCurrentPositionContext(_ context: AKICurrentPositionContext) {
+        let observer = context.currentPositionContext(context.model)
+        _ = observer.subscribe(onNext: { _ in
+            
+        },onError: { error in
+            DispatchQueue.main.async {
+                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }
+        },onCompleted: { result in
+            DispatchQueue.main.async {
+                self.contextDidLoad(context)
+            }
+        },onDisposed: nil)
     }
-
 }

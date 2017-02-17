@@ -30,7 +30,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             let user = AKIUser()
             user.id = accessToken?.userID
             self.model = user
-            self.contextDidLoad(self.context)
+            self.contextDidLoad(AKIFacebookLoginContext(user))
         } else {
             self.model = AKIUser()
         }
@@ -70,7 +70,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
                 model?.email = email
                 model?.password = password
                 
-                self?.loginWithFirebase((self?.model!)!)
+                self?.observeFirebaseLoginContext(AKILoginContext(model!))
             }).disposed(by: self.disposeBag)
     }
     
@@ -87,35 +87,47 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             print (error)
             return
         }
-        
-        self.observeContext(AKIFacebookLoginContext(), model: self.model!)
+    
+        self.observeFacebookLoginContext(AKIFacebookLoginContext(self.model!))
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
 
     }
     
-    func loginWithFirebase(_ model: AKIModel) {
-//        let context = AKILoginContext()
-//        context.model = model
-//        self.setObserver(context)
-    }
-    
     //MARK: Observing
-    
     
     override func contextDidLoad(_ context: AKIContext) {
         self.pushViewController(AKILocationViewController(), model: context.model)
     }
     
-    func observeContext(_ context: AKIFacebookLoginContext, model: AKIModel) {
-        let observer = context.loginFacebook(model)
+    func observeFacebookLoginContext(_ context: AKIFacebookLoginContext) {
+        let observer = context.loginFacebook(context.model)
         _ = observer.subscribe(onNext: { _ in
             
         },onError: { error in
-            
+            DispatchQueue.main.async {
+                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }
         },onCompleted: { result in
-            self.pushViewController(AKILocationViewController(), model: model)
+            DispatchQueue.main.async {
+                self.contextDidLoad(context)
+            }
+        },onDisposed: nil)
+    }
+    
+    func observeFirebaseLoginContext(_ context: AKILoginContext) {
+        let observer = context.loginUser(context.model)
+        _ = observer.subscribe(onNext: { _ in
+            
+        },onError: { error in
+            DispatchQueue.main.async {
+                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }
+        },onCompleted: { result in
+            DispatchQueue.main.async {
+                self.contextDidLoad(context)
+            }
         },onDisposed: nil)
     }
 }

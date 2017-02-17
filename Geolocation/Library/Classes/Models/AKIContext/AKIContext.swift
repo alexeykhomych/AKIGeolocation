@@ -2,26 +2,13 @@
 //  AKIContext.swift
 //  Geolocation
 //
-//  Created by Alexey Khomych on 2/2/17.
+//  Created by Alexey Khomych on 2/17/17.
 //  Copyright © 2017 Alexey Khomych. All rights reserved.
 //
 
 import UIKit
 
-class AKIContext {
-    
-    var errorMessage: String?
-    
-    var model: AKIModel? = nil
-    
-    func performExecute() {
-        
-    }
-    
-    func execute() {
-        DispatchQueue.global().async {
-            self.performExecute()
-        }
-    }
-
+protocol AKIContext {
+    var model: AKIModel { get set }
+    init(_ model: AKIModel)
 }

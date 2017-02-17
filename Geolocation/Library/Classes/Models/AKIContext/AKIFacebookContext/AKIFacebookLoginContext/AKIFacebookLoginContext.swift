@@ -18,6 +18,8 @@ import RxCocoa
 
 class AKIFacebookLoginContext: AKIContext {
     
+    var model: AKIModel
+    
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
     }
@@ -34,36 +36,8 @@ class AKIFacebookLoginContext: AKIContext {
         return [kAKIRequestFields : "\(kAKIRequestID), \(kAKIRequestName), \(kAKIRequestEmail)"]
     }
     
-    override func performExecute() {
-        self.signInWithFirebase()
-        self.signInWithFacebook()
-    }
-    
-    func contextCompleted() {
-        AKIViewController.observer?.onCompleted()
-    }
-    
-    func signInWithFirebase() {
-        FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
-            if error != nil {
-                return
-            }
-            
-            let model = self.model as? AKIUser
-            model?.id = user?.uid
-        })
-    }
-    
-    func signInWithFacebook() {
-        FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
-            if error != nil {
-                self.errorMessage = error?.localizedDescription
-                return
-            }
-            
-            self.parseJSON(result!)
-            self.contextCompleted()
-        })
+    required init(_ model: AKIModel) {
+        self.model = model
     }
     
     func parseJSON(_ json: Any) {
@@ -91,7 +65,7 @@ class AKIFacebookLoginContext: AKIContext {
             
             FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
                 if error != nil {
-                    self.errorMessage = error?.localizedDescription
+                    observer.on(.error(error!))
                     return
                 }
                 
@@ -103,17 +77,5 @@ class AKIFacebookLoginContext: AKIContext {
             
             return Disposables.create()
         }
-    }
-    
-    func observerNext(_ observer: AnyObserver<AKIContext>, element: AKIContext) {
-        observer.onNext(element)
-    }
-    
-    func observerError(_ observer: AnyObserver<AKIContext>, error: Error?) {
-        observer.on(.error(error!))
-    }
-    
-    func observerCompleted(_ observer: AnyObserver<AKIContext>) {
-        observer.onCompleted()
     }
 }
