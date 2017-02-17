@@ -83,13 +83,13 @@ class AKISignUpViewController: AKIViewController {
             }).disposed(by: self.disposeBag)
     }
     
-    func signUpContext(_ model: AnyObject) {
+    func signUpContext(_ model: AKIModel) {
         let context = AKISignUpContext()
         context.model = model
         self.setObserver(context)
     }
     
-    override func contextDidLoad() {
+    override func contextDidLoad(_ context: AKIContext, model: AKIModel) {
         print(kAKISuccessfullySignUp)
         self.pushViewController(AKILocationViewController(), model: self.model)
     }

@@ -48,7 +48,7 @@ class AKIViewController: UIViewController, presentErrorMessage, validateStringWi
     let disposeBag = DisposeBag()
     var context: AKIContext?
     
-    var model: AnyObject? = nil
+    var model: AKIModel? = nil
     
     func getView<R>() -> R? {
         return self.viewIfLoaded.flatMap { $0 as? R }
@@ -66,42 +66,35 @@ class AKIViewController: UIViewController, presentErrorMessage, validateStringWi
         self.view.endEditing(true)
     }
     
-    func setObserver(_ context: AKIContext) {
-        AKIViewController.observer = PublishSubject<AKIContext>()
-        AKIViewController.observer?.subscribe(onNext: { context in
-            self.contextWillLoading()
-            context.execute()
-        }, onError: { error in
-            self.presentAlertErrorMessage(context.errorMessage!, style: .alert)
-            self.contextDidFailLoading()
-        }, onCompleted: {
-            DispatchQueue.main.async {
-                self.contextDidLoad()
-            }
-        }, onDisposed: {
+    func observeContext(_ context: AKIContext, model: AKIModel) {
+        let observer = context.execute()
+        _ = observer.subscribe(onNext: { _ in
             
-        }).addDisposableTo(self.disposeBag)
-        
-        AKIViewController.observer?.onNext(context)
+        },onError: { error in
+            
+        },onCompleted: { result in
+            DispatchQueue.main.async {
+                self.contextDidLoad(context)
+            }
+        },onDisposed: nil)
     }
     
-    func contextDidLoad() {
-        
-    }
-    
-    func contextDidFailLoading() {
-        
-    }
-    
-    func contextWillLoading() {
+    func contextDidLoad(_ context: AKIContext) {
         
     }
     
-    func pushViewController(_ viewController: AKIViewController, model: AnyObject?) {
+    func contextDidFailLoading(_ context: AKIContext) {
+        
+    }
+    
+    func contextWillLoading(_ context: AKIContext) {
+        
+    }
+    
+    func pushViewController(_ viewController: AKIViewController, model: AKIModel?) {
         DispatchQueue.main.async {
             viewController.model = model
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
-
 }

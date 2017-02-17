@@ -30,7 +30,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             let user = AKIUser()
             user.id = accessToken?.userID
             self.model = user
-            self.contextDidLoad()
+            self.contextDidLoad(self.context)
         } else {
             self.model = AKIUser()
         }
@@ -88,26 +88,34 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             return
         }
         
-        self.loginWithFacebook(self.model!)
+        self.observeContext(AKIFacebookLoginContext(), model: self.model!)
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-//        print("Did log out of facebook")
+
     }
     
-    func loginWithFirebase(_ model: AnyObject) {
-        let context = AKILoginContext()
-        context.model = model
-        self.setObserver(context)
+    func loginWithFirebase(_ model: AKIModel) {
+//        let context = AKILoginContext()
+//        context.model = model
+//        self.setObserver(context)
     }
     
-    func loginWithFacebook(_ model: AnyObject) {
-        let context = AKIFacebookLoginContext()
-        context.model = model
-        self.setObserver(context)
+    //MARK: Observing
+    
+    
+    override func contextDidLoad(_ context: AKIContext) {
+        self.pushViewController(AKILocationViewController(), model: context.model)
     }
     
-    override func contextDidLoad() {
-        self.pushViewController(AKILocationViewController(), model: self.model)
+    func observeContext(_ context: AKIFacebookLoginContext, model: AKIModel) {
+        let observer = context.loginFacebook(model)
+        _ = observer.subscribe(onNext: { _ in
+            
+        },onError: { error in
+            
+        },onCompleted: { result in
+            self.pushViewController(AKILocationViewController(), model: model)
+        },onDisposed: nil)
     }
 }

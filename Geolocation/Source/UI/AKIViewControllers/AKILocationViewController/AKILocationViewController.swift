@@ -83,7 +83,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     //MARK: Observ
     
-    override func contextDidLoad() {
+    override func contextDidLoad(_ context: AKIContext) {
         print("coordinates saved")
     }
     
@@ -103,7 +103,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func writeLocationToDB(_ coordinates: CLLocationCoordinate2D, _ model: AnyObject) {
+    func writeLocationToDB(_ coordinates: CLLocationCoordinate2D, _ model: AKIModel) {
         let context = AKICurrentPositionContext()
         context.coordinates = coordinates
         context.model = model

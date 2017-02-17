@@ -12,7 +12,7 @@ class AKIContext {
     
     var errorMessage: String?
     
-    var model: AnyObject? = nil
+    var model: AKIModel? = nil
     
     func performExecute() {
         

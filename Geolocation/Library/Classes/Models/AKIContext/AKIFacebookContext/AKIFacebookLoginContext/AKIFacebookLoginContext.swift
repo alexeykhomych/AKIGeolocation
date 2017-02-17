@@ -13,6 +13,9 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKIFacebookLoginContext: AKIContext {
     
     var accessTokenString: String {
@@ -69,5 +72,48 @@ class AKIFacebookLoginContext: AKIContext {
             model?.email = dictionary[kAKIRequestEmail] as? String
             model?.name = dictionary[kAKIRequestName] as? String
         }
+    }
+    
+    //MARK: RxSwift
+    
+    func loginFacebook(_ model: AKIModel) -> Observable<AnyObject> {
+        return Observable.create { observer in
+            let model = model as? AKIUser
+            
+            FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
+                if error != nil {
+                    observer.on(.error(error!))
+                    return
+                }
+                
+                model?.id = user?.uid
+            })
+            
+            FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
+                if error != nil {
+                    self.errorMessage = error?.localizedDescription
+                    return
+                }
+                
+                self.parseJSON(result!)
+            })
+            
+            observer.onNext(model!)
+            observer.onCompleted()
+            
+            return Disposables.create()
+        }
+    }
+    
+    func observerNext(_ observer: AnyObserver<AKIContext>, element: AKIContext) {
+        observer.onNext(element)
+    }
+    
+    func observerError(_ observer: AnyObserver<AKIContext>, error: Error?) {
+        observer.on(.error(error!))
+    }
+    
+    func observerCompleted(_ observer: AnyObserver<AKIContext>) {
+        observer.onCompleted()
     }
 }
