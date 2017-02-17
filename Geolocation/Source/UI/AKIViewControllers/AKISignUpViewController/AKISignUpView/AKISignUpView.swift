@@ -8,18 +8,8 @@
 
 import UIKit
 
-let kAKIPredicateEmailFormat = "SELF MATCHES %@"
-let kAKIPredicatePasswordFormat = "%d >= %d"
-
-let kAKIPredicateEmailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-let kAKIPredicateMinimalPasswordLength = 6
-
-let kAKIErrorMessageEnterYourEmail = "Enter your email"
-let kAKIErrorMessageEnterYourPassword = "Enter your password"
-let kAKIErrorMessageEnterYourName = "Enter your name"
-
-let kAKIErrorMessageEmailIncorrect = "Email is incorrect"
-let kAKIErrorMessagePasswordIncorect = "Password is incorrect"
+import RxCocoa
+import RxSwift
 
 class AKISignUpView: UIView, validateStringWithPredicate {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
@@ -28,38 +18,44 @@ class AKISignUpView: UIView, validateStringWithPredicate {
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     
+    @IBOutlet var signUpButton: UIButton!
     
-    @IBOutlet var signUpButton: UIButton?
+    @IBOutlet var passwordValidLable: UILabel!
+    @IBOutlet var emailValidLable: UILabel!
+    @IBOutlet var nameValidLable: UILabel!
     
-    func validateFields() -> Bool {
-        guard let email = self.emailTextField?.text else {
-//            self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourEmail, style: .alert)
-            return false
-        }
+    let disposeBag = DisposeBag()
+    
+    func validateFields() {
+        let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
+            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicateEmailFormat,
+                                                                            kAKIPredicateEmailRegex))
+        }).shareReplay(1)
         
-        guard let password = self.passwordTextField?.text else {
-//            self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourPassword, style: .alert)
-            return false
-        }
+        let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
+            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
+                                                                          text!.characters.count,
+                                                                          kAKIPredicateMinimalPasswordLength))
+        }).shareReplay(1)
         
-        guard (self.nameTextField?.text) != nil else {
-//            self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourName, style: .alert)
-            return false
-        }
+        let name: Observable<Bool> = self.nameTextField!.rx.text.map({ text -> Bool in
+            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
+                                                                           text!.characters.count,
+                                                                           kAKIPredicateMinimalPasswordLength))
+        }).shareReplay(1)
         
-        if !self.validateStringWithPredicate(email, predicate: NSPredicate(format: kAKIPredicateEmailFormat, kAKIPredicateEmailRegex)) {
-//            self.presentAlertErrorMessage(self.kAKIErrorMessageEmailIncorrect, style: .alert)
-            return false
-        }
+        let everythingValid: Observable<Bool> = Observable.combineLatest(email, password, name) { $0 && $1 && $2 }
         
-        if !self.validateStringWithPredicate(password, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
-                                                                              password.characters.count,
-                                                                              kAKIPredicateMinimalPasswordLength))
-        {
-//            self.presentAlertErrorMessage(self.kAKIErrorMessagePasswordIncorect, style: .alert)
-            return false
-        }
+        email.bindTo(self.emailValidLable.rx.isHidden)
+        .addDisposableTo(self.disposeBag)
         
-        return true
+        password.bindTo(self.passwordValidLable.rx.isHidden)
+            .addDisposableTo(self.disposeBag)
+        
+        name.bindTo(self.nameValidLable.rx.isHidden)
+            .addDisposableTo(self.disposeBag)
+        
+        everythingValid.bindTo(self.signUpButton.rx.isEnabled)
+        .addDisposableTo(self.disposeBag)
     }
 }

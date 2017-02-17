@@ -38,6 +38,8 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.initFacebookLoginButton()
         self.initLoginButton()
         self.initSignupButton()
+        
+        self.loginView?.validateFields()
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,20 +59,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.loginView?.loginButton?.rx.tap
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                let view = self?.loginView
-                let model = self?.model as? AKIUser
-                
-                let email = view?.emailTextField?.text
-                let password = view?.passwordTextField?.text
-                
-                if (email?.isEmpty)! || (password?.isEmpty)! {
-                    return
-                }
-                
-                model?.email = email
-                model?.password = password
-                
-                self?.observeFirebaseLoginContext(AKILoginContext(model!))
+                self?.observeFirebaseLoginContext(AKILoginContext((self?.model!)!))
             }).disposed(by: self.disposeBag)
     }
     

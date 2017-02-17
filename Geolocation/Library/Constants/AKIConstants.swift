@@ -40,6 +40,12 @@ let kAKIFirebaseURL = "https://test-ec520.firebaseio.com/"
 let kAKIDistanceFilter = 50
 let kAKIGoogleMapsDefaultZoom: Float = 15.0
 
+let kAKIPredicateEmailFormat = "SELF MATCHES %@"
+let kAKIPredicatePasswordFormat = "%d >= %d"
+
+let kAKIPredicateEmailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+let kAKIPredicateMinimalPasswordLength = 6
+
 class AKIConstants: NSObject {
 
 }

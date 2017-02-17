@@ -24,6 +24,7 @@ class AKISignUpViewController: AKIViewController {
         super.viewDidLoad()
         
         self.initSignUpButton()
+        self.signUpView?.validateFields()
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,10 +36,6 @@ class AKISignUpViewController: AKIViewController {
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 let signUpView = self.signUpView
-                if !(signUpView?.validateFields())! {
-                    self.presentAlertErrorMessage("Data is not valide", style: .alert)
-                    return
-                }
                 
                 let model = AKIUser((signUpView?.emailTextField?.text)!,
                                     password: (signUpView?.passwordTextField?.text)!,
