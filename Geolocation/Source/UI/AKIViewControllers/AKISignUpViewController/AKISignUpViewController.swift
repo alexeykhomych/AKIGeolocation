@@ -11,6 +11,9 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKISignUpViewController: AKIViewController {
     
     let kAKIPredicateEmailFormat = "SELF MATCHES %@"
@@ -76,13 +79,13 @@ class AKISignUpViewController: AKIViewController {
                 
                 let model = AKIUser(email, password: password, name: name)
                 self.model = model
-                self.signUpContext()
+                self.signUpContext(self.model!)
             }).disposed(by: self.disposeBag)
     }
     
-    func signUpContext() {
+    func signUpContext(_ model: AnyObject) {
         let context = AKISignUpContext()
-        context.model = self.model
+        context.model = model
         self.setObserver(context)
     }
     

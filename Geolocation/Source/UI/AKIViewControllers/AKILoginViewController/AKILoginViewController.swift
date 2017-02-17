@@ -70,7 +70,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
                 model?.email = email
                 model?.password = password
                 
-                self?.loginWithFirebase()
+                self?.loginWithFirebase((self?.model!)!)
             }).disposed(by: self.disposeBag)
     }
     
@@ -88,22 +88,22 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             return
         }
         
-        self.loginWithFacebook()
+        self.loginWithFacebook(self.model!)
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
 //        print("Did log out of facebook")
     }
     
-    func loginWithFirebase() {
+    func loginWithFirebase(_ model: AnyObject) {
         let context = AKILoginContext()
-        context.model = self.model
+        context.model = model
         self.setObserver(context)
     }
     
-    func loginWithFacebook() {
+    func loginWithFacebook(_ model: AnyObject) {
         let context = AKIFacebookLoginContext()
-        context.model = self.model
+        context.model = model
         self.setObserver(context)
     }
     

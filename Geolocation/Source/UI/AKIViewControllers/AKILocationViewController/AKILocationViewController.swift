@@ -15,6 +15,9 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     let kAKILogout = "Logout"
@@ -75,7 +78,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         let mapView = self.locationView?.mapView
         mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: kAKIGoogleMapsDefaultZoom))
         
-        self.writeLocationToDB(coordinate)
+        self.writeLocationToDB(coordinate, self.model!)
     }
     
     //MARK: Observ
@@ -100,10 +103,10 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func writeLocationToDB(_ coordinates: CLLocationCoordinate2D) {
+    func writeLocationToDB(_ coordinates: CLLocationCoordinate2D, _ model: AnyObject) {
         let context = AKICurrentPositionContext()
         context.coordinates = coordinates
-        context.model = self.model
+        context.model = model
         self.setObserver(context)
     }
 
