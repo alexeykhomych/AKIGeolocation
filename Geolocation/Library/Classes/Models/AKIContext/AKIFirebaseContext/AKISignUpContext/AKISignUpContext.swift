@@ -25,7 +25,7 @@ class AKISignUpContext: AKIContext {
     func createUserCompletionHandler(_ observer: AnyObserver<AnyObject>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             if error != nil {
-                observer.onError(error)
+                observer.onError(error!)
             }
             
             let model = self.model as? AKIUser

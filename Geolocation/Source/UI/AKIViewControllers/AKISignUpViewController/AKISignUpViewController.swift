@@ -16,19 +16,6 @@ import RxCocoa
 
 class AKISignUpViewController: AKIViewController {
     
-    let kAKIPredicateEmailFormat = "SELF MATCHES %@"
-    let kAKIPredicatePasswordFormat = "%d >= %d"
-    
-    let kAKIPredicateEmailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-    let kAKIPredicateMinimalPasswordLength = 6
-    
-    let kAKIErrorMessageEnterYourEmail = "Enter your email"
-    let kAKIErrorMessageEnterYourPassword = "Enter your password"
-    let kAKIErrorMessageEnterYourName = "Enter your name"
-    
-    let kAKIErrorMessageEmailIncorrect = "Email is incorrect"
-    let kAKIErrorMessagePasswordIncorect = "Password is incorrect"
-    
     var signUpView: AKISignUpView? {
         return self.getView()
     }
@@ -48,36 +35,15 @@ class AKISignUpViewController: AKIViewController {
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 let signUpView = self.signUpView
-                
-                guard let email = signUpView?.emailTextField?.text else {
-                    self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourEmail, style: .alert)
+                if !(signUpView?.validateFields())! {
+                    self.presentAlertErrorMessage("Data is not valide", style: .alert)
                     return
                 }
                 
-                guard let password = signUpView?.passwordTextField?.text else {
-                    self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourPassword, style: .alert)
-                    return
-                }
+                let model = AKIUser((signUpView?.emailTextField?.text)!,
+                                    password: (signUpView?.passwordTextField?.text)!,
+                                    name: (signUpView?.nameTextField?.text)!)
                 
-                guard let name = signUpView?.nameTextField?.text else {
-                    self.presentAlertErrorMessage(self.kAKIErrorMessageEnterYourName, style: .alert)
-                    return
-                }
-                
-                if !self.validateStringWithPredicate(email, predicate: NSPredicate(format: self.kAKIPredicateEmailFormat, self.kAKIPredicateEmailRegex)) {
-                    self.presentAlertErrorMessage(self.kAKIErrorMessageEmailIncorrect, style: .alert)
-                    return
-                }
-                
-                if !self.validateStringWithPredicate(password, predicate: NSPredicate(format: self.kAKIPredicatePasswordFormat,
-                                                                                      password.characters.count,
-                                                                                      self.kAKIPredicateMinimalPasswordLength))
-                {
-                    self.presentAlertErrorMessage(self.kAKIErrorMessagePasswordIncorect, style: .alert)
-                    return
-                }
-                
-                let model = AKIUser(email, password: password, name: name)
                 self.model = model
                 self.observeCurrentPositionContext(AKISignUpContext(self.model!))
             }).disposed(by: self.disposeBag)

@@ -18,16 +18,16 @@ import RxCocoa
 
 class AKICurrentPositionContext: AKIContext {
     
-    var coordinates: CLLocationCoordinate2D?
+    var locations: [CLLocation]?
     var model: AKIModel
     
     required init(_ model: AKIModel) {
         self.model = model
     }
     
-    init(_ model: AKIModel, coordinates: CLLocationCoordinate2D) {
+    init(_ model: AKIModel, locations: [CLLocation]) {
         self.model = model
-        self.coordinates = coordinates
+        self.locations = locations
     }
    
     func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
@@ -45,10 +45,14 @@ class AKICurrentPositionContext: AKIContext {
             
             let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
             let userReference = reference.child(kAKIRequestCoordinates).child((model?.id!)!)
-            let coordinates = self.coordinates
             
-            let values = [kAKIRequestCoordinatesLatitude: coordinates!.latitude,
-                          kAKIRequestCoordinatesLongitude: coordinates!.longitude] as [String : Any]
+            let location = self.locations?.last
+            
+            let coordinates = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
+                                                     longitude: (location?.coordinate.longitude)!)
+            
+            let values = [kAKIRequestCoordinatesLatitude: coordinates.latitude,
+                          kAKIRequestCoordinatesLongitude: coordinates.longitude] as [String : Any]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
             

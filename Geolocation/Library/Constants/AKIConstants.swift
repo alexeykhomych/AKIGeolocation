@@ -37,6 +37,9 @@ let kAKISuccessfullySignUp = "successfully signed up"
 
 let kAKIFirebaseURL = "https://test-ec520.firebaseio.com/"
 
+let kAKIDistanceFilter = 50
+let kAKIGoogleMapsDefaultZoom: Float = 15.0
+
 class AKIConstants: NSObject {
 
 }

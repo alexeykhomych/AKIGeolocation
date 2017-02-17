@@ -21,9 +21,6 @@ import RxCocoa
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     let kAKILogout = "Logout"
-    let kAKIDistanceFilter:CLLocationDistance = 50
-    
-    let kAKIGoogleMapsDefaultZoom: Float = 15.0
     
     let locationManager = CLLocationManager()
     
@@ -53,7 +50,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         let locationManager = self.locationManager
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
-        locationManager.distanceFilter = kAKIDistanceFilter
+        locationManager.distanceFilter = CLLocationDistance(kAKIDistanceFilter)
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -71,14 +68,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last
-        let coordinate = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
-                                                longitude: (location?.coordinate.longitude)!)
-        
-        let mapView = self.locationView?.mapView
-        mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: kAKIGoogleMapsDefaultZoom))
-        
-        self.observeCurrentPositionContext(AKICurrentPositionContext(self.model!, coordinates: coordinate))
+        self.locationView?.cameraPosition(locations: locations)
+        self.observeCurrentPositionContext(AKICurrentPositionContext(self.model!, locations: locations))
     }
     
     //MARK: Observ
