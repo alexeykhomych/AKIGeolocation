@@ -25,8 +25,8 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" id="tLE-Iu-tAu">
-                    <rect key="frame" x="16" y="394" width="343" height="30"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" id="tLE-Iu-tAu">
+                    <rect key="frame" x="16" y="414" width="343" height="30"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -36,30 +36,6 @@
                     <rect key="frame" x="124" y="617" width="126" height="30"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Login with FB"/>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="drS-4g-MEC">
-                    <rect key="frame" x="16" y="459" width="165" height="32"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.0" green="0.64423688918183686" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                    <state key="normal" title="Login">
-                        <color key="titleColor" red="1" green="0.9698557177983318" blue="0.0004047529727226884" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                    <connections>
-                        <action selector="loginButton:" destination="-1" eventType="touchUpInside" id="jiw-Pt-xu7"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8aq-vk-iiD">
-                    <rect key="frame" x="194" y="459" width="165" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.0" green="0.6442368892" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                    <state key="normal" title="SignUp">
-                        <color key="titleColor" red="1" green="0.96985571780000002" blue="0.0004047529727" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                    <connections>
-                        <action selector="signUpButton:" destination="-1" eventType="touchUpInside" id="fAw-BU-EwB"/>
-                    </connections>
                 </button>
                 <navigationBar contentMode="scaleToFill" id="vdY-qt-JBU">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -72,14 +48,48 @@
                     <rect key="frame" x="0.0" y="44" width="375" height="295"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                 </imageView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Email is incorrect" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9PV-Hn-MHC">
+                    <rect key="frame" x="23" y="385" width="336" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="0.1187502725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Password is incorrect" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="w8V-nV-my9">
+                    <rect key="frame" x="23" y="452" width="336" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="0.1187502725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="drS-4g-MEC">
+                    <rect key="frame" x="16" y="481" width="165" height="32"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.0" green="0.64423688918183686" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <state key="normal" title="Login">
+                        <color key="titleColor" red="1" green="0.9698557177983318" blue="0.0004047529727226884" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8aq-vk-iiD">
+                    <rect key="frame" x="194" y="481" width="165" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.0" green="0.6442368892" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <state key="normal" title="SignUp">
+                        <color key="titleColor" red="1" green="0.96985571780000002" blue="0.0004047529727" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <gestureRecognizers/>
             <connections>
                 <outlet property="emailTextField" destination="ZG7-gc-PkK" id="yTQ-7m-3mX"/>
+                <outlet property="emailValidLable" destination="9PV-Hn-MHC" id="MLX-U3-YVT"/>
                 <outlet property="loginButton" destination="drS-4g-MEC" id="KWY-Ix-qhS"/>
                 <outlet property="loginWithFBButton" destination="mvd-ob-Rbd" id="kzt-pC-x6a"/>
                 <outlet property="passwordTextField" destination="tLE-Iu-tAu" id="me7-ng-4IC"/>
+                <outlet property="passwordValidLable" destination="w8V-nV-my9" id="yI3-uG-hAv"/>
                 <outlet property="signUpButton" destination="8aq-vk-iiD" id="Itc-KQ-8z9"/>
                 <outlet property="tapGestureRecognizer" destination="Fh6-WK-RYK" id="y8t-Xh-ukc"/>
                 <outletCollection property="gestureRecognizers" destination="Fh6-WK-RYK" appends="YES" id="gCA-L0-Va8"/>

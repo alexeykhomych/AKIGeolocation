@@ -11,20 +11,21 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKISignUpContext: AKIContext {
     
-    override func performExecute() {
-        guard let model = self.model as? AKIUser else {
-            return
-        }
-
-        FIRAuth.auth()?.createUser(withEmail: model.email!, password: model.password!, completion: self.createUserCompletionHandler())
-    }
+    var model: AKIModel
     
-    func createUserCompletionHandler() -> (FIRUser?, Error?) -> () {
+    required init(_ model: AKIModel) {
+        self.model = model
+    }
+
+    func createUserCompletionHandler(_ observer: AnyObserver<AnyObject>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             if error != nil {
-//                self.presentAlertErrorMessage((error?.localizedDescription)!, style: .alert)
+                observer.onError(error!)
             }
             
             let model = self.model as? AKIUser
@@ -36,7 +37,7 @@ class AKISignUpContext: AKIContext {
             
             model?.id = user?.uid
             
-            self.contextCompleted()
+            observer.onCompleted()
         }
     }
     
@@ -49,7 +50,12 @@ class AKISignUpContext: AKIContext {
         }
     }
     
-    func contextCompleted() {
-        AKIViewController.observer?.onCompleted()
+    func signUp() -> Observable<AnyObject> {
+        return Observable.create { observer in
+            let model = self.model as! AKIUser
+            FIRAuth.auth()?.createUser(withEmail: model.email!, password: model.password!, completion: self.createUserCompletionHandler(observer))
+            
+            return Disposables.create()
+        }
     }
 }

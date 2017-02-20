@@ -8,6 +8,9 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
+
 import FBSDKLoginKit
 
 import Firebase
@@ -27,11 +30,23 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             let user = AKIUser()
             user.id = accessToken?.userID
             self.model = user
-            self.modelDidLoad()
+            self.contextDidLoad(AKIFacebookLoginContext(user))
         } else {
             self.model = AKIUser()
         }
         
+        self.initFacebookLoginButton()
+        self.initLoginButton()
+        self.initSignupButton()
+        
+        self.loginView?.validateFields()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    func initFacebookLoginButton() {
         let facebookLoginButton = FBSDKLoginButton()
         facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
         facebookLoginButton.delegate = self
@@ -39,18 +54,22 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         
         self.view.addSubview(facebookLoginButton)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    
+    func initLoginButton() {
+        self.loginView?.loginButton?.rx.tap
+            .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                let context = AKILoginContext((self?.model)!)
+                self?.observerContext(context, observer: (self?.firebaseObserver(context))!)
+            }).disposed(by: self.disposeBag)
     }
     
-    @IBAction func loginButton(_ sender: UIButton) {
-        let email = self.loginView?.emailTextField?.text
-        let password = self.loginView?.passwordTextField?.text
-        
-        if self.validateFields(email!, password: password!) {
-            self.loginWithFirebase()
-        }
+    func initSignupButton() {
+        self.loginView?.signUpButton?.rx.tap
+            .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.pushViewController(AKISignUpViewController(), model: self?.model)
+            }).disposed(by: self.disposeBag)
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
@@ -58,35 +77,26 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             print (error)
             return
         }
-        
-        print("Successfully logged in with facebook")
-        self.loginWithFacebook()
-        
+    
+        let context = AKIFacebookLoginContext((self.model)!)
+        self.observerContext(context, observer: (self.facebookObserver(context)))
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        print("Did log out of facebook")
+
     }
     
-    @IBAction func signUpButton(_ sender: UIButton) {
-        self.pushViewController(AKISignUpViewController(), model: self.model)
+    //MARK: Observing
+    
+    override func contextDidLoad(_ context: AKIContext) {
+        self.pushViewController(AKILocationViewController(), model: context.model)
     }
     
-    func loginWithFirebase() {
-        let context = AKILoginContext()
-        context.model = self.model
-        self.setObserver(context)
+    func facebookObserver(_ context: AKIFacebookLoginContext) -> Observable<AnyObject> {
+        return context.loginFacebook()
     }
     
-    func loginWithFacebook() {
-        let context = AKIFacebookLoginContext()
-        context.model = self.model
-        self.setObserver(context)
-    }
-    
-    override func modelDidLoad() {
-        DispatchQueue.main.async {
-            self.pushViewController(AKILocationViewController(), model: self.model)
-        }
+    func firebaseObserver(_ context: AKILoginContext) -> Observable<AnyObject> {
+        return context.loginUser()
     }
 }

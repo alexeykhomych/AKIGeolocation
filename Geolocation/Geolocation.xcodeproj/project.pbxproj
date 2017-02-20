@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		164C9780D044AB12E9912C0C /* Pods_Geolocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 523A570F04911F530045D246 /* Pods_Geolocation.framework */; };
-		C94CF2A51E48966400D467BA /* AKIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2981E48966400D467BA /* AKIContext.swift */; };
 		C94CF2A61E48966400D467BA /* AKIFacebookLoginContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF29B1E48966400D467BA /* AKIFacebookLoginContext.swift */; };
 		C94CF2A71E48966400D467BA /* AKILoginContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF29E1E48966400D467BA /* AKILoginContext.swift */; };
-		C94CF2A81E48966400D467BA /* AKILogOutContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A01E48966400D467BA /* AKILogOutContext.swift */; };
 		C94CF2A91E48966400D467BA /* AKISignUpContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A21E48966400D467BA /* AKISignUpContext.swift */; };
 		C94CF2AA1E48966400D467BA /* AKIUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A41E48966400D467BA /* AKIUser.swift */; };
 		C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2AC1E48C0E200D467BA /* AKICurrentPositionContext.swift */; };
@@ -34,16 +32,16 @@
 		C95263471E4390F50021124E /* AKISignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263451E4390F50021124E /* AKISignUpViewController.swift */; };
 		C95263481E4390F50021124E /* AKISignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C95263461E4390F50021124E /* AKISignUpViewController.xib */; };
 		C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95263491E4392BF0021124E /* AKIViewController.swift */; };
+		C98A4FCB1E5731CA0029FF3A /* AKIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A4FCA1E5731CA0029FF3A /* AKIModel.swift */; };
+		C98A4FCD1E573D2E0029FF3A /* AKIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		523A570F04911F530045D246 /* Pods_Geolocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geolocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.release.xcconfig"; sourceTree = "<group>"; };
-		C94CF2981E48966400D467BA /* AKIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContext.swift; sourceTree = "<group>"; };
 		C94CF29B1E48966400D467BA /* AKIFacebookLoginContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIFacebookLoginContext.swift; sourceTree = "<group>"; };
 		C94CF29E1E48966400D467BA /* AKILoginContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginContext.swift; sourceTree = "<group>"; };
-		C94CF2A01E48966400D467BA /* AKILogOutContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILogOutContext.swift; sourceTree = "<group>"; };
 		C94CF2A21E48966400D467BA /* AKISignUpContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKISignUpContext.swift; sourceTree = "<group>"; };
 		C94CF2A41E48966400D467BA /* AKIUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIUser.swift; sourceTree = "<group>"; };
 		C94CF2AC1E48C0E200D467BA /* AKICurrentPositionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKICurrentPositionContext.swift; sourceTree = "<group>"; };
@@ -68,6 +66,8 @@
 		C95263451E4390F50021124E /* AKISignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKISignUpViewController.swift; sourceTree = "<group>"; };
 		C95263461E4390F50021124E /* AKISignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKISignUpViewController.xib; sourceTree = "<group>"; };
 		C95263491E4392BF0021124E /* AKIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIViewController.swift; sourceTree = "<group>"; };
+		C98A4FCA1E5731CA0029FF3A /* AKIModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIModel.swift; sourceTree = "<group>"; };
+		C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContext.swift; sourceTree = "<group>"; };
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
 		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
@@ -103,6 +103,7 @@
 			children = (
 				C94CF2971E48966400D467BA /* AKIContext */,
 				C94CF2A31E48966400D467BA /* AKIUser */,
+				C98A4FCA1E5731CA0029FF3A /* AKIModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -112,7 +113,7 @@
 			children = (
 				C94CF2991E48966400D467BA /* AKIFacebookContext */,
 				C94CF29C1E48966400D467BA /* AKIFirebaseContext */,
-				C94CF2981E48966400D467BA /* AKIContext.swift */,
+				C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */,
 			);
 			path = AKIContext;
 			sourceTree = "<group>";
@@ -138,7 +139,6 @@
 			children = (
 				C94CF2AB1E48C0CE00D467BA /* AKICurrentPositionContext */,
 				C94CF29D1E48966400D467BA /* AKILoginContext */,
-				C94CF29F1E48966400D467BA /* AKILogOutContext */,
 				C94CF2A11E48966400D467BA /* AKISignUpContext */,
 			);
 			path = AKIFirebaseContext;
@@ -150,14 +150,6 @@
 				C94CF29E1E48966400D467BA /* AKILoginContext.swift */,
 			);
 			path = AKILoginContext;
-			sourceTree = "<group>";
-		};
-		C94CF29F1E48966400D467BA /* AKILogOutContext */ = {
-			isa = PBXGroup;
-			children = (
-				C94CF2A01E48966400D467BA /* AKILogOutContext.swift */,
-			);
-			path = AKILogOutContext;
 			sourceTree = "<group>";
 		};
 		C94CF2A11E48966400D467BA /* AKISignUpContext */ = {
@@ -438,7 +430,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		1C4C0274038A5A575ADF6076 /* [CP] Copy Pods Resources */ = {
@@ -480,17 +472,17 @@
 			files = (
 				C95263151E43594C0021124E /* AKILoginViewController.swift in Sources */,
 				C94CF2A91E48966400D467BA /* AKISignUpContext.swift in Sources */,
-				C94CF2A51E48966400D467BA /* AKIContext.swift in Sources */,
 				C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */,
 				C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */,
 				C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */,
+				C98A4FCD1E573D2E0029FF3A /* AKIContext.swift in Sources */,
 				C94CF2A61E48966400D467BA /* AKIFacebookLoginContext.swift in Sources */,
 				C95263471E4390F50021124E /* AKISignUpViewController.swift in Sources */,
 				C94CF2AA1E48966400D467BA /* AKIUser.swift in Sources */,
 				C94CF2A71E48966400D467BA /* AKILoginContext.swift in Sources */,
-				C94CF2A81E48966400D467BA /* AKILogOutContext.swift in Sources */,
 				C95263191E4359640021124E /* AKILoginView.swift in Sources */,
 				C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */,
+				C98A4FCB1E5731CA0029FF3A /* AKIModel.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
 				C95263441E4390E60021124E /* AKISignUpView.swift in Sources */,
 				C95263231E4365580021124E /* AKILocationView.swift in Sources */,
@@ -627,6 +619,69 @@
 				INFOPLIST_FILE = Geolocation/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"icucore\"",
+					"-l\"sqlite3\"",
+					"-l\"z\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"CFNetwork\"",
+					"-framework",
+					"\"CoreData\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"FirebaseAnalytics\"",
+					"-framework",
+					"\"FirebaseAuth\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseDatabase\"",
+					"-framework",
+					"\"FirebaseInstanceID\"",
+					"-framework",
+					"\"GLKit\"",
+					"-framework",
+					"\"GTMSessionFetcher\"",
+					"-framework",
+					"\"GoogleMaps\"",
+					"-framework",
+					"\"GoogleMapsBase\"",
+					"-framework",
+					"\"GoogleMapsCore\"",
+					"-framework",
+					"\"GoogleToolboxForMac\"",
+					"-framework",
+					"\"IQKeyboardManagerSwift\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"OpenGLES\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = AKI.Geolocation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -649,6 +704,69 @@
 				INFOPLIST_FILE = Geolocation/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"icucore\"",
+					"-l\"sqlite3\"",
+					"-l\"z\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"CFNetwork\"",
+					"-framework",
+					"\"CoreData\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"FirebaseAnalytics\"",
+					"-framework",
+					"\"FirebaseAuth\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseDatabase\"",
+					"-framework",
+					"\"FirebaseInstanceID\"",
+					"-framework",
+					"\"GLKit\"",
+					"-framework",
+					"\"GTMSessionFetcher\"",
+					"-framework",
+					"\"GoogleMaps\"",
+					"-framework",
+					"\"GoogleMapsBase\"",
+					"-framework",
+					"\"GoogleMapsCore\"",
+					"-framework",
+					"\"GoogleToolboxForMac\"",
+					"-framework",
+					"\"IQKeyboardManagerSwift\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"OpenGLES\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = AKI.Geolocation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;

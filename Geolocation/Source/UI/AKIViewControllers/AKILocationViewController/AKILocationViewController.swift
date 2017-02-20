@@ -15,17 +15,15 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
-    let kAKILogout = "Logout"
-    let kAKIDistanceFilter:CLLocationDistance = 50
-    
-    let kAKIGoogleMapsDefaultZoom: Float = 15.0
-    let kAKIGoogmeMapsDefaultLatitude = 0.0
-    let kAKIGoogleMapsDefaultLongitude = 0.0
+    var isMoving: Bool = false
     
     let locationManager = CLLocationManager()
-    var camera = GMSCameraPosition()
+    let isRunning = Variable(true)
     
     var locationView: AKILocationView? {
         return self.getView()
@@ -33,30 +31,62 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.initContext()
         self.initLocationManager()
-        
         self.initLeftBarButtonItem()
-        
-        let mapView = self.locationView?.mapView
-        mapView?.isMyLocationEnabled = true
-        mapView?.settings.myLocationButton = true
+        self.initMapView()
+        self.initTimer()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    func initContext() {
+        self.context = AKICurrentPositionContext(self.model!)
+    }
+    
+    func initMapView() {
+        let mapView = self.locationView?.mapView
+        mapView?.isMyLocationEnabled = true
+        mapView?.settings.myLocationButton = true
+    }
+    
     func initLocationManager() {
         let locationManager = self.locationManager
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
-        locationManager.distanceFilter = kAKIDistanceFilter
+        locationManager.distanceFilter = CLLocationDistance(kAKIDistanceFilter)
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
-        }        
+        }
+    }
+    
+    func initTimer() {
+        self.isRunning.asObservable()
+            .flatMapLatest {  isRunning in
+                isRunning ? Observable<Int>.interval(RxTimeInterval(kAKITimerInterval), scheduler: MainScheduler.instance) : .empty()
+            }
+            .flatMapWithIndex { (int, index) in Observable.just(index) }
+            .subscribe(onNext: { result in
+                if self.isMoving {
+                    return
+                }
+                
+                let locationManager = self.locationManager
+                let locations = CLLocation(latitude: (locationManager.location?.coordinate.latitude)!,
+                                           longitude: (locationManager.location?.coordinate.longitude)!)
+                self.writeLocationToDB(locations: [locations])
+            }, onError: { error in
+            
+            }, onCompleted: { result in
+                
+            }, onDisposed: nil)
+            .addDisposableTo(self.disposeBag)
     }
     
     //MARK: CLLocationManagerDelegate
@@ -68,31 +98,40 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last
-        let coordinate = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
-                                                longitude: (location?.coordinate.longitude)!)
+        var isMoving = self.isMoving
+        isMoving = true
         
-        let mapView = self.locationView?.mapView
-        mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: kAKIGoogleMapsDefaultZoom))
+        self.locationView?.cameraPosition(locations: locations)
+        self.writeLocationToDB(locations: locations)
         
-        self.writeLocationToDB(coordinate)
+        isMoving = false
+    }
+    
+    func writeLocationToDB(locations: [CLLocation]) {
+        let context = self.context as! AKICurrentPositionContext
+        context.locations = locations
+        self.observerContext(context, observer: self.locationObserver(context))
     }
     
     //MARK: Observ
     
-    override func modelDidLoad() {
-        DispatchQueue.main.async {
-            print("coordinates saved")
-        }
+    override func contextDidLoad(_ context: AKIContext) {
+        print("coordinates saved")
     }
     
     private func initLeftBarButtonItem() {
-        let logoutButton = UIBarButtonItem.init(title: kAKILogout,
+        let logoutButton = UIBarButtonItem.init(title: kAKILogoutButtonText,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(logout))
         
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
+        self.navigationItem.leftBarButtonItem!.rx.tap
+            .subscribe(onNext: { [unowned self] in
+                self.isRunning.value = !self.isRunning.value
+                self.logout()
+            })
+            .addDisposableTo(self.disposeBag)
     }
     
     func logout() {
@@ -102,11 +141,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func writeLocationToDB(_ coordinates: CLLocationCoordinate2D) {
-        let context = AKICurrentPositionContext()
-        context.coordinates = coordinates
-        context.model = self.model
-        self.setObserver(context)
+    func locationObserver(_ context: AKICurrentPositionContext) -> Observable<AnyObject> {
+        return context.currentPositionContext()
     }
-
 }

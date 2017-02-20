@@ -8,7 +8,10 @@
 
 import UIKit
 
-class AKIUser: NSObject {
+import RxCocoa
+import RxSwift
+
+class AKIUser: AKIModel {
     
     var email: String?
     var password: String?

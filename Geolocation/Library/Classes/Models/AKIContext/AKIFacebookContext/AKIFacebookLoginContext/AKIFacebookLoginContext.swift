@@ -13,7 +13,12 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
+import RxSwift
+import RxCocoa
+
 class AKIFacebookLoginContext: AKIContext {
+    
+    var model: AKIModel
     
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
@@ -31,36 +36,8 @@ class AKIFacebookLoginContext: AKIContext {
         return [kAKIRequestFields : "\(kAKIRequestID), \(kAKIRequestName), \(kAKIRequestEmail)"]
     }
     
-    override func performExecute() {
-        self.signInWithFirebase()
-        self.signInWithFacebook()
-    }
-    
-    func contextCompleted() {
-        AKIViewController.observer?.onCompleted()
-    }
-    
-    func signInWithFirebase() {
-        FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
-            if error != nil {
-                return
-            }
-            
-            let model = self.model as? AKIUser
-            model?.id = user?.uid
-        })
-    }
-    
-    func signInWithFacebook() {
-        FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
-            if error != nil {
-                self.errorMessage = error?.localizedDescription
-                return
-            }
-            
-            self.parseJSON(result!)
-            self.contextCompleted()
-        })
+    required init(_ model: AKIModel) {
+        self.model = model
     }
     
     func parseJSON(_ json: Any) {
@@ -68,6 +45,36 @@ class AKIFacebookLoginContext: AKIContext {
             let model = self.model as? AKIUser
             model?.email = dictionary[kAKIRequestEmail] as? String
             model?.name = dictionary[kAKIRequestName] as? String
+        }
+    }
+    
+    //MARK: RxSwift
+    
+    func loginFacebook() -> Observable<AnyObject> {
+        return Observable.create { observer in
+            let model = self.model as? AKIUser
+            
+            FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
+                if error != nil {
+                    observer.on(.error(error!))
+                    return
+                }
+                
+                model?.id = user?.uid
+            })
+            
+            FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
+                if error != nil {
+                    observer.on(.error(error!))
+                    return
+                }
+                
+                self.parseJSON(result!)
+            })
+            
+            observer.onCompleted()
+            
+            return Disposables.create()
         }
     }
 }
