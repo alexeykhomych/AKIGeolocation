@@ -32,6 +32,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.initContext()
         self.initLocationManager()
         self.initLeftBarButtonItem()
         self.initMapView()
@@ -40,6 +41,10 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func initContext() {
+        self.context = AKICurrentPositionContext(self.model!)
     }
     
     func initMapView() {
@@ -62,13 +67,13 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func initTimer() {
-        isRunning.asObservable()
+        self.isRunning.asObservable()
             .flatMapLatest {  isRunning in
                 isRunning ? Observable<Int>.interval(RxTimeInterval(kAKITimerInterval), scheduler: MainScheduler.instance) : .empty()
             }
             .flatMapWithIndex { (int, index) in Observable.just(index) }
             .subscribe(onNext: { result in
-                if !self.isMoving {
+                if self.isMoving {
                     return
                 }
                 
@@ -103,7 +108,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func writeLocationToDB(locations: [CLLocation]) {
-        let context = AKICurrentPositionContext(self.model!, locations: locations)
+        let context = self.context as! AKICurrentPositionContext
+        context.locations = locations
         self.observerContext(context, observer: self.locationObserver(context))
     }
     

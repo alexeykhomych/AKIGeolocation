@@ -39,8 +39,9 @@ class AKICurrentPositionContext: AKIContext {
         }
     }
     
-    func currentPositionContext() -> Observable<AnyObject> {
-        return Observable.create { observer in
+    func currentPositionContext() -> PublishSubject<AnyObject> {
+        let observer = PublishSubject<AnyObject>()
+        _ = observer.subscribe({ observer in
             let model = self.model as? AKIUser
             
             let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
@@ -56,10 +57,10 @@ class AKICurrentPositionContext: AKIContext {
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
             
-            observer.onNext(model!)
-            observer.onCompleted()
-            
-            return Disposables.create()
-        }
+        })
+        
+        observer.onCompleted()
+        
+        return observer
     }
 }
