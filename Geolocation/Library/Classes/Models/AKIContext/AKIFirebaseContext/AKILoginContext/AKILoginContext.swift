@@ -22,7 +22,7 @@ class AKILoginContext: AKIContext {
         self.model = model
     }
     
-    func loginUser(_ model: AKIModel) -> Observable<AnyObject> {
+    func loginUser() -> Observable<AnyObject> {
         return Observable.create { observer in
             let model = self.model as! AKIUser
             FIRAuth.auth()?.signIn(withEmail: model.email!, password: model.password!, completion: { (user, error) in

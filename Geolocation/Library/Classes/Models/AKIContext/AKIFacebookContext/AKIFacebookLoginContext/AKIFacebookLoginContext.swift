@@ -50,9 +50,9 @@ class AKIFacebookLoginContext: AKIContext {
     
     //MARK: RxSwift
     
-    func loginFacebook(_ model: AKIModel) -> Observable<AnyObject> {
+    func loginFacebook() -> Observable<AnyObject> {
         return Observable.create { observer in
-            let model = model as? AKIUser
+            let model = self.model as? AKIUser
             
             FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
                 if error != nil {
@@ -72,7 +72,6 @@ class AKIFacebookLoginContext: AKIContext {
                 self.parseJSON(result!)
             })
             
-            observer.onNext(model!)
             observer.onCompleted()
             
             return Disposables.create()

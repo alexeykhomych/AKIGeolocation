@@ -37,7 +37,7 @@ extension validateStringWithPredicate {
     }
 }
 
-@objc protocol validateString {
+protocol validateString {
     func validateString(_ string: String)
 }
 
@@ -64,6 +64,20 @@ class AKIViewController: UIViewController, presentErrorMessage, validateStringWi
     
     @IBAction func tapGestureRecognizer(sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
+    }
+    
+    func observerContext(_ context: AKIContext, observer: Observable<AnyObject>) {
+        _ = observer.subscribe(onNext: { _ in
+            
+        },onError: { error in
+            DispatchQueue.main.async {
+                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }
+        },onCompleted: { result in
+            DispatchQueue.main.async {
+                self.contextDidLoad(context)
+            }
+        },onDisposed: nil)
     }
     
     func contextDidLoad(_ context: AKIContext) {

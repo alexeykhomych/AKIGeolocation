@@ -59,7 +59,8 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.loginView?.loginButton?.rx.tap
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.observeFirebaseLoginContext(AKILoginContext((self?.model!)!))
+                let context = AKILoginContext((self?.model)!)
+                self?.observerContext(context, observer: (self?.firebaseObserver(context))!)
             }).disposed(by: self.disposeBag)
     }
     
@@ -77,7 +78,8 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             return
         }
     
-        self.observeFacebookLoginContext(AKIFacebookLoginContext(self.model!))
+        let context = AKIFacebookLoginContext((self.model)!)
+        self.observerContext(context, observer: (self.facebookObserver(context)))
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
@@ -90,33 +92,11 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.pushViewController(AKILocationViewController(), model: context.model)
     }
     
-    func observeFacebookLoginContext(_ context: AKIFacebookLoginContext) {
-        let observer = context.loginFacebook(context.model)
-        _ = observer.subscribe(onNext: { _ in
-            
-        },onError: { error in
-            DispatchQueue.main.async {
-                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }
-        },onCompleted: { result in
-            DispatchQueue.main.async {
-                self.contextDidLoad(context)
-            }
-        },onDisposed: nil)
+    func facebookObserver(_ context: AKIFacebookLoginContext) -> Observable<AnyObject> {
+        return context.loginFacebook()
     }
     
-    func observeFirebaseLoginContext(_ context: AKILoginContext) {
-        let observer = context.loginUser(context.model)
-        _ = observer.subscribe(onNext: { _ in
-            
-        },onError: { error in
-            DispatchQueue.main.async {
-                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }
-        },onCompleted: { result in
-            DispatchQueue.main.async {
-                self.contextDidLoad(context)
-            }
-        },onDisposed: nil)
+    func firebaseObserver(_ context: AKILoginContext) -> Observable<AnyObject> {
+        return context.loginUser()
     }
 }

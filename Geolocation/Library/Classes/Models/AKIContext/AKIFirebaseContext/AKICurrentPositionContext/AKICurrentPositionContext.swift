@@ -39,7 +39,7 @@ class AKICurrentPositionContext: AKIContext {
         }
     }
     
-    func currentPositionContext(_ model: AKIModel) -> Observable<AnyObject> {
+    func currentPositionContext() -> Observable<AnyObject> {
         return Observable.create { observer in
             let model = self.model as? AKIUser
             

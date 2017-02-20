@@ -50,7 +50,7 @@ class AKISignUpContext: AKIContext {
         }
     }
     
-    func signUp(_ model: AKIModel) -> Observable<AnyObject> {
+    func signUp() -> Observable<AnyObject> {
         return Observable.create { observer in
             let model = self.model as! AKIUser
             FIRAuth.auth()?.createUser(withEmail: model.email!, password: model.password!, completion: self.createUserCompletionHandler(observer))

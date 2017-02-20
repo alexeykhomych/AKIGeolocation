@@ -40,9 +40,9 @@ class AKISignUpViewController: AKIViewController {
                 let model = AKIUser((signUpView?.emailTextField?.text)!,
                                     password: (signUpView?.passwordTextField?.text)!,
                                     name: (signUpView?.nameTextField?.text)!)
-                
-                self.model = model
-                self.observeCurrentPositionContext(AKISignUpContext(self.model!))
+    
+                let context = AKISignUpContext(model)
+                self.observerContext(context, observer: self.signUpObserver(context))
             }).disposed(by: self.disposeBag)
     }
     
@@ -50,18 +50,7 @@ class AKISignUpViewController: AKIViewController {
         self.pushViewController(AKILocationViewController(), model: context.model)
     }
     
-    func observeCurrentPositionContext(_ context: AKISignUpContext) {
-        let observer = context.signUp(model!)
-        _ = observer.subscribe(onNext: { _ in
-            
-        },onError: { error in
-            DispatchQueue.main.async {
-                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }
-        },onCompleted: { result in
-            DispatchQueue.main.async {
-                self.contextDidLoad(context)
-            }
-        },onDisposed: nil)
+    func signUpObserver(_ context: AKISignUpContext) -> Observable<AnyObject> {
+        return context.signUp()
     }
 }

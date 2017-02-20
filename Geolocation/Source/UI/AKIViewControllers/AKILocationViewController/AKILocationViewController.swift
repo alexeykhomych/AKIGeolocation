@@ -69,7 +69,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.locationView?.cameraPosition(locations: locations)
-        self.observeCurrentPositionContext(AKICurrentPositionContext(self.model!, locations: locations))
+        let context = AKICurrentPositionContext(self.model!, locations: locations)
+        self.observerContext(context, observer: self.locationObserver(context))
     }
     
     //MARK: Observ
@@ -94,18 +95,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func observeCurrentPositionContext(_ context: AKICurrentPositionContext) {
-        let observer = context.currentPositionContext(context.model)
-        _ = observer.subscribe(onNext: { _ in
-            
-        },onError: { error in
-            DispatchQueue.main.async {
-                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }
-        },onCompleted: { result in
-            DispatchQueue.main.async {
-                self.contextDidLoad(context)
-            }
-        },onDisposed: nil)
+    func locationObserver(_ context: AKICurrentPositionContext) -> Observable<AnyObject> {
+        return context.currentPositionContext()
     }
 }
