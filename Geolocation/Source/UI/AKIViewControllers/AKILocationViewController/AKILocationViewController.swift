@@ -20,9 +20,10 @@ import RxCocoa
 
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
-    let kAKILogout = "Logout"
+    var isMoving: Bool = false
     
     let locationManager = CLLocationManager()
+    let isRunning = Variable(true)
     
     var locationView: AKILocationView? {
         return self.getView()
@@ -34,6 +35,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         self.initLocationManager()
         self.initLeftBarButtonItem()
         self.initMapView()
+        self.initTimer()
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,6 +61,29 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         }
     }
     
+    func initTimer() {
+        isRunning.asObservable()
+            .flatMapLatest {  isRunning in
+                isRunning ? Observable<Int>.interval(RxTimeInterval(kAKITimerInterval), scheduler: MainScheduler.instance) : .empty()
+            }
+            .flatMapWithIndex { (int, index) in Observable.just(index) }
+            .subscribe(onNext: { result in
+                if !self.isMoving {
+                    return
+                }
+                
+                let locationManager = self.locationManager
+                let locations = CLLocation(latitude: (locationManager.location?.coordinate.latitude)!,
+                                           longitude: (locationManager.location?.coordinate.longitude)!)
+                self.writeLocationToDB(locations: [locations])
+            }, onError: { error in
+            
+            }, onCompleted: { result in
+                
+            }, onDisposed: nil)
+            .addDisposableTo(self.disposeBag)
+    }
+    
     //MARK: CLLocationManagerDelegate
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -68,7 +93,16 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        var isMoving = self.isMoving
+        isMoving = true
+        
         self.locationView?.cameraPosition(locations: locations)
+        self.writeLocationToDB(locations: locations)
+        
+        isMoving = false
+    }
+    
+    func writeLocationToDB(locations: [CLLocation]) {
         let context = AKICurrentPositionContext(self.model!, locations: locations)
         self.observerContext(context, observer: self.locationObserver(context))
     }
@@ -80,12 +114,18 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     private func initLeftBarButtonItem() {
-        let logoutButton = UIBarButtonItem.init(title: kAKILogout,
+        let logoutButton = UIBarButtonItem.init(title: kAKILogoutButtonText,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(logout))
         
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
+        self.navigationItem.leftBarButtonItem!.rx.tap
+            .subscribe(onNext: { [unowned self] in
+                self.isRunning.value = !self.isRunning.value
+                self.logout()
+            })
+            .addDisposableTo(self.disposeBag)
     }
     
     func logout() {
