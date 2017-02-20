@@ -27,23 +27,7 @@ protocol presentErrorMessage {
     func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle)
 }
 
-protocol validateStringWithPredicate {
-    func validateStringWithPredicate(_ string: String, predicate: NSPredicate) -> Bool
-}
-
-extension validateStringWithPredicate {
-    func validateStringWithPredicate(_ string: String, predicate: NSPredicate) -> Bool {
-        return predicate.evaluate(with: string)
-    }
-}
-
-protocol validateString {
-    func validateString(_ string: String)
-}
-
-class AKIViewController: UIViewController, presentErrorMessage, validateStringWithPredicate {
-    
-    static var observer: PublishSubject<AKIContext>?
+class AKIViewController: UIViewController, presentErrorMessage, AKIValidateStringWithPredicate {
     
     let disposeBag = DisposeBag()
     var context: AKIContext?

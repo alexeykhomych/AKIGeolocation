@@ -16,6 +16,10 @@ import RxCocoa
 
 class AKISignUpContext: AKIContext {
     
+    func userSignUp() {
+        	
+    }
+    
     var model: AKIModel
     
     required init(_ model: AKIModel) {

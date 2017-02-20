@@ -46,6 +46,8 @@ let kAKIPredicatePasswordFormat = "%d >= %d"
 let kAKIPredicateEmailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
 let kAKIPredicateMinimalPasswordLength = 6
 
+let kAKIPredicateNameRegex = "\\A\\w{5,18}\\z"
+
 let kAKITimerInterval = 60
 
 let kAKILogoutButtonText = "Logout"

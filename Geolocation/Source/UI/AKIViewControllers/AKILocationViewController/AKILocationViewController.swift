@@ -108,9 +108,9 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func writeLocationToDB(locations: [CLLocation]) {
-        let context = self.context as! AKICurrentPositionContext
-        context.locations = locations
-        self.observerContext(context, observer: self.locationObserver(context))
+        let context = self.context as? AKICurrentPositionContext
+        context?.locations = locations
+        self.observerContext(context!, observer: self.locationObserver(context!))
     }
     
     //MARK: Observ

@@ -11,7 +11,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class AKILoginView: UIView, validateStringWithPredicate {
+class AKILoginView: UIView, AKIValidateStringWithPredicate {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
     @IBOutlet var emailTextField: UITextField?
@@ -28,12 +28,12 @@ class AKILoginView: UIView, validateStringWithPredicate {
     
     func validateFields() {
         let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicateEmailFormat,
+            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicateEmailFormat,
                                                                            kAKIPredicateEmailRegex))
         }).shareReplay(1)
         
         let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
+            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
                                                                            text!.characters.count,
                                                                            kAKIPredicateMinimalPasswordLength))
         }).shareReplay(1)
