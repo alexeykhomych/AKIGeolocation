@@ -63,7 +63,7 @@ class AKIFacebookLoginContext: AKIContext {
                 model?.id = user?.uid
             })
             
-            FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
+            FBSDKGraphRequest(graphPath: kAKIRequestFacebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
                 if error != nil {
                     observer.on(.error(error!))
                     return

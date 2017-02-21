@@ -72,20 +72,16 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
                 isRunning ? Observable<Int>.interval(RxTimeInterval(kAKITimerInterval), scheduler: MainScheduler.instance) : .empty()
             }
             .flatMapWithIndex { (int, index) in Observable.just(index) }
-            .subscribe(onNext: { result in
-                if self.isMoving {
+            .subscribe(onNext: { [weak self] _ in
+                if (self?.isMoving)! {
                     return
                 }
                 
-                let locationManager = self.locationManager
-                let locations = CLLocation(latitude: (locationManager.location?.coordinate.latitude)!,
-                                           longitude: (locationManager.location?.coordinate.longitude)!)
-                self.writeLocationToDB(locations: [locations])
-            }, onError: { error in
-            
-            }, onCompleted: { result in
-                
-            }, onDisposed: nil)
+                let locationManager = self?.locationManager
+                let locations = CLLocation(latitude: (locationManager?.location?.coordinate.latitude)!,
+                                           longitude: (locationManager?.location?.coordinate.longitude)!)
+                self?.writeLocationToDB(locations: [locations])
+            })
             .addDisposableTo(self.disposeBag)
     }
     
@@ -127,9 +123,9 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
         self.navigationItem.leftBarButtonItem!.rx.tap
-            .subscribe(onNext: { [unowned self] in
-                self.isRunning.value = !self.isRunning.value
-                self.logout()
+            .subscribe(onNext: { [weak self] in
+                self?.isRunning.value = !(self?.isRunning.value)!
+                self?.logout()
             })
             .addDisposableTo(self.disposeBag)
     }

@@ -34,16 +34,17 @@ class AKISignUpViewController: AKIViewController {
     func initSignUpButton() {
         self.signUpView?.signUpButton?.rx.tap
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { _ in
-                let signUpView = self.signUpView
+            .subscribe(onNext: { [weak self] in
+                let signUpView = self?.signUpView
                 
                 let model = AKIUser((signUpView?.emailTextField?.text)!,
                                     password: (signUpView?.passwordTextField?.text)!,
                                     name: (signUpView?.nameTextField?.text)!)
     
                 let context = AKISignUpContext(model)
-                self.observerContext(context, observer: self.signUpObserver(context))
-            }).disposed(by: self.disposeBag)
+                self?.observerContext(context, observer: (self?.signUpObserver(context))!)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     override func contextDidLoad(_ context: AKIContext) {

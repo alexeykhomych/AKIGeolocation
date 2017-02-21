@@ -39,6 +39,7 @@
 		C97EC6561E5B33AD00882F4C /* AKINameValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EC6551E5B33AD00882F4C /* AKINameValidation.swift */; };
 		C98A4FCB1E5731CA0029FF3A /* AKIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A4FCA1E5731CA0029FF3A /* AKIModel.swift */; };
 		C98A4FCD1E573D2E0029FF3A /* AKIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */; };
+		C98B628F1E5C73A800578770 /* AKILoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B628E1E5C73A800578770 /* AKILoginViewModel.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,7 @@
 		C97EC6551E5B33AD00882F4C /* AKINameValidation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKINameValidation.swift; sourceTree = "<group>"; };
 		C98A4FCA1E5731CA0029FF3A /* AKIModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIModel.swift; sourceTree = "<group>"; };
 		C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContext.swift; sourceTree = "<group>"; };
+		C98B628E1E5C73A800578770 /* AKILoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginViewModel.swift; sourceTree = "<group>"; };
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
 		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
@@ -123,9 +125,9 @@
 		C94CF2971E48966400D467BA /* AKIContext */ = {
 			isa = PBXGroup;
 			children = (
+				C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */,
 				C94CF2991E48966400D467BA /* AKIFacebookContext */,
 				C94CF29C1E48966400D467BA /* AKIFirebaseContext */,
-				C98A4FCC1E573D2E0029FF3A /* AKIContext.swift */,
 			);
 			path = AKIContext;
 			sourceTree = "<group>";
@@ -234,6 +236,7 @@
 		C952630F1E4358F90021124E /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C98B628C1E5C737500578770 /* Models */,
 				C95263101E4359080021124E /* UI */,
 			);
 			path = Source;
@@ -372,6 +375,22 @@
 				C97EC6551E5B33AD00882F4C /* AKINameValidation.swift */,
 			);
 			path = AKINameValidation;
+			sourceTree = "<group>";
+		};
+		C98B628C1E5C737500578770 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C98B628D1E5C739000578770 /* AKILoginViewModel */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C98B628D1E5C739000578770 /* AKILoginViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C98B628E1E5C73A800578770 /* AKILoginViewModel.swift */,
+			);
+			path = AKILoginViewModel;
 			sourceTree = "<group>";
 		};
 		C994D58B1E4481A30096C8AA /* Constants */ = {
@@ -533,6 +552,7 @@
 				C97EC6501E5B2E5100882F4C /* AKIPasswordValidation.swift in Sources */,
 				C97EC6561E5B33AD00882F4C /* AKINameValidation.swift in Sources */,
 				C98A4FCD1E573D2E0029FF3A /* AKIContext.swift in Sources */,
+				C98B628F1E5C73A800578770 /* AKILoginViewModel.swift in Sources */,
 				C97EC6531E5B2E6C00882F4C /* AKIEmailValidation.swift in Sources */,
 				C94CF2A61E48966400D467BA /* AKIFacebookLoginContext.swift in Sources */,
 				C95263471E4390F50021124E /* AKISignUpViewController.swift in Sources */,

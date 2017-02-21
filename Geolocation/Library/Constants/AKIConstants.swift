@@ -21,7 +21,7 @@ let kAKIGoogleAPIKey = "AIzaSyDhCTlo2o_D_SDwFUWdtf8C1t_2i-ksHdA"
 let kAKIFacebookPermissionEmail = "email"
 let kAKIFacebookPermissionPublicProfile = "public_profile"
 
-let kAKIFacebookRequestMe = "/me"
+let kAKIRequestFacebookMe = "/me"
 let kAKIRequestFields = "fields"
 let kAKIRequestID = "id"
 let kAKIRequestName = "name"
@@ -52,6 +52,6 @@ let kAKITimerInterval = 60
 
 let kAKILogoutButtonText = "Logout"
 
-class AKIConstants: NSObject {
+class AKIConstants {
 
 }

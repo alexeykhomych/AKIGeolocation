@@ -14,8 +14,8 @@ import RxSwift
 class AKILoginView: UIView, AKIValidateStringWithPredicate {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
-    @IBOutlet var emailTextField: UITextField?
-    @IBOutlet var passwordTextField: UITextField?
+    @IBOutlet var emailTextField: UITextField!
+    @IBOutlet var passwordTextField: UITextField!
     
     @IBOutlet var loginButton: UIButton!
     @IBOutlet var loginWithFBButton: UIButton?
