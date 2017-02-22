@@ -16,9 +16,18 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKIFacebookLoginContext: AKIContext {
+protocol ContextProtocol: class {
     
-    var model: AKIModel
+    init(_ model: AnyObject)
+    
+    func execute() -> Observable<AnyObject>
+    func parseJSON(_ json: Any)
+    
+}
+
+class AKIFacebookLoginContext {
+    
+    private var model: AKIModel
     
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
@@ -40,14 +49,6 @@ class AKIFacebookLoginContext: AKIContext {
         self.model = model
     }
     
-    func parseJSON(_ json: Any) {
-        if let dictionary = json as? NSDictionary {
-            let model = self.model as? AKIUser
-            model?.email = dictionary[Context.Request.email] as? String
-            model?.name = dictionary[Context.Request.name] as? String
-        }
-    }
-    
     //MARK: RxSwift
     
     func loginFacebook() -> Observable<AnyObject> {
@@ -61,16 +62,8 @@ class AKIFacebookLoginContext: AKIContext {
                 }
                 
                 model?.id = user?.uid
-            })
-            
-            FBSDKGraphRequest(graphPath: Context.Request.facebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
-                if error != nil {
-                    observer.on(.error(error!))
-                    return
-                }
-                
-                self.parseJSON(result!)
-            })
+                model?.email = user?.email
+            })            
             
             observer.onCompleted()
             

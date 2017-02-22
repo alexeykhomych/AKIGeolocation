@@ -21,6 +21,7 @@ import RxCocoa
 class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     
     var isMoving: Bool = false
+    let disposeBag = DisposeBag()
     
     let locationManager = CLLocationManager()
     let isRunning = Variable(true)
@@ -46,7 +47,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func initContext() {
-        self.context = AKICurrentPositionContext(self.model!)
+//        self.context = AKICurrentPositionContext(self.model!)
     }
     
     func initMapView() {
@@ -107,8 +108,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     }
     
     func writeLocationToDB(locations: [CLLocation]) {
-        let context = self.context as? AKICurrentPositionContext
-        context?.locations = locations
+//        let context = self.context as? AKICurrentPositionContext
+//        context?.locations = locations
         
     }
     

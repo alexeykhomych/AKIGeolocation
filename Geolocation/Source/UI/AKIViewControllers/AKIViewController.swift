@@ -29,9 +29,6 @@ protocol presentErrorMessage {
 
 class AKIViewController: UIViewController, presentErrorMessage {
     
-    let disposeBag = DisposeBag()
-    var context: AKIContext?
-    
     var model: AKIModel? = nil
     
     func getView<R>() -> R? {

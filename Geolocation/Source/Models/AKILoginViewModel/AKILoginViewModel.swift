@@ -37,4 +37,22 @@ class AKILoginViewModel {
         
         self.loginContext = loginContext
     }
+    
+//    func validateFields() -> Bool {
+//        return self.nameValidation(self.name) &&
+//            self.emailValidation(self.email) &&
+//            self.passwordValidation(self.password)
+//    }
+    
+    private func nameValidation(_ name: String) -> Bool {
+        return name.nameValidation()
+    }
+    
+    private func passwordValidation(_ password: String) -> Bool {
+        return password.passwordValidation()
+    }
+    
+    private func emailValidation(_ email: String) -> Bool {
+        return email.emailValidation()
+    }
 }
