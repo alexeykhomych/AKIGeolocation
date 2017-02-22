@@ -44,16 +44,16 @@ class AKICurrentPositionContext: AKIContext {
         _ = observer.subscribe({ observer in
             let model = self.model as? AKIUser
             
-            let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
-            let userReference = reference.child(kAKIRequestCoordinates).child((model?.id!)!)
+            let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
+            let userReference = reference.child(Context.Request.coordinates).child((model?.id!)!)
             
             let location = self.locations?.last
             
             let coordinates = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
                                                      longitude: (location?.coordinate.longitude)!)
             
-            let values = [kAKIRequestCoordinatesLatitude: coordinates.latitude,
-                          kAKIRequestCoordinatesLongitude: coordinates.longitude] as [String : Any]
+            let values = [Context.Request.latitude: coordinates.latitude,
+                          Context.Request.longitude: coordinates.longitude] as [String : Any]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
             

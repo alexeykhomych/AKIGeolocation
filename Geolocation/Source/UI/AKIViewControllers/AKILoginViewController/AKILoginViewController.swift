@@ -18,6 +18,8 @@ import FirebaseAuth
 
 class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     
+    let kAKILogoutButtonText = "Logout"
+    
     private var loginViewModel: AKILoginViewModel?
     
     var loginView: AKILoginView? {
@@ -32,7 +34,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
             let user = AKIUser()
             user.id = accessToken?.userID
             self.model = user
-            self.contextDidLoad(AKIFacebookLoginContext(user))
+            
         } else {
             self.model = AKIUser()
         }
@@ -51,14 +53,14 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         let facebookLoginButton = FBSDKLoginButton()
         facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
         facebookLoginButton.delegate = self
-        facebookLoginButton.readPermissions = [kAKIFacebookPermissionEmail, kAKIFacebookPermissionPublicProfile]
+        facebookLoginButton.readPermissions = [Context.Permission.email, Context.Permission.publicProfile]
         
         self.view.addSubview(facebookLoginButton)
     }
     
     func initLoginButton() {
         self.loginView?.loginButton?.rx.tap
-            .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 
             })
@@ -67,7 +69,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     
     func initSignupButton() {
         self.loginView?.signUpButton?.rx.tap
-            .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
 //                self?.pushViewController(AKISignUpViewController(), model: self?.model)
             })

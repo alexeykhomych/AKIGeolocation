@@ -19,10 +19,10 @@ class AKIUser: AKIModel {
     var id: String?
     
     override init() {
-        self.email = kAKIEmptyString
-        self.password = kAKIEmptyString
-        self.name = kAKIEmptyString
-        self.id = kAKIEmptyString
+        self.email = ""
+        self.password = ""
+        self.name = ""
+        self.id = ""
     }
     
     init(_ email: String, password: String, name: String) {

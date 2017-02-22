@@ -16,8 +16,8 @@ import RxCocoa
 
 extension presentErrorMessage where Self: UIViewController {
     func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle) {
-        let alertController = UIAlertController(title: kAKIAllertTitleError, message: message, preferredStyle: style)
-        let defaultAction = UIAlertAction(title: kAKIAllertTitleOk, style: .cancel, handler: nil)
+        let alertController = UIAlertController(title: UI.AllertMessage.titleError, message: message, preferredStyle: style)
+        let defaultAction = UIAlertAction(title: UI.AllertMessage.titleOk, style: .cancel, handler: nil)
         alertController.addAction(defaultAction)
         self.present(alertController, animated: true, completion: nil)
     }
@@ -27,7 +27,7 @@ protocol presentErrorMessage {
     func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle)
 }
 
-class AKIViewController: UIViewController, presentErrorMessage, AKIValidateStringWithPredicate {
+class AKIViewController: UIViewController, presentErrorMessage {
     
     let disposeBag = DisposeBag()
     var context: AKIContext?
@@ -48,32 +48,6 @@ class AKIViewController: UIViewController, presentErrorMessage, AKIValidateStrin
     
     @IBAction func tapGestureRecognizer(sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
-    }
-    
-    func observerContext(_ context: AKIContext, observer: Observable<AnyObject>) {
-        _ = observer.subscribe(onNext: { _ in
-            
-        },onError: { error in
-            DispatchQueue.main.async {
-                self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }
-        },onCompleted: { result in
-            DispatchQueue.main.async {
-                self.contextDidLoad(context)
-            }
-        },onDisposed: nil)
-    }
-    
-    func contextDidLoad(_ context: AKIContext) {
-        
-    }
-    
-    func contextDidFailLoading(_ context: AKIContext) {
-        
-    }
-    
-    func contextWillLoading(_ context: AKIContext) {
-        
     }
     
     func pushViewController(_ viewController: AKIViewController, model: AKIModel?) {

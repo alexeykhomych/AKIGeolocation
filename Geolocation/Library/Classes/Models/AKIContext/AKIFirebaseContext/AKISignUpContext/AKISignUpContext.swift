@@ -34,9 +34,9 @@ class AKISignUpContext: AKIContext {
             
             let model = self.model as? AKIUser
             
-            let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
-            let userReference = reference.child(kAKIRequestUsers).child(kAKIRequestUsers)
-            let values = [kAKIRequestName: model?.name, kAKIRequestEmail: model?.email, kAKIRequestPassword: model?.password]
+            let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
+            let userReference = reference.child(Context.Request.users).child(Context.Request.users)
+            let values = [Context.Request.name: model?.name, Context.Request.email: model?.email, Context.Request.password: model?.password]
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
             
             model?.id = user?.uid

@@ -25,6 +25,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     let isRunning = Variable(true)
     
+    let logoutButtonText = "Log out"
+    
     var locationView: AKILocationView? {
         return self.getView()
     }
@@ -57,7 +59,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         let locationManager = self.locationManager
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
-        locationManager.distanceFilter = CLLocationDistance(kAKIDistanceFilter)
+        locationManager.distanceFilter = CLLocationDistance(Google.Maps.Default.distanceFilter)
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -69,7 +71,8 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     func initTimer() {
         self.isRunning.asObservable()
             .flatMapLatest {  isRunning in
-                isRunning ? Observable<Int>.interval(RxTimeInterval(kAKITimerInterval), scheduler: MainScheduler.instance) : .empty()
+                isRunning ? Observable<Int>.interval(RxTimeInterval(Timer.Default.timerInterval),
+                                                     scheduler: MainScheduler.instance) : .empty()
             }
             .flatMapWithIndex { (int, index) in Observable.just(index) }
             .subscribe(onNext: { [weak self] _ in
@@ -106,17 +109,13 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
     func writeLocationToDB(locations: [CLLocation]) {
         let context = self.context as? AKICurrentPositionContext
         context?.locations = locations
-        self.observerContext(context!, observer: self.locationObserver(context!))
+        
     }
     
     //MARK: Observ
     
-    override func contextDidLoad(_ context: AKIContext) {
-        print("coordinates saved")
-    }
-    
     private func initLeftBarButtonItem() {
-        let logoutButton = UIBarButtonItem.init(title: kAKILogoutButtonText,
+        let logoutButton = UIBarButtonItem.init(title: self.logoutButtonText,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(logout))

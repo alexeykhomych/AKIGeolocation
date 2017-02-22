@@ -34,7 +34,7 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         
-        GMSServices.provideAPIKey(kAKIGoogleAPIKey)
+        GMSServices.provideAPIKey(Google.API.key)
         
         IQKeyboardManager.sharedManager().enable = true
         

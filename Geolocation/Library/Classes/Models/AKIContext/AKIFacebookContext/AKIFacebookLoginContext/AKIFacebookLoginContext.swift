@@ -33,7 +33,7 @@ class AKIFacebookLoginContext: AKIContext {
     }
     
     var parameters: [AnyHashable: Any] {
-        return [kAKIRequestFields : "\(kAKIRequestID), \(kAKIRequestName), \(kAKIRequestEmail)"]
+        return [Context.Request.fields : "\(Context.Request.id), \(Context.Request.name), \(Context.Request.email)"]
     }
     
     required init(_ model: AKIModel) {
@@ -43,8 +43,8 @@ class AKIFacebookLoginContext: AKIContext {
     func parseJSON(_ json: Any) {
         if let dictionary = json as? NSDictionary {
             let model = self.model as? AKIUser
-            model?.email = dictionary[kAKIRequestEmail] as? String
-            model?.name = dictionary[kAKIRequestName] as? String
+            model?.email = dictionary[Context.Request.email] as? String
+            model?.name = dictionary[Context.Request.name] as? String
         }
     }
     
@@ -63,7 +63,7 @@ class AKIFacebookLoginContext: AKIContext {
                 model?.id = user?.uid
             })
             
-            FBSDKGraphRequest(graphPath: kAKIRequestFacebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
+            FBSDKGraphRequest(graphPath: Context.Request.facebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
                 if error != nil {
                     observer.on(.error(error!))
                     return

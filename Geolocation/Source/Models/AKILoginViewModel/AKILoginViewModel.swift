@@ -17,10 +17,10 @@ class AKILoginViewModel {
     
     private let user: Observable<AKIUser>
     
-    let name: Observable<String>
-    let password: Observable<String>
-    let email: Observable<String>
-    let id: Observable<String>
+    let name:       Observable<String>
+    let password:   Observable<String>
+    let email:      Observable<String>
+    let id:         Observable<String>
     
     init(_ loginContext: AKILoginContext) {
         

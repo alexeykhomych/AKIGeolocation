@@ -11,7 +11,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class AKILoginView: UIView, AKIValidateStringWithPredicate {
+class AKILoginView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
     @IBOutlet var emailTextField: UITextField!

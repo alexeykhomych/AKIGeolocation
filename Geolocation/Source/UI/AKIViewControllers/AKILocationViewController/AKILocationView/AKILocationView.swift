@@ -18,6 +18,6 @@ class AKILocationView: UIView {
         let coordinate = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
                                                 longitude: (location?.coordinate.longitude)!)
         
-        self.mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: kAKIGoogleMapsDefaultZoom))
+        self.mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: Google.Maps.Default.zoom))
     }
 }
