@@ -26,27 +26,17 @@ class AKILoginView: UIView, AKIValidateStringWithPredicate {
     
     let disposeBag = DisposeBag()
     
-    func validateFields() {
-        let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
-            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicateEmailFormat,
-                                                                           kAKIPredicateEmailRegex))
-        }).shareReplay(1)
-        
-        let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
-            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
-                                                                           text!.characters.count,
-                                                                           kAKIPredicateMinimalPasswordLength))
-        }).shareReplay(1)
-        
-        let everythingValid: Observable<Bool> = Observable.combineLatest(email, password) { $0 && $1 }
-        
-        email.bindTo(self.emailValidLable.rx.isHidden)
+    func addBindsToViewModel(_ loginViewModel: AKILoginViewModel) {
+        loginViewModel.email
+            .asObservable()
+            .map({ text -> String? in
+                return Optional(text)
+            })
+            .bindTo(self.emailTextField.rx.text)
             .addDisposableTo(self.disposeBag)
         
-        password.bindTo(self.passwordValidLable.rx.isHidden)
-            .addDisposableTo(self.disposeBag)
-        
-        everythingValid.bindTo(self.loginButton.rx.isEnabled)
+        loginViewModel.password
+            .bindTo(self.passwordTextField.rx.text)
             .addDisposableTo(self.disposeBag)
     }
 }

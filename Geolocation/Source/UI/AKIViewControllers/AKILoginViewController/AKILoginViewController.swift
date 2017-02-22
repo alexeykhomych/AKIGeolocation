@@ -23,22 +23,6 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     var loginView: AKILoginView? {
         return self.getView()
     }
-    
-    private func addBindsToViewModel(_ loginViewModel: AKILoginViewModel) {
-        let loginView:AKILoginView = self.loginView!
-        
-        loginViewModel.email
-            .asObservable()
-            .map({ text -> String? in
-                return Optional(text)
-            })
-            .bindTo(loginView.emailTextField.rx.text)
-            .addDisposableTo(self.disposeBag)
-        
-        loginViewModel.password
-            .bindTo(loginView.passwordTextField.rx.text)
-            .addDisposableTo(self.disposeBag)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +40,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.initFacebookLoginButton()
         self.initLoginButton()
         self.initSignupButton()
-        self.observForViewModel()
+        self.loginView?.addBindsToViewModel(self.loginViewModel!)
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,12 +60,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.loginView?.loginButton?.rx.tap
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                //провести валидацию
                 
-                //забиндить поля с вьюмодела
-                let loginViewModel = AKILoginViewModel(AKILoginContext((self?.model!)!))
-                self?.loginViewModel = loginViewModel
-                self?.addBindsToViewModel(loginViewModel)
             })
             .disposed(by: self.disposeBag)
     }
@@ -90,7 +69,7 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
         self.loginView?.signUpButton?.rx.tap
             .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.pushViewController(AKISignUpViewController(), model: self?.model)
+//                self?.pushViewController(AKISignUpViewController(), model: self?.model)
             })
             .disposed(by: self.disposeBag)
     }
@@ -107,17 +86,4 @@ class AKILoginViewController: AKIViewController, FBSDKLoginButtonDelegate {
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
 
     }
-    
-    func observForViewModel() {
-        let loginViewModel = self.loginViewModel
-        //необходимо подписаться на изменения ViewModel
-        let temp = loginViewModel?.id.asObservable()
-            .debounce(0.3, scheduler: MainScheduler.instance)
-            .shareReplay(1)
-        
-        _ = temp?.subscribe(onNext: { _ in
-            self.pushViewController(AKILocationViewController(), model: self.model)
-        })
-    }
-
 }
