@@ -11,21 +11,41 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class AKIUser: AKIModel {
+extension AKIUserProtocol {
+    
+    mutating func initWithEmptyFields() {
+        self.email = ""
+        self.password = ""
+        self.name = ""
+        self.id = ""
+    }
+}
+
+protocol AKIUserProtocol {
+    
+    var email: String? { get set }
+    var password: String? { get set }
+    var name: String? { get set }
+    var id: String? { get set }
+    
+    init(email: String, password: String, name: String)
+}
+
+class AKIUser: AKIModelProtocol, AKIUserProtocol {
     
     var email: String?
     var password: String?
     var name: String?
     var id: String?
     
-    override init() {
+    init() {
         self.email = ""
         self.password = ""
         self.name = ""
         self.id = ""
     }
     
-    init(_ email: String, password: String, name: String) {
+    required init(email: String, password: String, name: String) {
         self.email = email
         self.password = password
         self.name = name

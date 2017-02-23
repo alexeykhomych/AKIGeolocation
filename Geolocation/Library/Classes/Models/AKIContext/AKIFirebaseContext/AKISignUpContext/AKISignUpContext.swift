@@ -22,7 +22,7 @@ class AKISignUpContext: AKIContextProtocol{
         self.model = model
     }
     
-    internal func execute() -> Observable<AnyObject> {
+    internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             let model = self.model
             FIRAuth.auth()?.createUser(withEmail: model.email!,
@@ -33,7 +33,7 @@ class AKISignUpContext: AKIContextProtocol{
         }
     }
     
-    func userCompletionHandler(_ observer: AnyObserver<AnyObject>) -> (FIRUser?, Error?) -> () {
+    func userCompletionHandler(_ observer: AnyObserver<AKIUser>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             if error != nil {
                 observer.onError(error!)

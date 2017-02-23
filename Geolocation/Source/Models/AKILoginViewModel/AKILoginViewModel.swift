@@ -11,9 +11,26 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+//protocol loginWithFacebook {
+//    var loginFacebookContext: AKIFacebookLoginContext? { get set }
+//}
+//
+//extension AKILoginViewModel: loginWithFacebook {
+//    internal var loginFacebookContext: AKIFacebookLoginContext? {
+//        get {
+//            return self.loginFacebookContext
+//        }
+//        set(newContext) {
+//            AKIFacebookLoginContext(self.model!)
+//        }
+//    }
+//}
+
 class AKILoginViewModel {
     private let loginContext: AKILoginContext
     private let disposeBag = DisposeBag()
+    
+    var model: AKIUser?
     
     private let user: Observable<AKIUser>
     
@@ -22,9 +39,10 @@ class AKILoginViewModel {
     let email:      Observable<String>
     let id:         Observable<String>
     
-    init(_ loginContext: AKILoginContext) {
-        
-        let user = loginContext.loginUser().asObservable()
+    init(_ model: AKIUser) {
+        self.model = model
+        let loginContext = AKILoginContext(model)
+        let user = loginContext.execute().asObservable()
             .debounce(0.3, scheduler: MainScheduler.instance)
             .shareReplay(1)
         

@@ -25,5 +25,5 @@ protocol AKIContextProtocol: class {
     
     init(_ model: AKIUser)
     
-    func execute() -> Observable<AnyObject>
+    func execute() -> Observable<AKIUser>
 }

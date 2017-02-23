@@ -40,9 +40,8 @@ class AKIFacebookLoginContext: AKIContextProtocol {
         self.model = model
     }
     
-    internal func execute() -> Observable<AnyObject> {
+    internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            let model = self.model
             
             FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
                 if error != nil {

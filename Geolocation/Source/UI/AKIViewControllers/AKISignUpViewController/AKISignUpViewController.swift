@@ -14,11 +14,14 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKISignUpViewController: AKIViewController {
+class AKISignUpViewController: UIViewController {
+    
+    var model: AKIUser?
     
     var signUpView: AKISignUpView? {
         return self.getView()
     }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +48,7 @@ class AKISignUpViewController: AKIViewController {
 //            .disposed(by: self.disposeBag)
     }
     
-    func signUpObserver(_ context: AKISignUpContext) -> Observable<AnyObject> {
-        return context.signUp()
+    func signUpObserver(_ context: AKISignUpContext) -> Observable<AKIUser> {
+        return context.execute()
     }
 }

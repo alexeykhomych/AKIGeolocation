@@ -96,11 +96,7 @@
             </connections>
             <point key="canvasLocation" x="26.5" y="52.5"/>
         </view>
-        <tapGestureRecognizer id="Fh6-WK-RYK">
-            <connections>
-                <action selector="tapGestureRecognizerWithSender:" destination="-1" id="fQy-Zn-DrA"/>
-            </connections>
-        </tapGestureRecognizer>
+        <tapGestureRecognizer id="Fh6-WK-RYK"/>
     </objects>
     <resources>
         <image name="geolocation" width="150" height="150"/>

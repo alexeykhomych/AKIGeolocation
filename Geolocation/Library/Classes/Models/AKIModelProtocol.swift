@@ -1,5 +1,5 @@
 //
-//  AKIModel.swift
+//  AKIModelProtocol.swift
 //  Geolocation
 //
 //  Created by Alexey Khomych on 2/17/17.
@@ -8,6 +8,6 @@
 
 import UIKit
 
-class AKIModel {
-
+protocol AKIModelProtocol {
+    
 }

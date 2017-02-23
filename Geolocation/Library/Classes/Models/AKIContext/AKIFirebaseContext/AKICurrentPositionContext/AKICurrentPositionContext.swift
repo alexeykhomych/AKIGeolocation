@@ -40,8 +40,8 @@ class AKICurrentPositionContext: AKIContextProtocol {
         }
     }
     
-    internal func execute() -> Observable<AnyObject> {
-        let observer = PublishSubject<AnyObject>()
+    internal func execute() -> Observable<AKIUser> {
+        let observer = PublishSubject<AKIUser>()
         _ = observer.subscribe({ observer in
             let model = self.model
             

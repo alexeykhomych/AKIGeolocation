@@ -18,7 +18,9 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
+class AKILocationViewController: UIViewController, AKIViewController, CLLocationManagerDelegate {
+    
+    var model: AKIUser?
     
     var isMoving: Bool = false
     let disposeBag = DisposeBag()
@@ -137,7 +139,7 @@ class AKILocationViewController: AKIViewController, CLLocationManagerDelegate {
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func locationObserver(_ context: AKICurrentPositionContext) -> Observable<AnyObject> {
-        return context.currentPositionContext()
+    func locationObserver(_ context: AKICurrentPositionContext) -> Observable<AKIUser> {
+        return context.execute()
     }
 }

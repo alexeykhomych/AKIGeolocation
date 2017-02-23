@@ -22,7 +22,7 @@ class AKILoginContext: AKIContextProtocol {
         self.model = model
     }
     
-    internal func execute() -> Observable<AnyObject> {
+    internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             let model = self.model
             FIRAuth.auth()?.signIn(withEmail: model.email!, password: model.password!, completion: { (user, error) in
