@@ -27,7 +27,18 @@ protocol presentErrorMessage {
     func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle)
 }
 
-class AKIViewController: UIViewController, presentErrorMessage {
+extension Tappable where Self: UIViewController {
+    func tapGestureRecognizer(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
+}
+
+protocol Tappable {
+    
+    func didTap()
+}
+
+class AKIViewController: UIViewController, presentErrorMessage, Tappable {
     
     var model: AKIModel? = nil
     
@@ -41,6 +52,10 @@ class AKIViewController: UIViewController, presentErrorMessage {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    internal func didTap() {
+        self.view.endEditing(true)
     }
     
     @IBAction func tapGestureRecognizer(sender: UITapGestureRecognizer) {

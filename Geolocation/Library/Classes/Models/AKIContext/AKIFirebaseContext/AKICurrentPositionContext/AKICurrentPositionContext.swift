@@ -16,20 +16,21 @@ import GoogleMaps
 import RxSwift
 import RxCocoa
 
-class AKICurrentPositionContext: AKIContext {
+class AKICurrentPositionContext: AKIContextProtocol {
     
-    var locations: [CLLocation]?
-    var model: AKIModel
+    private var locations: [CLLocation]?
     
-    required init(_ model: AKIModel) {
+    var model: AKIUser
+    
+    required init(_ model: AKIUser) {
         self.model = model
     }
     
-    init(_ model: AKIModel, locations: [CLLocation]) {
+    init(_ model: AKIUser, locations: [CLLocation]) {
         self.model = model
         self.locations = locations
     }
-   
+    
     func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
         return { (error, reference) in
             if error != nil {
@@ -39,13 +40,13 @@ class AKICurrentPositionContext: AKIContext {
         }
     }
     
-    func currentPositionContext() -> PublishSubject<AnyObject> {
+    internal func execute() -> Observable<AnyObject> {
         let observer = PublishSubject<AnyObject>()
         _ = observer.subscribe({ observer in
-            let model = self.model as? AKIUser
+            let model = self.model
             
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child((model?.id!)!)
+            let userReference = reference.child(Context.Request.coordinates).child(model.id!)
             
             let location = self.locations?.last
             
@@ -56,7 +57,6 @@ class AKICurrentPositionContext: AKIContext {
                           Context.Request.longitude: coordinates.longitude] as [String : Any]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
-            
         })
         
         observer.onCompleted()

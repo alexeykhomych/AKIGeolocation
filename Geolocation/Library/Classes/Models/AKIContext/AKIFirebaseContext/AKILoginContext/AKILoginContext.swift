@@ -14,17 +14,17 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-class AKILoginContext: AKIContext {
+class AKILoginContext: AKIContextProtocol {
     
-    var model: AKIModel
+    var model: AKIUser
     
-    required init(_ model: AKIModel) {
+    required init(_ model: AKIUser) {
         self.model = model
     }
     
-    func loginUser() -> Observable<AKIUser> {
+    internal func execute() -> Observable<AnyObject> {
         return Observable.create { observer in
-            let model = self.model as! AKIUser
+            let model = self.model
             FIRAuth.auth()?.signIn(withEmail: model.email!, password: model.password!, completion: { (user, error) in
                 if error != nil {
                     observer.on(.error(error!))
