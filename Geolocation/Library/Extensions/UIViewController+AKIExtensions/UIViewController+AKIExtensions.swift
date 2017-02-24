@@ -9,12 +9,10 @@
 import UIKit
 
 extension UIViewController {
-    
-    typealias AKIModel = AnyObject
 
-    func pushViewController(_ viewController: UIViewController, model: AKIModel) {
+    func pushViewController(_ viewController: UIViewController, viewModel: AKIViewModel) {
         DispatchQueue.main.async {
-//            viewController.model = model
+//            viewController.viewModel = viewModel
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }

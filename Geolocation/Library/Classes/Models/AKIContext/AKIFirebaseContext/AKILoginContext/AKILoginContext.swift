@@ -18,8 +18,8 @@ class AKILoginContext: AKIContextProtocol {
     
     var model: AKIUser?
     
-    required init(_ model: AKIUser) {
-        self.model = model
+    required init(_ viewModel: AKIViewModel) {
+        self.model = viewModel.model
     }
     
     internal func execute() -> Observable<AKIUser> {
