@@ -43,16 +43,16 @@ extension AKILoginViewController: AKIFacebookLogin {
         let accessToken = FBSDKAccessToken.current()
 
         if accessToken != nil {
-            let model = AKIUser()
-            model.id = accessToken?.userID
-            self.model = model
+//            let model = AKIUser()
+//            model.id = accessToken?.userID
+//            self.model = model
         }
     }
 }
 
 class AKILoginViewController: UIViewController {
 
-    var model: AKIUser?
+    var viewModel: AKIViewModel?
     
     let kAKILogoutButtonText = "Logout"
     let disposeBag = DisposeBag()
@@ -64,62 +64,69 @@ class AKILoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //1
         self.initModel()
         
-        self.initFacebookLoginButton()
+        //2
+        
+        self.loginView?.addBindsToViewModel(self.viewModel!)
+        
+//        self.initFacebookLoginButton()
         self.initLoginButton()
         self.initSignupButton()
         
-        self.loginWithAccessToken()
+//        self.loginWithAccessToken()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func initModel() {
-        let user = AKIUser()
-        let accessToken = FBSDKAccessToken.current()
-        
-        if accessToken != nil {
-            user.id = accessToken?.userID
-            model = user
-            
-        }
-        
-        self.model = user
+    private func initModel() {
+        self.viewModel = AKIViewModel(AKIUser())
     }
     
-    func initLoginButton() {
+    private func initLoginButton() {
         self.loginView?.loginButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.doSomething()
+                let context = AKILoginContext((self?.viewModel)!)
+                self?.doSomething(context)
             })
             .disposed(by: self.disposeBag)
     }
     
-    func initSignupButton() {
+    private func initSignupButton() {
         self.loginView?.signUpButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.pushViewController(AKISignUpViewController(), model: (self?.model)!)
+                self?.pushViewController(AKISignUpViewController(), viewModel: (self?.viewModel)!)
             })
             .disposed(by: self.disposeBag)
     }
     
-    func doSomething() {
-        let model = AKIUser(email: (self.loginView?.emailTextField.text)!,
-                            password: (self.loginView?.passwordTextField.text)!,
-                            name: "")
-        self.model = model
+    private func doSomething(_ context: AKILoginContext) {
+        let id = context.execute().asObservable().shareReplay(1)
+        id.subscribe( onCompleted: { result in
+            self.pushViewController(AKILocationViewController(), viewModel: self.viewModel!)
+        }).disposed(by: self.disposeBag)
         
-        let viewModel = AKIViewModel(model)
-        
-        let id = viewModel.id?.asObservable()
-        id?.subscribe( onCompleted: { result in
-            self.pushViewController(AKILocationViewController(), model: model)
+        id.subscribe(onError: { error in
+            print(error.localizedDescription)
         }).disposed(by: self.disposeBag)
     }
     
 }
+
+/*
+ 1) создаю вьюмодел с пустой моделью юзера
+ 2) привязываю поля вьюмодела к полям ui
+ 3) заполняя поля в ui вьюмодел их валидирует
+ 4) если валидация тру то включить кнопку логина
+ 
+ 5) при нажатии на логин передаю вьюмодел в контекст
+ 6) контекст заполняет модель
+ 7) контекст сообщает контроллеру о завершении
+ 8) контроллер открывает следующий контроллер
+ 
+*/
