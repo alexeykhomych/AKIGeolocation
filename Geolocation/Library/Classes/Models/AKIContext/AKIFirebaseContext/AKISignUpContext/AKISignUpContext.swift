@@ -16,7 +16,7 @@ import RxCocoa
 
 class AKISignUpContext: AKIContextProtocol{
     
-    var model: AKIUser
+    var model: AKIUser?
     
     required init(_ model: AKIUser) {
         self.model = model
@@ -25,8 +25,8 @@ class AKISignUpContext: AKIContextProtocol{
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             let model = self.model
-            FIRAuth.auth()?.createUser(withEmail: model.email!,
-                                       password: model.password!,
+            FIRAuth.auth()?.createUser(withEmail: (model?.email!)!,
+                                       password: (model?.password!)!,
                                        completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
@@ -44,13 +44,13 @@ class AKISignUpContext: AKIContextProtocol{
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
             let userReference = reference.child(Context.Request.users).child(Context.Request.users)
             
-            let values = [Context.Request.name: model.name,
-                          Context.Request.email: model.email,
-                          Context.Request.password: model.password]
+            let values = [Context.Request.name: model?.name,
+                          Context.Request.email: model?.email,
+                          Context.Request.password: model?.password]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
             
-            model.id = user?.uid
+            model?.id = user?.uid
             
             observer.onCompleted()
         }

@@ -20,7 +20,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
     
     private var locations: [CLLocation]?
     
-    var model: AKIUser
+    var model: AKIUser?
     
     required init(_ model: AKIUser) {
         self.model = model
@@ -46,7 +46,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
             let model = self.model
             
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child(model.id!)
+            let userReference = reference.child(Context.Request.coordinates).child((model?.id!)!)
             
             let location = self.locations?.last
             

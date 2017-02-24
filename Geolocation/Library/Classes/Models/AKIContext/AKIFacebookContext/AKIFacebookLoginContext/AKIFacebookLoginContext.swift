@@ -18,7 +18,7 @@ import RxCocoa
 
 class AKIFacebookLoginContext: AKIContextProtocol {
     
-    var model: AKIUser
+    var model: AKIUser?
     
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString

@@ -31,7 +31,7 @@ protocol AKIUserProtocol {
     init(email: String, password: String, name: String)
 }
 
-class AKIUser: AKIModelProtocol, AKIUserProtocol {
+class AKIUser: AKIUserProtocol {
     
     var email: String?
     var password: String?

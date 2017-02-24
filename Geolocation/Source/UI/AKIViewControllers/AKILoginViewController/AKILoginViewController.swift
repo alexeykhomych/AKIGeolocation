@@ -20,20 +20,6 @@ protocol AKIFacebookLogin: FBSDKLoginButtonDelegate {
     
 }
 
-protocol AKIFirebaseLogin {
-
-    func loginWithFirebase()
-
-}
-
-extension AKILoginViewController: AKIFirebaseLogin {
-
-    internal func loginWithFirebase() {
-        
-    }
-
-}
-
 extension AKILoginViewController: AKIFacebookLogin {
     
     internal func initFacebookLoginButton() {
@@ -71,8 +57,6 @@ class AKILoginViewController: UIViewController {
     let kAKILogoutButtonText = "Logout"
     let disposeBag = DisposeBag()
     
-    private var loginViewModel: AKILoginViewModel?
-    
     var loginView: AKILoginView? {
         return self.getView()
     }
@@ -81,7 +65,6 @@ class AKILoginViewController: UIViewController {
         super.viewDidLoad()
         
         self.initModel()
-        self.initViewModel()
         
         self.initFacebookLoginButton()
         self.initLoginButton()
@@ -105,10 +88,6 @@ class AKILoginViewController: UIViewController {
         }
         
         self.model = user
-    }
-    
-    func initViewModel() {
-        self.loginViewModel = AKILoginViewModel(self.model!)
     }
     
     func initLoginButton() {
@@ -135,10 +114,10 @@ class AKILoginViewController: UIViewController {
                             name: "")
         self.model = model
         
-        let viewModel = AKILoginViewModel(model)
+        let viewModel = AKIViewModel(model)
         
-        let id = viewModel.id.asObservable()
-        id.subscribe( onCompleted: { result in
+        let id = viewModel.id?.asObservable()
+        id?.subscribe( onCompleted: { result in
             self.pushViewController(AKILocationViewController(), model: model)
         }).disposed(by: self.disposeBag)
     }
