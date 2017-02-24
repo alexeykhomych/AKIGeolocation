@@ -11,19 +11,19 @@ import Foundation
 extension String {
     
     func passwordValidation() -> Bool {
-        return self.validateStringWithPredicate(NSPredicate(format: Validation.passwordFormat,
+        return self.characters.count > 0 && self.validateStringWithPredicate(NSPredicate(format: Validation.passwordFormat,
                                                             self.characters.count,
                                                             Validation.minimalPasswordLength))
     }
     
     func nameValidation() -> Bool {
-        return self.validateStringWithPredicate(NSPredicate(format: Validation.nameRegex,
+        return self.characters.count > 0 && self.validateStringWithPredicate(NSPredicate(format: Validation.nameRegex,
                                                             self.characters.count,
                                                             Validation.minimalNameLength))
     }
     
     func emailValidation() -> Bool {
-        return self.validateStringWithPredicate(NSPredicate(format: Validation.emailFormat,
+        return self.characters.count > 0 && self.validateStringWithPredicate(NSPredicate(format: Validation.emailFormat,
                                                             Validation.emailRegex))
     }
 
