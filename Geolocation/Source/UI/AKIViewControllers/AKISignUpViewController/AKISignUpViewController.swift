@@ -16,13 +16,12 @@ import RxCocoa
 
 class AKISignUpViewController: UIViewController {
     
-    var model: AKIUser?
+    var viewModel: AKIViewModel?
     
     var signUpView: AKISignUpView? {
         return self.getView()
     }
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         

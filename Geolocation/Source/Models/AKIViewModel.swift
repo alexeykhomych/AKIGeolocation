@@ -13,7 +13,6 @@ import RxCocoa
 
 protocol AKIUserViewModelProtocol: AKIUserObserverViewModelProtocol {
     var model: AKIUser? { get set }
-    var context: AKIContextProtocol? { get set }
     
     init(_ model: AKIUser)
     func nameValidation(_ name: String) -> Bool
@@ -50,9 +49,6 @@ extension AKIUserViewModelProtocol {
             return
         }
         
-        let context = AKIContextProvider(user!)
-        self.context = context
-        self.observingForProperties(context)
     }
     
     mutating func fillModel(_ email: String, password: String, name: String) {
@@ -64,29 +60,33 @@ extension AKIUserViewModelProtocol {
             return
         }
         
-        self.context = AKISignUpContext(user!)
     }
 }
 
 protocol AKIUserObserverViewModelProtocol {
     
-    var name:       Observable<String>? { get set }
-    var password:   Observable<String>? { get set }
-    var email:      Observable<String>? { get set }
-    var id:         Observable<String>? { get set }
+    var name:       Observable<String?>? { get set }
+    var password:   Observable<String?> { get set }
+    var email:      Observable<String?>? { get set }
+    var id:         Observable<String?>? { get set }
+    
+    var isValidPassword: Observable<Bool>? { get set }
+    var isValidEmail: Observable<Bool>? { get set }
     
     func observingForProperties(_ context: AKIContextProvider)
 }
 
 class AKIViewModel: AKIUserViewModelProtocol {
     
-    internal var id: Observable<String>?
-    internal var email: Observable<String>?
-    internal var password: Observable<String>?
-    internal var name: Observable<String>?
+    internal var isValidEmail: Observable<Bool>?
+    internal var isValidPassword: Observable<Bool>?
+    
+    internal var id: Observable<String?>?
+    internal var email: Observable<String?>?
+    internal var password: Observable<String?>
+    internal var name: Observable<String?>?
 
     internal var model: AKIUser?
-    internal var context: AKIContextProtocol?
 
     let disposeBag = DisposeBag()
 

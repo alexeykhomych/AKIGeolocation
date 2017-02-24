@@ -18,9 +18,9 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKILocationViewController: UIViewController, AKIViewController, CLLocationManagerDelegate {
+class AKILocationViewController: UIViewController, CLLocationManagerDelegate {
     
-    var model: AKIUser?
+    var viewModel: AKIViewModel?
     
     var isMoving: Bool = false
     let disposeBag = DisposeBag()

@@ -49,15 +49,29 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                     return
                 }
                 
-                let json:NSDictionary = ["id": user?.uid as Any,
-                                         "email": user?.email as Any]
+                self.model?.id = user?.uid
+            })
+            
+            FBSDKGraphRequest(graphPath: Context.Request.facebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
+                if error != nil {
+                    observer.on(.error(error!))
+                    return
+                }
                 
-                self.fillModel(with: json)
+                self.parseJSON(result!)
             })
             
             observer.onCompleted()
             
             return Disposables.create()
+        }
+    }
+    
+    func parseJSON(_ json: Any) {
+        if let dictionary = json as? NSDictionary {
+            let model = self.model
+            model?.email = dictionary[Context.Request.email] as? String
+            model?.name = dictionary[Context.Request.name] as? String
         }
     }
 }
