@@ -14,48 +14,40 @@ import RxSwift
 class AKISignUpView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
-    @IBOutlet var nameTextField: UITextField?
-    @IBOutlet var emailTextField: UITextField?
-    @IBOutlet var passwordTextField: UITextField?
+    @IBOutlet var nameTextField: UITextField!
+    @IBOutlet var emailTextField: UITextField!
+    @IBOutlet var passwordTextField: UITextField!
     
     @IBOutlet var signUpButton: UIButton!
-    
-    @IBOutlet var passwordValidLable: UILabel!
-    @IBOutlet var emailValidLable: UILabel!
-    @IBOutlet var nameValidLable: UILabel!
-    
+        
     let disposeBag = DisposeBag()
     
-    func validateFields() {
-//        let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
-//            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: Validation.emailFormat,
-//                                                                            Validation.emailRegex))
-//        }).shareReplay(1)
-//        
-//        let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
-//            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: Validation.passwordFormat,
-//                                                                          text!.characters.count,
-//                                                                          Validation.minimalPasswordLength))
-//        }).shareReplay(1)
-//        
-//        let name: Observable<Bool> = self.nameTextField!.rx.text.map({ text -> Bool in
-//            self.AKIValidateStringWithPredicate(text!, predicate: NSPredicate(format: Validation.passwordFormat,
-//                                                                           text!.characters.count,
-//                                                                           Validation.minimalPasswordLength))
-//        }).shareReplay(1)
-//        
-//        let everythingValid: Observable<Bool> = Observable.combineLatest(email, password, name) { $0 && $1 && $2 }
-//        
-//        email.bindTo(self.emailValidLable.rx.isHidden)
-//            .addDisposableTo(self.disposeBag)
-//        
-//        password.bindTo(self.passwordValidLable.rx.isHidden)
-//            .addDisposableTo(self.disposeBag)
-//        
-//        name.bindTo(self.nameValidLable.rx.isHidden)
-//            .addDisposableTo(self.disposeBag)
-//        
-//        everythingValid.bindTo(self.signUpButton.rx.isEnabled)
-//            .addDisposableTo(self.disposeBag)
+    func addBindsToViewModel(_ viewModel: AKIViewModel) {
+        let emailValidate: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
+            viewModel.emailValidation(self.emailTextField.text!)
+        }).shareReplay(1)
+        
+        let passwordValidate: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
+            viewModel.passwordValidation(self.passwordTextField.text!)
+        }).shareReplay(1)
+        
+        let nameValidate: Observable<Bool> = self.nameTextField!.rx.text.map({ text -> Bool in
+            viewModel.nameValidation(self.nameTextField.text!)
+        }).shareReplay(1)
+        
+        let everythingValid: Observable<Bool> = Observable.combineLatest(emailValidate, passwordValidate, nameValidate) { $0 && $1 && $2 }
+        
+        everythingValid.bindTo(self.signUpButton.rx.isEnabled)
+            .addDisposableTo(self.disposeBag)
+        
+        let mail = self.emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = mail.bindTo(viewModel.email!)
+        
+        let password = self.passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = password.bindTo(viewModel.password!)
+        
+        let name = self.nameTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = name.bindTo(viewModel.name!)
     }
+
 }

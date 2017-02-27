@@ -14,7 +14,20 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
+extension AKISignUpViewController {
+    func initSignUpButton() {
+        self.signUpView?.signUpButton?.rx.tap
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.signUpWithContext(AKISignUpContext((self?.viewModel)!))
+            })
+            .disposed(by: self.disposeBag)
+    }
+}
+
 class AKISignUpViewController: UIViewController {
+    
+    let disposeBag = DisposeBag()
     
     var viewModel: AKIViewModel?
     
@@ -26,28 +39,29 @@ class AKISignUpViewController: UIViewController {
         super.viewDidLoad()
         
         self.initSignUpButton()
-        self.signUpView?.validateFields()
+        self.initModel()
+        self.signUpView?.addBindsToViewModel(self.viewModel!)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func initSignUpButton() {
-//        self.signUpView?.signUpButton?.rx.tap
-//            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-//            .subscribe(onNext: { [weak self] in
-//                let signUpView = self?.signUpView
-//                
-//                let model = AKIUser((signUpView?.emailTextField?.text)!,
-//                                    password: (signUpView?.passwordTextField?.text)!,
-//                                    name: (signUpView?.nameTextField?.text)!)
-//    
-//            })
-//            .disposed(by: self.disposeBag)
+    func initModel() {
+        self.viewModel = AKIViewModel(AKIUser())
     }
     
-    func signUpObserver(_ context: AKISignUpContext) -> Observable<AKIUser> {
-        return context.execute()
+    func signUpWithContext(_ context: AKISignUpContext) {
+        let id = context.execute().asObservable().shareReplay(1)
+        
+        id.subscribe( onCompleted: { result in
+            let controller = AKILocationViewController()
+            controller.viewModel = self.viewModel
+            self.pushViewController(controller)
+        }).disposed(by: self.disposeBag)
+        
+        id.subscribe(onError: { error in
+            print(error.localizedDescription)
+        }).disposed(by: self.disposeBag)
     }
 }

@@ -41,6 +41,7 @@ struct Validation {
     static let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
     static let emailFormat = "SELF MATCHES %@"
     static let passwordFormat = "%d >= %d"
+    static let nameFormat = "SELF MATCHES %@"
     static let nameRegex = "\\A\\w{5,18}\\z"
     static let minimalPasswordLength = 6
     static let minimalNameLength = 6

@@ -17,9 +17,8 @@ extension String {
     }
     
     func nameValidation() -> Bool {
-        return self.characters.count > 0 && self.validateStringWithPredicate(NSPredicate(format: Validation.nameRegex,
-                                                            self.characters.count,
-                                                            Validation.minimalNameLength))
+        return self.characters.count > 0 && self.validateStringWithPredicate(NSPredicate(format: Validation.nameFormat,
+                                                            Validation.nameRegex))
     }
     
     func emailValidation() -> Bool {

@@ -10,9 +10,8 @@ import UIKit
 
 extension UIViewController {
 
-    func pushViewController(_ viewController: UIViewController, viewModel: AKIViewModel) {
+    func pushViewController(_ viewController: UIViewController) {
         DispatchQueue.main.async {
-//            viewController.viewModel = viewModel
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }

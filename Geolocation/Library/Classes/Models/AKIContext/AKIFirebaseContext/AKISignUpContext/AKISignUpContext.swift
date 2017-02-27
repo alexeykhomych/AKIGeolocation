@@ -16,17 +16,17 @@ import RxCocoa
 
 class AKISignUpContext: AKIContextProtocol{
     
-    var model: AKIUser?
+    var model: AKIViewModel?
     
-    required init(_ model: AKIUser) {
+    required init(_ model: AKIViewModel) {
         self.model = model
     }
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            let model = self.model
-            FIRAuth.auth()?.createUser(withEmail: (model?.email!)!,
-                                       password: (model?.password!)!,
+            let user = self.model?.model
+            FIRAuth.auth()?.createUser(withEmail: (user?.email!)!,
+                                       password: (user?.password!)!,
                                        completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
@@ -39,7 +39,7 @@ class AKISignUpContext: AKIContextProtocol{
                 observer.onError(error!)
             }
             
-            let model = self.model
+            let model = self.model?.model
             
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
             let userReference = reference.child(Context.Request.users).child(Context.Request.users)

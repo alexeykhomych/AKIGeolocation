@@ -53,7 +53,7 @@ extension AKIUserViewModelProtocol {
 }
 
 protocol AKIUserObserverViewModelProtocol {
-    var name:       Observable<String>? { get set }
+    var name:       Variable<String>? { get set }
     var password:   Variable<String>? { get set }
     var email:      Variable<String>? { get set }
     var id:         Observable<String>? { get set }
@@ -64,7 +64,7 @@ class AKIViewModel: AKIUserViewModelProtocol {
     internal var id: Observable<String>?
     internal var email: Variable<String>?
     internal var password: Variable<String>?
-    internal var name: Observable<String>?
+    internal var name: Variable<String>?
 
     internal var model: AKIUser?
 
@@ -74,6 +74,7 @@ class AKIViewModel: AKIUserViewModelProtocol {
         self.model = model
         self.password = Variable<String>("")
         self.email = Variable<String>("")
+        self.name = Variable<String>("")
         self.fillModelWithObservingProperties()
     }
     
