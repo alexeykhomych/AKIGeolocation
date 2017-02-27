@@ -11,24 +11,24 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-import GoogleMaps
-
 import RxSwift
 import RxCocoa
 
 class AKICurrentPositionContext: AKIContextProtocol {
     
-    private var locations: [CLLocation]?
+    private var logitude: Double?
+    private var latitude: Double?
     
-    var model: AKIUser?
+    var model: AKIViewModel?
     
-    required init(_ model: AKIUser) {
+    required init(_ model: AKIViewModel) {
         self.model = model
     }
     
-    init(_ model: AKIUser, locations: [CLLocation]) {
+    init(_ model: AKIViewModel, latitude: Double, longitude: Double) {
         self.model = model
-        self.locations = locations
+        self.logitude = longitude
+        self.latitude = latitude
     }
     
     func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
@@ -43,18 +43,13 @@ class AKICurrentPositionContext: AKIContextProtocol {
     internal func execute() -> Observable<AKIUser> {
         let observer = PublishSubject<AKIUser>()
         _ = observer.subscribe({ observer in
-            let model = self.model
+            let user = self.model?.model
             
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child((model?.id!)!)
+            let userReference = reference.child(Context.Request.coordinates).child((user?.id!)!)
             
-            let location = self.locations?.last
-            
-            let coordinates = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
-                                                     longitude: (location?.coordinate.longitude)!)
-            
-            let values = [Context.Request.latitude: coordinates.latitude,
-                          Context.Request.longitude: coordinates.longitude] as [String : Any]
+            let values = [Context.Request.latitude: self.latitude as Any,
+                          Context.Request.longitude: self.logitude as Any] as [String : Any]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
         })

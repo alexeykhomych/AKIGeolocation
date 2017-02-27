@@ -18,14 +18,24 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKILocationViewController: UIViewController, CLLocationManagerDelegate {
+extension AKILocationViewController {
+    
+    func logOut() {
+        FBSDKLoginManager().logOut()
+        try! FIRAuth.auth()?.signOut()
+        
+        _ = self.navigationController?.popToRootViewController(animated: true)
+    }
+}
+
+class AKILocationViewController: UIViewController {
     
     var viewModel: AKIViewModel?
     
     var isMoving: Bool = false
     let disposeBag = DisposeBag()
     
-    let locationManager = CLLocationManager()
+    var locationManager: AKILocationManager?
     let isRunning = Variable(true)
     
     let logoutButtonText = "Log out"
@@ -37,19 +47,15 @@ class AKILocationViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initContext()
         self.initLocationManager()
         self.initLeftBarButtonItem()
         self.initMapView()
         self.initTimer()
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    func initContext() {
-//        self.context = AKICurrentPositionContext(self.model!)
     }
     
     func initMapView() {
@@ -59,16 +65,7 @@ class AKILocationViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func initLocationManager() {
-        let locationManager = self.locationManager
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.distanceFilter = CLLocationDistance(Google.Maps.Default.distanceFilter)
-        
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
-        }
+        self.locationManager = AKILocationManager()
     }
     
     func initTimer() {
@@ -83,63 +80,49 @@ class AKILocationViewController: UIViewController, CLLocationManagerDelegate {
                     return
                 }
                 
-                let locationManager = self?.locationManager
-                let locations = CLLocation(latitude: (locationManager?.location?.coordinate.latitude)!,
-                                           longitude: (locationManager?.location?.coordinate.longitude)!)
-                self?.writeLocationToDB(locations: [locations])
+                self?.writeLocationToDB((self?.locationManager?.longitude)!, latitude: (self?.locationManager?.latitude)!)
             })
             .addDisposableTo(self.disposeBag)
     }
     
-    //MARK: CLLocationManagerDelegate
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            print("User allowed us to access location")
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        var isMoving = self.isMoving
-        isMoving = true
+    func writeLocationToDB(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
+        let context = AKICurrentPositionContext(self.viewModel!, latitude: latitude, longitude: longitude)
+        let id = context.execute().asObservable().shareReplay(1)
         
-        self.locationView?.cameraPosition(locations: locations)
-        self.writeLocationToDB(locations: locations)
+        id.subscribe( onCompleted: { result in
+            print("хуйня записана в бд")
+        }).disposed(by: self.disposeBag)
         
-        isMoving = false
+        id.subscribe(onError: { error in
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }).disposed(by: self.disposeBag)
+
     }
-    
-    func writeLocationToDB(locations: [CLLocation]) {
-//        let context = self.context as? AKICurrentPositionContext
-//        context?.locations = locations
-        
-    }
-    
-    //MARK: Observ
     
     private func initLeftBarButtonItem() {
         let logoutButton = UIBarButtonItem.init(title: self.logoutButtonText,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
-                                                action: #selector(logout))
+                                                action: #selector(logOut))
         
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
         self.navigationItem.leftBarButtonItem!.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.isRunning.value = !(self?.isRunning.value)!
-                self?.logout()
+                self?.logOut()
             })
             .addDisposableTo(self.disposeBag)
     }
     
-    func logout() {
-        FBSDKLoginManager().logOut()
-        try! FIRAuth.auth()?.signOut()
-
-        _ = self.navigationController?.popToRootViewController(animated: true)
-    }
-    
-    func locationObserver(_ context: AKICurrentPositionContext) -> Observable<AKIUser> {
-        return context.execute()
+    private func Context(_ context: AKICurrentPositionContext) {
+        let id = context.execute().asObservable().shareReplay(1)
+        
+        id.subscribe( onCompleted: { result in
+            print("хуйня записана в бд")
+        }).disposed(by: self.disposeBag)
+        
+        id.subscribe(onError: { error in
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }).disposed(by: self.disposeBag)
     }
 }
