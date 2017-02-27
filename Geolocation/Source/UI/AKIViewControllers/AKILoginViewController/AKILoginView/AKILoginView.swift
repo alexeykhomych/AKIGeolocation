@@ -41,10 +41,16 @@ class AKILoginView: UIView {
         everythingValid.bindTo(self.loginButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-//        viewModel.password.bindTo(self.passwordTextField?.rx.text)
+        viewModel.password?.bindTo(self.passwordTextField!.rx.text)
+            .addDisposableTo(self.disposeBag)
+        
+        viewModel.email?.bindTo(self.emailTextField!.rx.text)
+            .addDisposableTo(self.disposeBag)
+        
+//        viewModel.email?.asObservable().bindTo(self.emailTextField!.rx.text)
 //            .addDisposableTo(self.disposeBag)
 //        
-//        viewModel.email?.bindTo(self.emailTextField?.rx.text.flatMap{ text in return text })
+//        viewModel.password?.asObservable().bindTo(self.passwordTextField!.rx.text)
 //            .addDisposableTo(self.disposeBag)
     }
 }

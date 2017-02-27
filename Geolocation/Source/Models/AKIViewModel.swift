@@ -23,15 +23,39 @@ protocol AKIUserViewModelProtocol: AKIUserObserverViewModelProtocol {
 extension AKIUserViewModelProtocol {
     
     func nameValidation(_ name: String) -> Bool {
-        return name.nameValidation()
+        let result = name.nameValidation()
+        
+        if !result {
+            return result
+        }
+        
+        self.model?.name = name
+        
+        return result
     }
     
     func passwordValidation(_ password: String) -> Bool {
-        return password.passwordValidation()
+        let result = password.passwordValidation()
+        
+        if !result {
+            return result
+        }
+        
+        self.model?.password = password
+        
+        return result
     }
     
     func emailValidation(_ email: String) -> Bool {
-        return email.emailValidation()
+        let result = email.emailValidation()
+        
+        if !result {
+            return result
+        }
+        
+        self.model?.email = email
+        
+        return result
     }
     
     func validateFields(_ model: AKIUser) -> Bool {
@@ -50,41 +74,30 @@ extension AKIUserViewModelProtocol {
         }
         
     }
-    
-    mutating func fillModel(_ email: String, password: String, name: String) {
-        let user = self.model
-        user?.password = password
-        user?.email = email
-        
-        if !self.validateFields(user!) {
-            return
-        }
-        
-    }
 }
 
 protocol AKIUserObserverViewModelProtocol {
     
-    var name:       Observable<String?>? { get set }
-    var password:   Observable<String?> { get set }
-    var email:      Observable<String?>? { get set }
-    var id:         Observable<String?>? { get set }
+    var name:       Observable<String>? { get set }
+    var password:   Observable<String>? { get set }
+    var email:      Observable<String>? { get set }
+    var id:         Observable<String>? { get set }
     
-    var isValidPassword: Observable<Bool>? { get set }
-    var isValidEmail: Observable<Bool>? { get set }
+    var isValidPassword: Observable<Bool?>? { get set }
+    var isValidEmail: Observable<Bool?>? { get set }
     
     func observingForProperties(_ context: AKIContextProvider)
 }
 
 class AKIViewModel: AKIUserViewModelProtocol {
     
-    internal var isValidEmail: Observable<Bool>?
-    internal var isValidPassword: Observable<Bool>?
+    internal var isValidEmail: Observable<Bool?>?
+    internal var isValidPassword: Observable<Bool?>?
     
-    internal var id: Observable<String?>?
-    internal var email: Observable<String?>?
-    internal var password: Observable<String?>
-    internal var name: Observable<String?>?
+    internal var id: Observable<String>?
+    internal var email: Observable<String>?
+    internal var password: Observable<String>?
+    internal var name: Observable<String>?
 
     internal var model: AKIUser?
 
@@ -92,6 +105,8 @@ class AKIViewModel: AKIUserViewModelProtocol {
 
     required init(_ model: AKIUser) {
         self.model = model
+        self.password = Observable<String>.never()
+        self.email = Observable<String>.never()
     }
     
     internal func observingForProperties(_ context: AKIContextProvider) {
@@ -104,5 +119,4 @@ class AKIViewModel: AKIUserViewModelProtocol {
         self.email = user.map { $0.email ?? "" }
         self.id = user.map { $0.id ?? "" }
     }
-
 }

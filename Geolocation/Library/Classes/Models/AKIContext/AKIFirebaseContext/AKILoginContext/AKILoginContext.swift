@@ -16,15 +16,15 @@ import RxSwift
 
 class AKILoginContext: AKIContextProtocol {
     
-    var model: AKIUser?
+    var viewModel: AKIViewModel?
     
     required init(_ viewModel: AKIViewModel) {
-        self.model = viewModel.model
+        self.viewModel = viewModel
     }
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            let model = self.model
+            let model = self.viewModel?.model
             FIRAuth.auth()?.signIn(withEmail: (model?.email!)!, password: (model?.password!)!, completion: { (user, error) in
                 if error != nil {
                     observer.on(.error(error!))
