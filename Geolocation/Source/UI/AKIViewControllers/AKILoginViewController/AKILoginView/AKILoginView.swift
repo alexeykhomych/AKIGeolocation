@@ -21,36 +21,27 @@ class AKILoginView: UIView {
     @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
     
-    @IBOutlet var passwordValidLable: UILabel!
-    @IBOutlet var emailValidLable: UILabel!
-    
     let disposeBag = DisposeBag()
     
     func addBindsToViewModel(_ viewModel: AKIViewModel) {
         
-        let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
+        let emailValidate: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
             viewModel.emailValidation(self.emailTextField.text!)
         }).shareReplay(1)
         
-        let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
+        let passwordValidate: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
             viewModel.passwordValidation(self.passwordTextField.text!)
         }).shareReplay(1)
         
-        let everythingValid: Observable<Bool> = Observable.combineLatest(email, password) { $0 && $1 }
+        let everythingValid: Observable<Bool> = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
         
         everythingValid.bindTo(self.loginButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        viewModel.password?.bindTo(self.passwordTextField!.rx.text)
-            .addDisposableTo(self.disposeBag)
+        let mail = self.emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = mail.bindTo(viewModel.email!)
         
-        viewModel.email?.bindTo(self.emailTextField!.rx.text)
-            .addDisposableTo(self.disposeBag)
-        
-//        viewModel.email?.asObservable().bindTo(self.emailTextField!.rx.text)
-//            .addDisposableTo(self.disposeBag)
-//        
-//        viewModel.password?.asObservable().bindTo(self.passwordTextField!.rx.text)
-//            .addDisposableTo(self.disposeBag)
+        let password = self.passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = password.bindTo(viewModel.password!)
     }
 }

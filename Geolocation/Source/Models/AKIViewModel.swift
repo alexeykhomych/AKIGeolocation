@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 
 protocol AKIUserViewModelProtocol: AKIUserObserverViewModelProtocol {
+    
     var model: AKIUser? { get set }
     
     init(_ model: AKIUser)
@@ -23,44 +24,19 @@ protocol AKIUserViewModelProtocol: AKIUserObserverViewModelProtocol {
 extension AKIUserViewModelProtocol {
     
     func nameValidation(_ name: String) -> Bool {
-        let result = name.nameValidation()
-        
-        if !result {
-            return result
-        }
-        
-        self.model?.name = name
-        
-        return result
+        return name.nameValidation()
     }
     
     func passwordValidation(_ password: String) -> Bool {
-        let result = password.passwordValidation()
-        
-        if !result {
-            return result
-        }
-        
-        self.model?.password = password
-        
-        return result
+        return password.passwordValidation()
     }
     
     func emailValidation(_ email: String) -> Bool {
-        let result = email.emailValidation()
-        
-        if !result {
-            return result
-        }
-        
-        self.model?.email = email
-        
-        return result
+        return email.emailValidation()
     }
     
     func validateFields(_ model: AKIUser) -> Bool {
-        return  self.nameValidation(model.name!) &&
-                self.emailValidation(model.email!) &&
+        return  self.emailValidation(model.email!) &&
                 self.passwordValidation(model.password!)
     }
     
@@ -77,26 +53,17 @@ extension AKIUserViewModelProtocol {
 }
 
 protocol AKIUserObserverViewModelProtocol {
-    
     var name:       Observable<String>? { get set }
-    var password:   Observable<String>? { get set }
-    var email:      Observable<String>? { get set }
+    var password:   Variable<String>? { get set }
+    var email:      Variable<String>? { get set }
     var id:         Observable<String>? { get set }
-    
-    var isValidPassword: Observable<Bool?>? { get set }
-    var isValidEmail: Observable<Bool?>? { get set }
-    
-    func observingForProperties(_ context: AKIContextProvider)
 }
 
 class AKIViewModel: AKIUserViewModelProtocol {
     
-    internal var isValidEmail: Observable<Bool?>?
-    internal var isValidPassword: Observable<Bool?>?
-    
     internal var id: Observable<String>?
-    internal var email: Observable<String>?
-    internal var password: Observable<String>?
+    internal var email: Variable<String>?
+    internal var password: Variable<String>?
     internal var name: Observable<String>?
 
     internal var model: AKIUser?
@@ -105,18 +72,35 @@ class AKIViewModel: AKIUserViewModelProtocol {
 
     required init(_ model: AKIUser) {
         self.model = model
-        self.password = Observable<String>.never()
-        self.email = Observable<String>.never()
+        self.password = Variable<String>("")
+        self.email = Variable<String>("")
+        self.fillModelWithObservingProperties()
     }
     
-    internal func observingForProperties(_ context: AKIContextProvider) {
-        let user = context.execute().asObservable()
-            .debounce(0.3, scheduler: MainScheduler.instance)
-            .shareReplay(1)
+    private func fillModelWithObservingProperties() {
+        let user = self.model
+        _ = self.email?.asObservable().subscribe(onNext: { result in
+            
+            if self.emailValidation(result) {
+                user?.email = result
+            }
+            
+        }).disposed(by: self.disposeBag)
         
-        self.name = user.map { $0.name ?? "" }
-        self.password = user.map { $0.password ?? "" }
-        self.email = user.map { $0.email ?? "" }
-        self.id = user.map { $0.id ?? "" }
+        _ = self.password?.asObservable().subscribe(onNext: { result in
+            
+            if self.passwordValidation(result) {
+                user?.password = result
+            }
+            
+        }).disposed(by: self.disposeBag)
+        
+        _ = self.name?.asObservable().subscribe(onNext: { result in
+            
+            if self.nameValidation(result) {
+                user?.name = result
+            }
+            
+        }).disposed(by: self.disposeBag)
     }
 }

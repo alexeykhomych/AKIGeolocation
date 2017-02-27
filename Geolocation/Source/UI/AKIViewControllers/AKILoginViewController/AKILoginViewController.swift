@@ -13,69 +13,56 @@ import RxCocoa
 
 import FBSDKLoginKit
 
-protocol AKIFacebookLogin: FBSDKLoginButtonDelegate {
-    
-    func initFacebookLoginButton()
+protocol AKIFacebookLoginProtocol {
     func loginWithAccessToken()
-    
 }
 
-extension AKILoginViewController: AKIFacebookLogin {
-    
-    internal func initFacebookLoginButton() {
-        let facebookLoginButton = FBSDKLoginButton()
-        facebookLoginButton.frame = (self.loginView?.loginWithFBButton?.frame)!
-        facebookLoginButton.delegate = self
-        facebookLoginButton.readPermissions = [Context.Permission.email, Context.Permission.publicProfile]
+protocol AKIFacebookLogOutProtocol {
+    func logOutWithFacebook()
+}
 
-        self.view.addSubview(facebookLoginButton)
-    }
-    
-    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
-
-    }
-
-    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        
-    }
+extension AKILoginViewController {
     
     func loginWithAccessToken() {
         let accessToken = FBSDKAccessToken.current()
 
+        let model = AKIUser()
+        self.viewModel?.model = model
+        
         if accessToken != nil {
-//            let model = AKIUser()
-//            model.id = accessToken?.userID
-//            self.model = model
+            model.id = accessToken?.userID
+            self.viewModel?.model = model
+            self.pushViewController(AKILocationViewController(), viewModel: self.viewModel!)
         }
+    }
+    
+    var pushToLocationViewControllerWithViewModel: Void {
+        return self.pushViewController(AKILocationViewController(), viewModel: self.viewModel!)
     }
 }
 
-class AKILoginViewController: UIViewController {
+class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
 
     var viewModel: AKIViewModel?
     
-    let kAKILogoutButtonText = "Logout"
-    let disposeBag = DisposeBag()
+    private let kAKILogoutButtonText = "Logout"
+    private let disposeBag = DisposeBag()
     
-    var loginView: AKILoginView? {
+    private var loginView: AKILoginView? {
         return self.getView()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //1
+
         self.initModel()
-        
-        //2
         
         self.loginView?.addBindsToViewModel(self.viewModel!)
         
-//        self.initFacebookLoginButton()
         self.initLoginButton()
         self.initSignupButton()
-        
-//        self.loginWithAccessToken()
+        self.initLoginWithFacebookButton()
+        self.loginWithAccessToken()
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,8 +77,7 @@ class AKILoginViewController: UIViewController {
         self.loginView?.loginButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                let context = AKILoginContext((self?.viewModel)!)
-                self?.doSomething(context)
+                self?.subscribeToLoginContext(AKILoginContext((self?.viewModel)!))
             })
             .disposed(by: self.disposeBag)
     }
@@ -105,28 +91,36 @@ class AKILoginViewController: UIViewController {
             .disposed(by: self.disposeBag)
     }
     
-    private func doSomething(_ context: AKILoginContext) {
+    private func initLoginWithFacebookButton() {
+        self.loginView?.loginWithFBButton?.rx.tap
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.subscribeToLoginContext(AKIFacebookLoginContext((self?.viewModel)!))
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    private func subscribeToLoginContext(_ context: AKILoginContext) {
         let id = context.execute().asObservable().shareReplay(1)
+        
         id.subscribe( onCompleted: { result in
-            self.pushViewController(AKILocationViewController(), viewModel: self.viewModel!)
+            self.pushToLocationViewControllerWithViewModel
         }).disposed(by: self.disposeBag)
         
         id.subscribe(onError: { error in
-            print(error.localizedDescription)
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
         }).disposed(by: self.disposeBag)
     }
     
+    private func subscribeToLoginContext(_ context: AKIFacebookLoginContext) {
+        let id = context.execute().asObservable().shareReplay(1)
+        
+        id.subscribe( onCompleted: { result in
+            self.pushToLocationViewControllerWithViewModel
+        }).disposed(by: self.disposeBag)
+        
+        id.subscribe(onError: { error in
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }).disposed(by: self.disposeBag)
+    }
 }
-
-/*
- 1) создаю вьюмодел с пустой моделью юзера
- 2) привязываю поля вьюмодела к полям ui
- 3) заполняя поля в ui вьюмодел их валидирует
- 4) если валидация тру то включить кнопку логина
- 4.1) если тру, то заполняю модель временными данными с UI
- 5) при нажатии на логин передаю вьюмодел в контекст
- 6) контекст заполняет модель
- 7) контекст сообщает контроллеру о завершении
- 8) контроллер открывает следующий контроллер
- 
-*/

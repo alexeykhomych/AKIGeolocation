@@ -11,23 +11,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension AKIContextProvider {
-    
-//    func contextType() -> AKIContextProtocol {
-//        let model = self.model
-//        if (model?.id?.isEmpty)! {
-//            return 
-//        }
-//    }
-}
-
 class AKIContextProvider: AKIContextProtocol {
 
-    internal var model: AKIUser?
+    internal var model: AKIViewModel?
     
-    internal  required init(_ model: AKIUser) {
+    internal  required init(_ model: AKIViewModel) {
         self.model = model
-        //определить тип контекста и выполнить execute
     }
     
     internal func execute() -> Observable<AKIUser> {
