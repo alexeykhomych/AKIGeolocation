@@ -38,7 +38,6 @@
 		C991076D1E601FC6008DF0FA /* AKIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C991076C1E601FC6008DF0FA /* AKIViewModel.swift */; };
 		C991076F1E603313008DF0FA /* AKIContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C991076E1E603313008DF0FA /* AKIContextProvider.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
-		C9BE364A1E647C410013DD6F /* AKIServiceTimerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE36491E647C410013DD6F /* AKIServiceTimerProvider.swift */; };
 		C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +77,6 @@
 		C991076E1E603313008DF0FA /* AKIContextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContextProvider.swift; sourceTree = "<group>"; };
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
 		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
-		C9BE36491E647C410013DD6F /* AKIServiceTimerProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIServiceTimerProvider.swift; sourceTree = "<group>"; };
 		C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILocationManager.swift; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -360,7 +358,6 @@
 			isa = PBXGroup;
 			children = (
 				C991076C1E601FC6008DF0FA /* AKIViewModel.swift */,
-				C9BE36491E647C410013DD6F /* AKIServiceTimerProvider.swift */,
 				C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */,
 			);
 			path = Models;
@@ -532,7 +529,6 @@
 				C991076D1E601FC6008DF0FA /* AKIViewModel.swift in Sources */,
 				C968E3851E5EF47000CF2F0A /* UIViewController+AKIExtensions.swift in Sources */,
 				C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */,
-				C9BE364A1E647C410013DD6F /* AKIServiceTimerProvider.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
 				C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */,
 				C95263441E4390E60021124E /* AKISignUpView.swift in Sources */,

@@ -10,11 +10,43 @@ import UIKit
 
 import GoogleMaps
 
-class AKILocationManager: NSObject, CLLocationManagerDelegate {
+import RxCocoa
+import RxSwift
+
+protocol AKIGoogleLocationManager: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+}
+
+extension AKIGoogleLocationManager {
+    func defaultManager() -> CLLocationManager {
+        let manager = CLLocationManager()
+        manager.requestAlwaysAuthorization()
+        manager.requestWhenInUseAuthorization()
+        manager.distanceFilter = CLLocationDistance(Google.Maps.Default.distanceFilter)
+        
+        if CLLocationManager.locationServicesEnabled() {
+            manager.delegate = self
+            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            manager.startUpdatingLocation()
+        }
+        
+        return manager
+    }
+}
+
+class AKILocationManager: NSObject, AKIGoogleLocationManager {
+    
+    var replaySubject: ReplaySubject<[CLLocation]> = ReplaySubject<[CLLocation]>.create(bufferSize: 1)
     
     var isMoving: Bool = false
     
     private var locationManager: CLLocationManager?
+    
+    var locations: [CLLocation]? {
+        return [CLLocation(latitude: self.latitude!,
+                           longitude: self.longitude!)]
+    }
     
     var location: CLLocation? {
         return self.locationManager?.location
@@ -32,11 +64,6 @@ class AKILocationManager: NSObject, CLLocationManagerDelegate {
         return self.coordinate?.longitude
     }
     
-    var locations: [CLLocation]? {
-        return [CLLocation(latitude: (self.latitude)!,
-                           longitude: (self.longitude)!)]
-    }
-    
     override init() {
         super.init()
         self.locationManager = self.defaultManager()
@@ -44,21 +71,6 @@ class AKILocationManager: NSObject, CLLocationManagerDelegate {
     
     init(_ manager: CLLocationManager) {
         self.locationManager = manager
-    }
-    
-    private func defaultManager() -> CLLocationManager {
-        let manager = CLLocationManager()
-        manager.requestAlwaysAuthorization()
-        manager.requestWhenInUseAuthorization()
-        manager.distanceFilter = CLLocationDistance(Google.Maps.Default.distanceFilter)
-        
-        if CLLocationManager.locationServicesEnabled() {
-            manager.delegate = self
-            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            manager.startUpdatingLocation()
-        }
-        
-        return manager
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -68,13 +80,6 @@ class AKILocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        var isMoving = self.isMoving
-        isMoving = true
-        
-//        self.locationView?.cameraPosition(locations: locations)
-//        self.writeLocationToDB(locations: locations)
-        
-        isMoving = false
+        _ = self.replaySubject.onNext(locations)
     }
-
 }
