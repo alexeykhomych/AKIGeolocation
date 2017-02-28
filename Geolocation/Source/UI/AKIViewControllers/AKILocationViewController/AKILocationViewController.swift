@@ -47,11 +47,11 @@ class AKILocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initLocationManager()
         self.initLeftBarButtonItem()
-        self.initMapView()
         self.initTimer()
-        
+        self.initLocationManager()
+        self.initMapView()
+        self.observForMoving()
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,18 +76,16 @@ class AKILocationViewController: UIViewController {
             }
             .flatMapWithIndex { (int, index) in Observable.just(index) }
             .subscribe(onNext: { [weak self] _ in
-                if (self?.isMoving)! {
-                    return
-                }
                 
-                self?.writeLocationToDB((self?.locationManager?.longitude)!, latitude: (self?.locationManager?.latitude)!)
             })
             .addDisposableTo(self.disposeBag)
     }
     
     func writeLocationToDB(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
         let context = AKICurrentPositionContext(self.viewModel!, latitude: latitude, longitude: longitude)
-        let id = context.execute().asObservable().shareReplay(1)
+        let id = context.execute()
+            .asObservable()
+            
         
         id.subscribe( onCompleted: { result in
             print("хуйня записана в бд")
@@ -114,15 +112,11 @@ class AKILocationViewController: UIViewController {
             .addDisposableTo(self.disposeBag)
     }
     
-    private func Context(_ context: AKICurrentPositionContext) {
-        let id = context.execute().asObservable().shareReplay(1)
-        
-        id.subscribe( onCompleted: { result in
-            print("хуйня записана в бд")
-        }).disposed(by: self.disposeBag)
-        
-        id.subscribe(onError: { error in
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }).disposed(by: self.disposeBag)
+    private func observForMoving() {
+        _ = self.locationManager?.replaySubject.subscribe(onNext: { locations in
+            DispatchQueue.main.async {
+                self.locationView?.cameraPosition(locations: locations)
+            }
+        }).addDisposableTo(self.disposeBag)
     }
 }
