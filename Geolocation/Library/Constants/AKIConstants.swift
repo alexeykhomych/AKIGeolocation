@@ -62,7 +62,7 @@ struct Google {
 
 struct Timer {
     struct Default {
-        static let timerInterval = 60
+        static let interval = 60
         static let debounceOneSecond = 1.0
     }
 }

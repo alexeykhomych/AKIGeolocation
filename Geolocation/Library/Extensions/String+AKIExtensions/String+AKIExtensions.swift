@@ -30,4 +30,7 @@ extension String {
         return predicate.evaluate(with: self)
     }
     
+    func unwrappedString(_ optionalString: String?) -> String {
+        return optionalString ?? ""
+    }    
 }

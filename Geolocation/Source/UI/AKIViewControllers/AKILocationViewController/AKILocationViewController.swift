@@ -18,29 +18,25 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-extension AKILocationViewController {
-    
-    func logOut() {
-        FBSDKLoginManager().logOut()
-        try! FIRAuth.auth()?.signOut()
-        
-        _ = self.navigationController?.popToRootViewController(animated: true)
-    }
+protocol AKILocationViewControllerProtocol {
+    func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
+    func observForMoving()
+    func initTimer()
+    func logOut()
 }
 
-class AKILocationViewController: UIViewController {
+class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
     
     var viewModel: AKIViewModel?
     
-    var isMoving: Bool = false
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
-    var locationManager: AKILocationManager?
-    let isRunning = Variable(true)
+    private var locationManager: AKILocationManager?
+    private let isRunning = Variable(true)
     
-    let logoutButtonText = "Log out"
+    private let logoutButtonText = "Log out"
     
-    var locationView: AKILocationView? {
+    private var locationView: AKILocationView? {
         return self.getView()
     }
 
@@ -58,43 +54,8 @@ class AKILocationViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    func initMapView() {
-        let mapView = self.locationView?.mapView
-        mapView?.isMyLocationEnabled = true
-        mapView?.settings.myLocationButton = true
-    }
-    
-    func initLocationManager() {
+    private func initLocationManager() {
         self.locationManager = AKILocationManager()
-    }
-    
-    func initTimer() {
-        self.isRunning.asObservable()
-            .flatMapLatest {  isRunning in
-                isRunning ? Observable<Int>.interval(RxTimeInterval(Timer.Default.timerInterval),
-                                                     scheduler: MainScheduler.instance) : .empty()
-            }
-            .flatMapWithIndex { (int, index) in Observable.just(index) }
-            .subscribe(onNext: { [weak self] _ in
-                
-            })
-            .addDisposableTo(self.disposeBag)
-    }
-    
-    func writeLocationToDB(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
-        let context = AKICurrentPositionContext(self.viewModel!, latitude: latitude, longitude: longitude)
-        let id = context.execute()
-            .asObservable()
-            
-        
-        id.subscribe( onCompleted: { result in
-            print("хуйня записана в бд")
-        }).disposed(by: self.disposeBag)
-        
-        id.subscribe(onError: { error in
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }).disposed(by: self.disposeBag)
-
     }
     
     private func initLeftBarButtonItem() {
@@ -106,17 +67,61 @@ class AKILocationViewController: UIViewController {
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
         self.navigationItem.leftBarButtonItem!.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.isRunning.value = !(self?.isRunning.value)!
                 self?.logOut()
             })
             .addDisposableTo(self.disposeBag)
     }
     
-    private func observForMoving() {
-        _ = self.locationManager?.replaySubject.subscribe(onNext: { locations in
+    private func initMapView() {
+        let mapView = self.locationView?.mapView
+        mapView?.isMyLocationEnabled = true
+        mapView?.settings.myLocationButton = true
+    }
+    
+    func initTimer() {
+        _ = Observable<Int>
+            .interval(RxTimeInterval(Timer.Default.interval), scheduler: MainScheduler.instance)
+            .takeUntil(rx.deallocated)
+            .subscribe({ _ in
+                let coordinate = self.locationManager?.coordinate
+                guard let latitude = coordinate?.latitude else {
+                    return
+                }
+                
+                guard let longitude = coordinate?.longitude else {
+                    return
+                }
+                
+                self.subscribeCurrentPositionContext(longitude, latitude: latitude)
+            })
+    }
+    
+    func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
+        guard let viewModel = self.viewModel else {
+            return
+        }
+        
+        let context = AKICurrentPositionContext(viewModel, latitude: latitude, longitude: longitude)
+        let observer = context.execute().asObservable()
+        
+        observer.subscribe(onError: { error in
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }).disposed(by: self.disposeBag)
+        
+    }
+    
+    func observForMoving() {
+        _ = self.locationManager?.replaySubject?.subscribe(onNext: { locations in
             DispatchQueue.main.async {
                 self.locationView?.cameraPosition(locations: locations)
             }
         }).addDisposableTo(self.disposeBag)
+    }
+    
+    func logOut() {
+        FBSDKLoginManager().logOut()
+        try? FIRAuth.auth()?.signOut()
+        
+        _ = self.navigationController?.popToRootViewController(animated: true)
     }
 }
