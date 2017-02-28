@@ -26,47 +26,15 @@ extension AKILoginViewController {
     func loginWithAccessToken() {
         let accessToken = FBSDKAccessToken.current()
 
-        let model = AKIUser()
-        self.viewModel?.model = model
+        let model = self.viewModel?.model
         
         if accessToken != nil {
-            model.id = accessToken?.userID
-            self.viewModel?.model = model
+            model?.id = accessToken?.userID
+            
             let controller = AKILocationViewController()
             controller.viewModel = self.viewModel
             self.pushViewController(controller)
         }
-    }
-    
-    func initLoginButton() {
-        self.loginView?.loginButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                let controller = AKILocationViewController()
-                controller.viewModel = self?.viewModel
-                self?.pushViewController(controller)
-            })
-            .disposed(by: self.disposeBag)
-    }
-    
-    func initSignupButton() {
-        self.loginView?.signUpButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.pushViewController(AKISignUpViewController())
-            })
-            .disposed(by: self.disposeBag)
-    }
-    
-    func initLoginWithFacebookButton() {
-        self.loginView?.loginWithFBButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                let controller = AKILocationViewController()
-                controller.viewModel = self?.viewModel
-                self?.pushViewController(controller)
-            })
-            .disposed(by: self.disposeBag)
     }
 }
 
@@ -86,16 +54,44 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
 
         self.initModel()
         
+        self.loginWithAccessToken()
+        
         self.loginView?.addBindsToViewModel(self.viewModel!)
         
         self.initLoginButton()
         self.initSignupButton()
         self.initLoginWithFacebookButton()
-        self.loginWithAccessToken()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    private func initLoginButton() {
+        self.loginView?.loginButton?.rx.tap
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.subscribeToLoginContext(AKILoginContext((self?.viewModel)!))
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    private func initSignupButton() {
+        self.loginView?.signUpButton?.rx.tap
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.pushViewController(AKISignUpViewController())
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    private func initLoginWithFacebookButton() {
+        self.loginView?.loginWithFBButton?.rx.tap
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.subscribeToLoginContext(AKIFacebookLoginContext((self?.viewModel)!))
+            })
+            .disposed(by: self.disposeBag)
     }
     
     private func initModel() {
@@ -106,7 +102,9 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
         let id = context.execute().asObservable().shareReplay(1)
         
         id.subscribe( onCompleted: { result in
-            self.pushViewController(AKILocationViewController())
+            let controller = AKILocationViewController()
+            controller.viewModel = self.viewModel
+            self.pushViewController(controller)
         }).disposed(by: self.disposeBag)
         
         id.subscribe(onError: { error in
@@ -118,7 +116,9 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
         let id = context.execute().asObservable().shareReplay(1)
         
         id.subscribe( onCompleted: { result in
-            self.pushViewController(AKILocationViewController())
+            let controller = AKILocationViewController()
+            controller.viewModel = self.viewModel
+            self.pushViewController(controller)
         }).disposed(by: self.disposeBag)
         
         id.subscribe(onError: { error in

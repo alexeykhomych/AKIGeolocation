@@ -59,6 +59,8 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                     
                     self.model?.model?.id = user?.uid
                 })
+                
+                observer.onCompleted()
             }))
             
 //            FBSDKGraphRequest(graphPath: Context.Request.facebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
@@ -69,9 +71,6 @@ class AKIFacebookLoginContext: AKIContextProtocol {
 //                
 //                self.parseJSON(result!)
 //            })
-            
-            
-            observer.onCompleted()
             
             return Disposables.create()
         }
