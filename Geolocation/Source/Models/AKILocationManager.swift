@@ -37,16 +37,9 @@ extension AKIGoogleLocationManager {
 
 class AKILocationManager: NSObject, AKIGoogleLocationManager {
     
-    var replaySubject: ReplaySubject<[CLLocation]> = ReplaySubject<[CLLocation]>.create(bufferSize: 1)
-    
-    var isMoving: Bool = false
+    var replaySubject: ReplaySubject<[CLLocation]>?
     
     private var locationManager: CLLocationManager?
-    
-    var locations: [CLLocation]? {
-        return [CLLocation(latitude: self.latitude!,
-                           longitude: self.longitude!)]
-    }
     
     var location: CLLocation? {
         return self.locationManager?.location
@@ -57,7 +50,7 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     var latitude: CLLocationDegrees? {
-        return self.coordinate?.latitude
+        return self.coordinate?.latitude ?? 0.0
     }
     
     var longitude: CLLocationDegrees? {
@@ -65,14 +58,11 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     override init() {
+        self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: 1)
         super.init()
         self.locationManager = self.defaultManager()
     }
     
-    init(_ manager: CLLocationManager) {
-        self.locationManager = manager
-    }
-
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             print("User allowed us to access location")
@@ -80,6 +70,6 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        _ = self.replaySubject.onNext(locations)
+        _ = self.replaySubject?.onNext(locations)
     }
 }
