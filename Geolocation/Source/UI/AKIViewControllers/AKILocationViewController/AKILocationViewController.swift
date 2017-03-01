@@ -26,8 +26,12 @@ protocol AKILocationViewControllerProtocol {
 }
 
 class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
-    
+    deinit {
+        print("dsd")
+    }
     var viewModel: AKIViewModel?
+    
+    private var timer: Disposable?
     
     private let disposeBag = DisposeBag()
     
@@ -52,7 +56,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
+
     private func initLocationManager() {
         self.locationManager = AKILocationManager()
     }
@@ -65,10 +69,9 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
         self.navigationItem.leftBarButtonItem!.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.logOut()
-            })
-            .addDisposableTo(self.disposeBag)
+            .subscribe(onNext: { [unowned self] in
+                self.logOut()
+            }).addDisposableTo(self.disposeBag)
     }
     
     private func initMapView() {
@@ -79,10 +82,9 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     
     func initTimer() {
         _ = Observable<Int>
-            .interval(RxTimeInterval(Timer.Default.interval), scheduler: MainScheduler.instance)
-            .takeUntil(rx.deallocated)
-            .subscribe({ _ in
-                let coordinate = self.locationManager?.coordinate
+            .interval(RxTimeInterval(Timer.Default.interval), scheduler: ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
+            .subscribe({ [weak self] _ in
+                let coordinate = self?.locationManager?.coordinate
                 guard let latitude = coordinate?.latitude else {
                     return
                 }
@@ -91,8 +93,8 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
                     return
                 }
                 
-                self.subscribeCurrentPositionContext(longitude, latitude: latitude)
-            })
+                self?.subscribeCurrentPositionContext(longitude, latitude: latitude)
+            }).addDisposableTo(self.disposeBag)
     }
     
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
@@ -103,15 +105,20 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         let context = AKICurrentPositionContext(viewModel, latitude: latitude, longitude: longitude)
         let observer = context.execute().asObservable()
         
-        observer.observeOn(MainScheduler.instance).subscribe(onError: { error in
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }).disposed(by: self.disposeBag)
+        observer
+            .observeOn(MainScheduler.instance)
+            .subscribe(onError: { [weak self] error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }).disposed(by: self.disposeBag)
     }
     
     func observForMoving() {
-        _ = self.locationManager?.replaySubject?.observeOn(MainScheduler.instance).subscribe(onNext: { locations in
-            self.locationView?.cameraPosition(locations: locations)
-        }).addDisposableTo(self.disposeBag)
+        _ = self.locationManager?
+            .replaySubject?
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [weak self] locations in
+                self?.locationView?.cameraPosition(locations: locations)
+            }).addDisposableTo(self.disposeBag)
     }
     
     func logOut() {

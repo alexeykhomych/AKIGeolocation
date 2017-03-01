@@ -14,17 +14,6 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-extension AKISignUpViewController {
-    func initSignUpButton() {
-        self.signUpView?.signUpButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.signUpWithContext(AKISignUpContext(self?.viewModel))
-            })
-            .disposed(by: self.disposeBag)
-    }
-}
-
 class AKISignUpViewController: UIViewController {
     
     let disposeBag = DisposeBag()
@@ -52,16 +41,29 @@ class AKISignUpViewController: UIViewController {
     }
     
     func signUpWithContext(_ context: AKISignUpContext) {
-        let id = context.execute().asObservable().shareReplay(1)
+        let contextSubscriber = context.execute().shareReplay(1)
         
-        id.subscribe( onCompleted: { result in
-            let controller = AKILocationViewController()
-            controller.viewModel = self.viewModel
-            self.pushViewController(controller)
-        }).disposed(by: self.disposeBag)
+        contextSubscriber
+            .observeOn(MainScheduler.instance)
+            .subscribe(onCompleted: { [weak self] result in
+                let controller = AKILocationViewController()
+                controller.viewModel = self?.viewModel
+                self?.pushViewController(controller)
+            }).disposed(by: self.disposeBag)
         
-        id.subscribe(onError: { error in
-            print(error.localizedDescription)
-        }).disposed(by: self.disposeBag)
+        contextSubscriber
+            .observeOn(MainScheduler.instance)
+            .subscribe(onError: { [weak self] error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }).disposed(by: self.disposeBag)
+    }
+    
+    private func initSignUpButton() {
+        self.signUpView?.signUpButton?
+            .rx.tap
+            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                self?.signUpWithContext(AKISignUpContext(self?.viewModel))
+            }).disposed(by: self.disposeBag)
     }
 }

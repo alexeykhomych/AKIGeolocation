@@ -39,6 +39,10 @@ extension AKILoginViewController {
 }
 
 class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
+    
+    deinit {
+        print("test")
+    }
 
     var viewModel: AKIViewModel?
     
@@ -86,7 +90,8 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
     }
     
     private func initLoginWithFacebookButton() {
-        self.loginView?.loginWithFBButton?.rx.tap
+        self.loginView?
+            .loginWithFBButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 self?.subscribeToLoginContext(AKIFacebookLoginContext(self?.viewModel))
@@ -99,30 +104,41 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
     }
     
     private func subscribeToLoginContext(_ context: AKILoginContext?) {
-        let contextSubscriber = context?.execute().asObservable().shareReplay(1)
+        let contextSubscriber = context?.execute().observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))).shareReplay(1)
         
-        contextSubscriber?.subscribe( onCompleted: { result in
-            let controller = AKILocationViewController()
-            controller.viewModel = self.viewModel
-            self.pushViewController(controller)
-        }).disposed(by: self.disposeBag)
+        contextSubscriber?
+            .observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+            .subscribe( onCompleted: { [weak self] result in
+                let controller = AKILocationViewController()
+                controller.viewModel = self?.viewModel
+                self?.pushViewController(controller)
+            }).disposed(by: self.disposeBag)
         
-        contextSubscriber?.subscribe(onError: { error in
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }).disposed(by: self.disposeBag)
+        contextSubscriber?
+            .observeOn(MainScheduler.instance)
+            .subscribe(onError: { [weak self] error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     private func subscribeToLoginContext(_ context: AKIFacebookLoginContext?) {
-        let contextSubscriber = context?.execute().asObservable().shareReplay(1)
+        let contextSubscriber = context?.execute().observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))).shareReplay(1)
         
-        contextSubscriber?.subscribe( onCompleted: { result in
-            let controller = AKILocationViewController()
-            controller.viewModel = self.viewModel
-            self.pushViewController(controller)
-        }).disposed(by: self.disposeBag)
+        contextSubscriber?
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+            .subscribe( onCompleted: { [weak self] result in
+                let controller = AKILocationViewController()
+                controller.viewModel = self?.viewModel
+                self?.pushViewController(controller)
+            })
+            .disposed(by: self.disposeBag)
         
-        contextSubscriber?.subscribe(onError: { error in
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }).disposed(by: self.disposeBag)
+        contextSubscriber?
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
+            .subscribe(onError: { [weak self] error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
+            .disposed(by: self.disposeBag)
     }
 }

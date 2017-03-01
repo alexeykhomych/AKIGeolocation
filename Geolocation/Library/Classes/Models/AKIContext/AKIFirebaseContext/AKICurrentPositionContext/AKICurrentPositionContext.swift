@@ -43,8 +43,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
     internal func execute() -> Observable<AKIUser> {
         let observer = PublishSubject<AKIUser>()
         _ = observer.subscribe({ observer in
-            
-            
+
             guard let user = self.model?.model else {
                 return
             }
@@ -64,6 +63,6 @@ class AKICurrentPositionContext: AKIContextProtocol {
         
         observer.onCompleted()
         
-        return observer
+        return observer.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
     }
 }

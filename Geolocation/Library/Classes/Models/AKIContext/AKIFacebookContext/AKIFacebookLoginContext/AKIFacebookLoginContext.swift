@@ -45,35 +45,31 @@ class AKIFacebookLoginContext: AKIContextProtocol {
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             
-            FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
-                
-                if (error != nil) || (result == nil) {
-                    return
-                }
-                
-                FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
-                    if error != nil {
-                        observer.on(.error(error!))
+//            guard let accessToken = self.accessToken else {
+//                return Disposables.create()
+//            }
+            
+//            if !accessToken.hasGranted(Context.Permission.publicProfile) {
+                FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
+                    
+                    if (error != nil) || (result == nil) {
                         return
                     }
                     
-                    self.model?.model?.id = user?.uid
-                })
-                
-                observer.onCompleted()
-            }))
-            
-//            FBSDKGraphRequest(graphPath: Context.Request.facebookMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
-//                if error != nil {
-//                    observer.on(.error(error!))
-//                    return
-//                }
-//                
-//                self.parseJSON(result!)
-//            })
-            
+                    FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
+                        if error != nil {
+                            observer.on(.error(error!))
+                            return
+                        }
+                        
+                        self.model?.model?.id = user?.uid
+                        observer.onCompleted()
+                    })
+                    
+                }))
+
             return Disposables.create()
-        }
+        }.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
     }
     
     func parseJSON(_ json: Any) {
