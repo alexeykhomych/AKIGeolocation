@@ -38,7 +38,7 @@ class AKIFacebookLoginContext: AKIContextProtocol {
         return [Context.Request.fields : "\(Context.Request.id), \(Context.Request.name), \(Context.Request.email)"]
     }
     
-    required init(_ model: AKIViewModel) {
+    required init(_ model: AKIViewModel?) {
         self.model = model
     }
     

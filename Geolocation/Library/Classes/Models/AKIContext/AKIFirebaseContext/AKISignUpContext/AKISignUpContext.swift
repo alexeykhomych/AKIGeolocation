@@ -18,25 +18,37 @@ class AKISignUpContext: AKIContextProtocol{
     
     var model: AKIViewModel?
     
-    required init(_ model: AKIViewModel) {
+    required init(_ model: AKIViewModel?) {
         self.model = model
     }
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            let user = self.model?.model
-            FIRAuth.auth()?.createUser(withEmail: (user?.email!)!,
-                                       password: (user?.password!)!,
+            guard let user = self.model?.model else {
+                return Disposables.create()
+            }
+            
+            guard let email = user.email else {
+                return Disposables.create()
+            }
+            
+            guard let password = user.password else {
+                return Disposables.create()
+            }
+            
+            FIRAuth.auth()?.createUser(withEmail: email,
+                                       password: password,
                                        completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
         }
     }
     
-    func userCompletionHandler(_ observer: AnyObserver<AKIUser>) -> (FIRUser?, Error?) -> () {
+    func userCompletionHandler(_ observer: AnyObserver<AKIUser>?) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
+            
             if error != nil {
-                observer.onError(error!)
+                observer?.onError(error!)
             }
             
             let model = self.model?.model
@@ -52,7 +64,7 @@ class AKISignUpContext: AKIContextProtocol{
             
             model?.id = user?.uid
             
-            observer.onCompleted()
+            observer?.onCompleted()
         }
     }
     

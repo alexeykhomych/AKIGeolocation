@@ -18,14 +18,23 @@ class AKILoginContext: AKIContextProtocol {
     
     var viewModel: AKIViewModel?
     
-    required init(_ viewModel: AKIViewModel) {
+    required init(_ viewModel: AKIViewModel?) {
         self.viewModel = viewModel
     }
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             let model = self.viewModel?.model
-            FIRAuth.auth()?.signIn(withEmail: (model?.email!)!, password: (model?.password!)!, completion: { (user, error) in
+            
+            guard let email = model?.email else {
+                return Disposables.create()
+            }
+            
+            guard let password = model?.password else {
+                return Disposables.create()
+            }
+            
+            FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
                 if error != nil {
                     observer.on(.error(error!))
                     return

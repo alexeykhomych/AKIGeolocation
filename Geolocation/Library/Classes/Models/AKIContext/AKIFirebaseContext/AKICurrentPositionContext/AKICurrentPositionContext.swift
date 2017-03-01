@@ -21,11 +21,11 @@ class AKICurrentPositionContext: AKIContextProtocol {
     
     var model: AKIViewModel?
     
-    required init(_ model: AKIViewModel) {
+    required init(_ model: AKIViewModel?) {
         self.model = model
     }
     
-    init(_ model: AKIViewModel, latitude: Double, longitude: Double) {
+    init(_ model: AKIViewModel?, latitude: Double?, longitude: Double?) {
         self.model = model
         self.logitude = longitude
         self.latitude = latitude
@@ -43,10 +43,18 @@ class AKICurrentPositionContext: AKIContextProtocol {
     internal func execute() -> Observable<AKIUser> {
         let observer = PublishSubject<AKIUser>()
         _ = observer.subscribe({ observer in
-            let user = self.model?.model
+            
+            
+            guard let user = self.model?.model else {
+                return
+            }
+            
+            guard let id = user.id else {
+                return
+            }
             
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child((user?.id!)!)
+            let userReference = reference.child(Context.Request.coordinates).child(id)
             
             let values = [Context.Request.latitude: self.latitude as Any,
                           Context.Request.longitude: self.logitude as Any] as [String : Any]

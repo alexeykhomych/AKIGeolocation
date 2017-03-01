@@ -15,40 +15,24 @@ protocol AKIUserViewModelProtocol: AKIUserObserverViewModelProtocol {
     
     var model: AKIUser? { get set }
     
-    init(_ model: AKIUser)
-    func nameValidation(_ name: String) -> Bool
-    func passwordValidation(_ password: String) -> Bool
-    func emailValidation(_ email: String) -> Bool
+    init(_ model: AKIUser?)
+    func nameValidation(_ name: String?) -> Bool
+    func passwordValidation(_ password: String?) -> Bool
+    func emailValidation(_ email: String?) -> Bool
 }
 
 extension AKIUserViewModelProtocol {
     
-    func nameValidation(_ name: String) -> Bool {
-        return name.nameValidation()
+    func nameValidation(_ name: String?) -> Bool {
+        return name?.nameValidation() ?? false
     }
     
-    func passwordValidation(_ password: String) -> Bool {
-        return password.passwordValidation()
+    func passwordValidation(_ password: String?) -> Bool {
+        return password?.passwordValidation() ?? false
     }
     
-    func emailValidation(_ email: String) -> Bool {
-        return email.emailValidation()
-    }
-    
-    func validateFields(_ model: AKIUser) -> Bool {
-        return  self.emailValidation(model.email!) &&
-                self.passwordValidation(model.password!)
-    }
-    
-    mutating func fillModel(_ email: String, password: String) {
-        let user = self.model
-        user?.password = password
-        user?.email = email
-        
-        if !self.validateFields(user!) {
-            return
-        }
-        
+    func emailValidation(_ email: String?) -> Bool {
+        return email?.emailValidation() ?? false
     }
 }
 
@@ -70,7 +54,7 @@ class AKIViewModel: AKIUserViewModelProtocol {
 
     let disposeBag = DisposeBag()
 
-    required init(_ model: AKIUser) {
+    required init(_ model: AKIUser?) {
         self.model = model
         self.password = Variable<String>("")
         self.email = Variable<String>("")
@@ -80,26 +64,26 @@ class AKIViewModel: AKIUserViewModelProtocol {
     
     private func fillModelWithObservingProperties() {
         let user = self.model
-        _ = self.email?.asObservable().subscribe(onNext: { result in
+        _ = self.email?.asObservable().subscribe(onNext: { email in
             
-            if self.emailValidation(result) {
-                user?.email = result
+            if self.emailValidation(email) {
+                user?.email = email
             }
             
         }).disposed(by: self.disposeBag)
         
-        _ = self.password?.asObservable().subscribe(onNext: { result in
+        _ = self.password?.asObservable().subscribe(onNext: { password in
             
-            if self.passwordValidation(result) {
-                user?.password = result
+            if self.passwordValidation(password) {
+                user?.password = password
             }
             
         }).disposed(by: self.disposeBag)
         
-        _ = self.name?.asObservable().subscribe(onNext: { result in
+        _ = self.name?.asObservable().subscribe(onNext: { name in
             
-            if self.nameValidation(result) {
-                user?.name = result
+            if self.nameValidation(name) {
+                user?.name = name
             }
             
         }).disposed(by: self.disposeBag)

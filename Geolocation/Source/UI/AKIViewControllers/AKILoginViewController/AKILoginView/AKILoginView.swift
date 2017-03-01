@@ -14,34 +14,57 @@ import RxSwift
 class AKILoginView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
-    @IBOutlet var emailTextField: UITextField!
-    @IBOutlet var passwordTextField: UITextField!
+    @IBOutlet var emailTextField: UITextField?
+    @IBOutlet var passwordTextField: UITextField?
     
-    @IBOutlet var loginButton: UIButton!
+    @IBOutlet var loginButton: UIButton?
     @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
     
     let disposeBag = DisposeBag()
     
-    func addBindsToViewModel(_ viewModel: AKIViewModel) {
+    func addBindsToViewModel(_ viewModel: AKIViewModel?) {
+        guard let viewModel = viewModel else {
+            return
+        }
         
-        let emailValidate: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
-            viewModel.emailValidation(self.emailTextField.text!)
+        guard let emailTextField = self.emailTextField else {
+            return
+        }
+        
+        guard let passwordTextField = self.emailTextField else {
+            return
+        }
+        
+        guard let userEmail = viewModel.email else {
+            return
+        }
+        
+        guard let userPassword = viewModel.password else {
+            return
+        }
+        
+        guard let loginButton = self.loginButton else {
+            return
+        }
+        
+        let emailValidate: Observable<Bool> = emailTextField.rx.text.map({ text -> Bool in
+            viewModel.emailValidation(emailTextField.text)
         }).shareReplay(1)
         
-        let passwordValidate: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
-            viewModel.passwordValidation(self.passwordTextField.text!)
+        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map({ text -> Bool in
+            viewModel.passwordValidation(passwordTextField.text)
         }).shareReplay(1)
         
         let everythingValid: Observable<Bool> = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
         
-        everythingValid.bindTo(self.loginButton.rx.isEnabled)
+        everythingValid.bindTo(loginButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        let mail = self.emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = mail.bindTo(viewModel.email!)
+        let mail = emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = mail.bindTo(userEmail)
         
-        let password = self.passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = password.bindTo(viewModel.password!)
+        let password = passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = password.bindTo(userPassword)
     }
 }

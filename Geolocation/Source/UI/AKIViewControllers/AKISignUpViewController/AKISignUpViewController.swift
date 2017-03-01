@@ -19,7 +19,7 @@ extension AKISignUpViewController {
         self.signUpView?.signUpButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.signUpWithContext(AKISignUpContext((self?.viewModel)!))
+                self?.signUpWithContext(AKISignUpContext(self?.viewModel))
             })
             .disposed(by: self.disposeBag)
     }
@@ -40,7 +40,7 @@ class AKISignUpViewController: UIViewController {
         
         self.initSignUpButton()
         self.initModel()
-        self.signUpView?.addBindsToViewModel(self.viewModel!)
+        self.signUpView?.addBindsToViewModel(self.viewModel)
     }
 
     override func didReceiveMemoryWarning() {
