@@ -32,7 +32,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     private let disposeBag = DisposeBag()
     
     private var locationManager: AKILocationManager?
-    private let isRunning = Variable(true)
     
     private let logoutButtonText = "Log out"
     
@@ -104,17 +103,14 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         let context = AKICurrentPositionContext(viewModel, latitude: latitude, longitude: longitude)
         let observer = context.execute().asObservable()
         
-        observer.subscribe(onError: { error in
+        observer.observeOn(MainScheduler.instance).subscribe(onError: { error in
             self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
         }).disposed(by: self.disposeBag)
-        
     }
     
     func observForMoving() {
-        _ = self.locationManager?.replaySubject?.subscribe(onNext: { locations in
-            DispatchQueue.main.async {
-                self.locationView?.cameraPosition(locations: locations)
-            }
+        _ = self.locationManager?.replaySubject?.observeOn(MainScheduler.instance).subscribe(onNext: { locations in
+            self.locationView?.cameraPosition(locations: locations)
         }).addDisposableTo(self.disposeBag)
     }
     
