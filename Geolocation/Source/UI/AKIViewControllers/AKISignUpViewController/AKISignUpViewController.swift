@@ -44,7 +44,7 @@ class AKISignUpViewController: UIViewController {
         let contextSubscriber = context.execute().shareReplay(1)
         
         contextSubscriber
-            .observeOn(MainScheduler.instance)
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onCompleted: { [weak self] result in
                 let controller = AKILocationViewController()
                 controller.viewModel = self?.viewModel
@@ -52,7 +52,7 @@ class AKISignUpViewController: UIViewController {
             }).disposed(by: self.disposeBag)
         
         contextSubscriber
-            .observeOn(MainScheduler.instance)
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             }).disposed(by: self.disposeBag)

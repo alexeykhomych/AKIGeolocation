@@ -41,7 +41,7 @@ class AKISignUpContext: AKIContextProtocol{
                                        completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
-            }.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+        }
     }
     
     func userCompletionHandler(_ observer: AnyObserver<AKIUser>?) -> (FIRUser?, Error?) -> () {

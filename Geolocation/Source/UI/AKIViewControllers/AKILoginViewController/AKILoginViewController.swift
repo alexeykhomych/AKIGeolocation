@@ -38,7 +38,7 @@ extension AKILoginViewController {
     }
 }
 
-class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
+class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappable {
     
     deinit {
         print("test")
@@ -104,10 +104,10 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
     }
     
     private func subscribeToLoginContext(_ context: AKILoginContext?) {
-        let contextSubscriber = context?.execute().observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))).shareReplay(1)
+        let contextSubscriber = context?.execute().shareReplay(1)
         
         contextSubscriber?
-            .observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+            .observeOn(MainScheduler.instance)
             .subscribe( onCompleted: { [weak self] result in
                 let controller = AKILocationViewController()
                 controller.viewModel = self?.viewModel
@@ -123,7 +123,7 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
     }
     
     private func subscribeToLoginContext(_ context: AKIFacebookLoginContext?) {
-        let contextSubscriber = context?.execute().observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))).shareReplay(1)
+        let contextSubscriber = context?.execute().shareReplay(1)
         
         contextSubscriber?
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
@@ -135,7 +135,7 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol{
             .disposed(by: self.disposeBag)
         
         contextSubscriber?
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })

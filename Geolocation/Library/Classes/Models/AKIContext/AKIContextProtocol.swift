@@ -15,6 +15,5 @@ protocol AKIContextProtocol {
     associatedtype AKIContext
     
     func execute() -> Observable<AKIContext>
+
 }
-
-

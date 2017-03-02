@@ -14,10 +14,6 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-protocol presentErrorMessage {
-    func presentAlertErrorMessage(_ message: String, style: UIAlertControllerStyle)
-}
-
 extension Tappable where Self: UIViewController {
     func tapGestureRecognizer(sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
@@ -25,7 +21,7 @@ extension Tappable where Self: UIViewController {
 }
 
 protocol Tappable {
-    func didTap()
+    func tapGestureRecognizer(sender: UITapGestureRecognizer)
 }
 
 protocol AKIViewController {

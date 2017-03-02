@@ -63,6 +63,6 @@ class AKICurrentPositionContext: AKIContextProtocol {
         
         observer.onCompleted()
         
-        return observer.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+        return observer
     }
 }

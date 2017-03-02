@@ -45,6 +45,6 @@ class AKILoginContext: AKIContextProtocol {
             })
             
             return Disposables.create()
-        }.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+        }
     }
 }

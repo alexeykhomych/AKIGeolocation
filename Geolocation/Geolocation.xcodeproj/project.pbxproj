@@ -39,6 +39,7 @@
 		C991076F1E603313008DF0FA /* AKIContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C991076E1E603313008DF0FA /* AKIContextProvider.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
 		C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */; };
+		C9F5207C1E6874D4004FBA77 /* NSObject+AKIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
 		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
 		C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILocationManager.swift; sourceTree = "<group>"; };
+		C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+AKIExtensions.swift"; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -340,6 +342,7 @@
 		C97D871B1E5DB6CA00888F0A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C9F5207A1E6874AA004FBA77 /* NSObject + AKIExtensions */,
 				C968E3831E5EF44800CF2F0A /* UIViewController+AKIExtensions */,
 				C97D871C1E5DB6F500888F0A /* String+AKIExtensions */,
 			);
@@ -369,6 +372,14 @@
 				C994D58C1E4481C30096C8AA /* AKIConstants.swift */,
 			);
 			path = Constants;
+			sourceTree = "<group>";
+		};
+		C9F5207A1E6874AA004FBA77 /* NSObject + AKIExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */,
+			);
+			path = "NSObject + AKIExtensions";
 			sourceTree = "<group>";
 		};
 		E755E22969CB975467F66C79 /* Frameworks */ = {
@@ -528,6 +539,7 @@
 				C95263191E4359640021124E /* AKILoginView.swift in Sources */,
 				C991076D1E601FC6008DF0FA /* AKIViewModel.swift in Sources */,
 				C968E3851E5EF47000CF2F0A /* UIViewController+AKIExtensions.swift in Sources */,
+				C9F5207C1E6874D4004FBA77 /* NSObject+AKIExtensions.swift in Sources */,
 				C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
 				C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */,

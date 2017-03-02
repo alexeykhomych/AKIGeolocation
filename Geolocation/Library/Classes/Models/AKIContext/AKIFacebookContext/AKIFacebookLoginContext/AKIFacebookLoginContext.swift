@@ -69,7 +69,7 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                 }))
 
             return Disposables.create()
-        }.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
+        }
     }
     
     func parseJSON(_ json: Any) {
