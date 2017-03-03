@@ -50,7 +50,10 @@ class AKILoginView: UIView {
         
         let emailValidate: Observable<Bool> = emailTextField.rx.text.map({ text -> Bool in
             viewModel.emailValidation(emailTextField.text)
+//            emailTextField.text.map { viewModel.emailValidation($0) }
         }).shareReplay(1)
+        
+//        let emailValidate: Observable<Bool> = emailTextField?.text.map { viewModel.emailValidation($0) }
         
         let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map({ text -> Bool in
             viewModel.passwordValidation(passwordTextField.text)

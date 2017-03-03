@@ -35,8 +35,8 @@ class AKILoginContext: AKIContextProtocol {
             }
             
             FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
-                if error != nil {
-                    observer.on(.error(error!))
+                if let error = error {
+                    observer.on(.error(error))
                     return
                 }
                 
