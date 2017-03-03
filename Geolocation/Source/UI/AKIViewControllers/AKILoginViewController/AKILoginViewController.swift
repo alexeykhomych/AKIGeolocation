@@ -67,12 +67,12 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
     }
     
     private func initLoginButton() {
-        let result = self.loginView?.loginButton?.rx.tap
+        _ = self.loginView?.loginButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
 //            .flatMap( { return AKILoginContext(self.viewModel)
 //            })
             .subscribe(onNext: { [weak self] in
-                self?.subscribeToLoginContext(AKILoginContext(self?.viewModel))
+                self?.subscribeToContext(AKILoginContext(self?.viewModel))
             })
             .disposed(by: self.disposeBag)
     }
@@ -91,7 +91,7 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
             .loginWithFBButton?.rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.subscribeToLoginContext(AKIFacebookLoginContext(self?.viewModel))
+                self?.subscribeToContext(AKIFacebookLoginContext(self?.viewModel))
             })
             .disposed(by: self.disposeBag)
     }
@@ -100,42 +100,14 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
         self.viewModel = AKIViewModel(AKIUser())
     }
     
-    private func subscribeToLoginContext(_ context: AKILoginContext?) {
-        let contextSubscriber = context?.execute().subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))).shareReplay(1)
-        
-//        contextSubscriber?.apply
-        
-        contextSubscriber?
-            .subscribe(onCompleted: { [weak self] result in
-                let controller = AKILocationViewController()
-                controller.viewModel = self?.viewModel
-                self?.pushViewController(controller)
-            }).disposed(by: self.disposeBag)
-        
-        contextSubscriber?
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-            .disposed(by: self.disposeBag)
-    }
+    //        contextSubscriber?.apply
     
-    private func subscribeToLoginContext(_ context: AKIFacebookLoginContext?) {
-        let contextSubscriber = context?.execute().subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))).shareReplay(1)
-        
-        contextSubscriber?
-            .subscribe(onCompleted: { [weak self] result in
-                let controller = AKILocationViewController()
-                controller.viewModel = self?.viewModel
-                self?.pushViewController(controller)
-            })
-            .disposed(by: self.disposeBag)
-        
-        contextSubscriber?
-            .subscribe(onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-            .disposed(by: self.disposeBag)
+    var performBlock: (() -> Void)?
+    
+    func showLocationViewControllerWithViewModel(_ viewModel: AKIViewModel?) {
+        let controller = AKILocationViewController()
+        controller.viewModel = viewModel
+        self.pushViewController(controller)
     }
     
     func subscribeToContext<R:AKIContextProtocol>(_ context: R?) {
@@ -143,9 +115,7 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
         
         contextSubscriber?
             .subscribe(onCompleted: { [weak self] _ in
-                let controller = AKILocationViewController()
-                controller.viewModel = self?.viewModel
-                self?.pushViewController(controller)
+                //block
             })
             .disposed(by: self.disposeBag)
         
