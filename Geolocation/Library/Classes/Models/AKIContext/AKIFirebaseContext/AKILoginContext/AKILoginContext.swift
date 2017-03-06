@@ -23,8 +23,8 @@ class AKILoginContext: AKIContextProtocol {
     }
     
     internal func execute() -> Observable<AKIUser> {
-        return Observable.create { observer in
-            let model = self.viewModel?.model
+        return Observable.create { [weak self] observer in
+            let model = self?.viewModel?.model
             
             guard let email = model?.email else {
                 return Disposables.create()
@@ -41,6 +41,7 @@ class AKILoginContext: AKIContextProtocol {
                 }
                 
                 model?.id = user?.uid
+                observer.onNext(model!)
                 observer.onCompleted()
             })
             

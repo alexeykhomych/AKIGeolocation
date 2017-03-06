@@ -64,6 +64,7 @@ class AKISignUpContext: AKIContextProtocol{
             
             model?.id = user?.uid
             
+            observer?.onNext(model)
             observer?.onCompleted()
         }
     }

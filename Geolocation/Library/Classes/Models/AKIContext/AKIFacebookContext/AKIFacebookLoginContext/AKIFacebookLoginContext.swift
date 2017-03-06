@@ -44,39 +44,31 @@ class AKIFacebookLoginContext: AKIContextProtocol {
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            
-//            guard let accessToken = self.accessToken else {
-//                return Disposables.create()
-//            }
-            
-//            if !accessToken.hasGranted(Context.Permission.publicProfile) {
-                FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
-                    
-                    if (error != nil) || (result == nil) {
+
+            FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
+                
+                if (error != nil) || (result == nil) {
+                    return
+                }
+                
+                FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
+                    if error != nil {
+                        observer.on(.error(error!))
                         return
                     }
                     
-                    FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
-                        if error != nil {
-                            observer.on(.error(error!))
-                            return
-                        }
-                        
-                        self.model?.model?.id = user?.uid
-                        observer.onCompleted()
-                    })
+                    guard let model = self.model?.model else {
+                        return
+                    }
                     
-                }))
+                    model.id = user?.uid
+                    observer.onNext(model)
+                    observer.onCompleted()
+                })
+                
+            }))
 
             return Disposables.create()
-        }
-    }
-    
-    func parseJSON(_ json: Any) {
-        if let dictionary = json as? NSDictionary {
-            let user = self.model?.model
-            user?.email = dictionary[Context.Request.email] as? String
-            user?.name = dictionary[Context.Request.name] as? String
         }
     }
 }
