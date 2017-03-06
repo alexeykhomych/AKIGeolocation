@@ -11,37 +11,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol AKIUserViewModelProtocol: AKIUserObserverViewModelProtocol {
-    
-    var model: AKIUser? { get set }
-    
-    init(_ model: AKIUser?)
-    func nameValidation(_ name: String?) -> Bool
-    func passwordValidation(_ password: String?) -> Bool
-    func emailValidation(_ email: String?) -> Bool
-}
 
-extension AKIUserViewModelProtocol {
-    
-    func nameValidation(_ name: String?) -> Bool {
-        return name?.nameValidation() ?? false
-    }
-    
-    func passwordValidation(_ password: String?) -> Bool {
-        return password?.passwordValidation() ?? false
-    }
-    
-    func emailValidation(_ email: String?) -> Bool {
-        return email?.emailValidation() ?? false
-    }
-}
-
-protocol AKIUserObserverViewModelProtocol {
-    var name:       Variable<String>? { get set }
-    var password:   Variable<String>? { get set }
-    var email:      Variable<String>? { get set }
-    var id:         Observable<String>? { get set }
-}
 
 class AKIViewModel: AKIUserViewModelProtocol {
     
@@ -63,7 +33,7 @@ class AKIViewModel: AKIUserViewModelProtocol {
     }
     
     private func fillModelWithObservingProperties() {
-        let user = self.model
+        var user = self.model
         _ = self.email?.asObservable().subscribe(onNext: { email in
             
             if self.emailValidation(email) {

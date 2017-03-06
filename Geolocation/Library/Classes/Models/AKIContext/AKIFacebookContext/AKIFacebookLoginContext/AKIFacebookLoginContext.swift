@@ -57,7 +57,7 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                         return
                     }
                     
-                    guard let model = self.model?.model else {
+                    guard var model = self.model?.model else {
                         return
                     }
                     

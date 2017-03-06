@@ -29,7 +29,10 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     deinit {
         print("dsd")
     }
+    
     var viewModel: AKIViewModel?
+    
+    var model: AKIUser?
     
     private var timer: Disposable?
     

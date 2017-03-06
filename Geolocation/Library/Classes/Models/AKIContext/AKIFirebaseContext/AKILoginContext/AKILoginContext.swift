@@ -24,7 +24,7 @@ class AKILoginContext: AKIContextProtocol {
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { [weak self] observer in
-            let model = self?.viewModel?.model
+            var model = self?.viewModel?.model
             
             guard let email = model?.email else {
                 return Disposables.create()
