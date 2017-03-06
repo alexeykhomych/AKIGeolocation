@@ -13,32 +13,7 @@ import RxCocoa
 
 import FBSDKLoginKit
 
-protocol AKIFacebookLoginProtocol {
-    func loginWithAccessToken()
-}
-
-protocol AKIFacebookLogOutProtocol {
-    func logOutWithFacebook()
-}
-
-extension AKILoginViewController {
-    
-    func loginWithAccessToken() {
-        let accessToken = FBSDKAccessToken.current()
-
-        let model = self.viewModel?.model
-        
-        if accessToken != nil {
-            model?.id = accessToken?.userID
-            
-            let controller = AKILocationViewController()
-            controller.viewModel = self.viewModel
-            self.pushViewController(controller)
-        }
-    }
-}
-
-class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappable {
+class AKILoginViewController: UIViewController, Tappable, contextObserver {
     var viewModel: AKIViewModel?
     
     private let kAKILogoutButtonText = "Logout"
@@ -53,7 +28,7 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
 
         self.initModel()
         
-        self.loginWithAccessToken()
+//        _ = self.loginWithAccessToken()
         
         self.loginView?.addBindsToViewModel(self.viewModel)
         
@@ -68,18 +43,17 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
     
     private func initLoginButton() {
         _ = self.loginView?.loginButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-//            .flatMap( { return AKILoginContext(self.viewModel)
-//            })
-            .subscribe(onNext: { [weak self] in
-                self?.subscribeToContext(AKILoginContext(self?.viewModel))
+            .flatMap( { result in
+                return Observable.from(AKILoginContext(self.viewModel).execute())
+            })
+            .subscribe(onNext: { [weak self] result in
+                self?.showLocationViewControllerWithViewModel(self?.viewModel)
             })
             .disposed(by: self.disposeBag)
     }
     
     private func initSignupButton() {
         self.loginView?.signUpButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 self?.pushViewController(AKISignUpViewController())
             })
@@ -87,11 +61,12 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
     }
     
     private func initLoginWithFacebookButton() {
-        self.loginView?
-            .loginWithFBButton?.rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.subscribeToContext(AKIFacebookLoginContext(self?.viewModel))
+        self.loginView?.loginWithFBButton?.rx.tap
+            .flatMap( { result in
+                return Observable.from(AKIFacebookLoginContext(self.viewModel).execute())
+            })
+            .subscribe(onNext: { [weak self] result in
+                self?.showLocationViewControllerWithViewModel(self?.viewModel)
             })
             .disposed(by: self.disposeBag)
     }
@@ -100,29 +75,10 @@ class AKILoginViewController: UIViewController, AKIFacebookLoginProtocol, Tappab
         self.viewModel = AKIViewModel(AKIUser())
     }
     
-    //        contextSubscriber?.apply
-    
-    var performBlock: (() -> Void)?
-    
     func showLocationViewControllerWithViewModel(_ viewModel: AKIViewModel?) {
         let controller = AKILocationViewController()
         controller.viewModel = viewModel
         self.pushViewController(controller)
     }
     
-    func subscribeToContext<R:AKIContextProtocol>(_ context: R?) {
-        let contextSubscriber = context?.execute().shareReplay(1).subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-        
-        contextSubscriber?
-            .subscribe(onCompleted: { [weak self] _ in
-                //block
-            })
-            .disposed(by: self.disposeBag)
-        
-        contextSubscriber?
-            .subscribe(onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-            .disposed(by: self.disposeBag)
-    }
 }
