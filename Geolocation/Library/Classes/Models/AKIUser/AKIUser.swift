@@ -11,43 +11,34 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-extension AKIUserProtocol {
+extension AKIUserViewModelProtocol {
     
-    mutating func initWithEmptyFields() {
-        self.email = ""
-        self.password = ""
-        self.name = ""
-        self.id = ""
+    func nameValidation(_ name: String?) -> Bool {
+        return name?.nameValidation() ?? false
+    }
+    
+    func passwordValidation(_ password: String?) -> Bool {
+        return password?.passwordValidation() ?? false
+    }
+    
+    func emailValidation(_ email: String?) -> Bool {
+        return email?.emailValidation() ?? false
     }
 }
 
-protocol AKIUserProtocol {
+protocol AKIUserViewModelProtocol {
     
-    var email: String? { get set }
-    var password: String? { get set }
-    var name: String? { get set }
-    var id: String? { get set }
-    
-    init(email: String, password: String, name: String)
+    func nameValidation(_ name: String?) -> Bool
+    func passwordValidation(_ password: String?) -> Bool
+    func emailValidation(_ email: String?) -> Bool
+
 }
 
-class AKIUser: AKIUserProtocol {
+struct AKIUser: AKIUserViewModelProtocol {
     
     var email: String?
     var password: String?
     var name: String?
     var id: String?
-    
-    init() {
-        self.email = ""
-        self.password = ""
-        self.name = ""
-        self.id = ""
-    }
-    
-    required init(email: String, password: String, name: String) {
-        self.email = email
-        self.password = password
-        self.name = name
-    }
+
 }
