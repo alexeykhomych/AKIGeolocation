@@ -26,7 +26,7 @@ class AKIFirebaseLoginProvider: AKIFirebaseLoginProtocol {
     }
        
     func login() -> Observable<AKIUser> {
-        return AKIFacebookLoginContext(self.userModel).execute()
+        return AKIFirebaseLoginContext(self.userModel).execute()
     }
     
     func logout() -> Observable<AKIUser> {
