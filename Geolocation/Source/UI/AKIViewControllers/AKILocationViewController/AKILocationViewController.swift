@@ -26,13 +26,8 @@ protocol AKILocationViewControllerProtocol {
 }
 
 class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
-    deinit {
-        print("dsd")
-    }
-    
-    var viewModel: AKIViewModel?
-    
-    var model: AKIUser?
+
+    var userModel: AKIUser?
     
     private var timer: Disposable?
     
@@ -101,11 +96,11 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     }
     
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
-        guard let viewModel = self.viewModel else {
+        guard let userModel = self.userModel else {
             return
         }
         
-        let context = AKICurrentPositionContext(viewModel, latitude: latitude, longitude: longitude)
+        let context = AKICurrentPositionContext(userModel, latitude: latitude, longitude: longitude)
         let observer = context.execute().asObservable()
         
         observer

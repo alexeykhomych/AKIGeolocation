@@ -20,7 +20,7 @@ class AKIFacebookLoginContext: AKIContextProtocol {
     
     var controller: UIViewController?
     
-    var model: AKIViewModel?
+    var userModel: AKIUser?
     
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
@@ -38,8 +38,8 @@ class AKIFacebookLoginContext: AKIContextProtocol {
         return [Context.Request.fields : "\(Context.Request.id), \(Context.Request.name), \(Context.Request.email)"]
     }
     
-    required init(_ model: AKIViewModel?) {
-        self.model = model
+    required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
     internal func execute() -> Observable<AKIUser> {
@@ -57,7 +57,7 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                         return
                     }
                     
-                    guard var model = self.model?.model else {
+                    guard var model = self.userModel else {
                         return
                     }
                     

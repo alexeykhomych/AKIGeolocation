@@ -16,15 +16,15 @@ import RxSwift
 
 class AKILoginContext: AKIContextProtocol {
     
-    var viewModel: AKIViewModel?
+    var userModel: AKIUser?
     
-    required init(_ viewModel: AKIViewModel?) {
-        self.viewModel = viewModel
+    required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { [weak self] observer in
-            var model = self?.viewModel?.model
+            var model = self?.userModel
             
             guard let email = model?.email else {
                 return Disposables.create()

@@ -19,14 +19,14 @@ class AKICurrentPositionContext: AKIContextProtocol {
     private var logitude: Double?
     private var latitude: Double?
     
-    var model: AKIViewModel?
+    var userModel: AKIUser?
     
-    required init(_ model: AKIViewModel?) {
-        self.model = model
+    required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
-    init(_ model: AKIViewModel?, latitude: Double?, longitude: Double?) {
-        self.model = model
+    init(_ userModel: AKIUser?, latitude: Double?, longitude: Double?) {
+        self.userModel = userModel
         self.logitude = longitude
         self.latitude = latitude
     }
@@ -44,7 +44,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
         let observer = PublishSubject<AKIUser>()
         _ = observer.subscribe({ observer in
 
-            guard let user = self.model?.model else {
+            guard let user = self.userModel else {
                 return
             }
             

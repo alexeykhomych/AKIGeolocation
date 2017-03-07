@@ -13,10 +13,10 @@ import RxCocoa
 
 class AKIContextProvider: AKIContextProtocol {
     
-    internal var viewModel: AKIViewModel?
+    internal var userModel: AKIUser?
     
-    internal  required init(_ viewModel: AKIViewModel?) {
-        self.viewModel = viewModel
+    internal  required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
     internal func execute() -> Observable<AKIUser> {

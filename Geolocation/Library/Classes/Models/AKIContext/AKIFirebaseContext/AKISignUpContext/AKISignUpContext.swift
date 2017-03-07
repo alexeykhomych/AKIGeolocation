@@ -16,15 +16,15 @@ import RxCocoa
 
 class AKISignUpContext: AKIContextProtocol{
     
-    var model: AKIViewModel?
+    var userModel: AKIUser?
     
-    required init(_ model: AKIViewModel?) {
-        self.model = model
+    required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            guard let user = self.model?.model else {
+            guard let user = self.userModel else {
                 return Disposables.create()
             }
             
@@ -51,7 +51,7 @@ class AKISignUpContext: AKIContextProtocol{
                 observer?.onError(error!)
             }
             
-            guard var model = self.model?.model else {
+            guard var model = self.userModel else {
                 return
             }
 

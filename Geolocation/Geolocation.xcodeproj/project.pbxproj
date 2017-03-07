@@ -38,6 +38,7 @@
 		C98A613A1E6DB91D004E2ADE /* AKILoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A61391E6DB91D004E2ADE /* AKILoginService.swift */; };
 		C991076D1E601FC6008DF0FA /* AKIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C991076C1E601FC6008DF0FA /* AKIViewModel.swift */; };
 		C991076F1E603313008DF0FA /* AKIContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C991076E1E603313008DF0FA /* AKIContextProvider.swift */; };
+		C992F4721E6EC3A700E77BBF /* AKIFacebookLoginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992F4711E6EC3A700E77BBF /* AKIFacebookLoginProvider.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
 		C99D10C01E6D5FF30073D96A /* AKIContextObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99D10BF1E6D5FF30073D96A /* AKIContextObserver.swift */; };
 		C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */; };
@@ -79,6 +80,7 @@
 		C98A61391E6DB91D004E2ADE /* AKILoginService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILoginService.swift; sourceTree = "<group>"; };
 		C991076C1E601FC6008DF0FA /* AKIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIViewModel.swift; sourceTree = "<group>"; };
 		C991076E1E603313008DF0FA /* AKIContextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContextProvider.swift; sourceTree = "<group>"; };
+		C992F4711E6EC3A700E77BBF /* AKIFacebookLoginProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIFacebookLoginProvider.swift; sourceTree = "<group>"; };
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
 		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
 		C99D10BF1E6D5FF30073D96A /* AKIContextObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIContextObserver.swift; sourceTree = "<group>"; };
@@ -368,8 +370,17 @@
 				C991076C1E601FC6008DF0FA /* AKIViewModel.swift */,
 				C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */,
 				C98A61391E6DB91D004E2ADE /* AKILoginService.swift */,
+				C992F4701E6EC38600E77BBF /* AKILoginService */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		C992F4701E6EC38600E77BBF /* AKILoginService */ = {
+			isa = PBXGroup;
+			children = (
+				C992F4711E6EC3A700E77BBF /* AKIFacebookLoginProvider.swift */,
+			);
+			path = AKILoginService;
 			sourceTree = "<group>";
 		};
 		C994D58B1E4481A30096C8AA /* Constants */ = {
@@ -556,6 +567,7 @@
 				C991076D1E601FC6008DF0FA /* AKIViewModel.swift in Sources */,
 				C968E3851E5EF47000CF2F0A /* UIViewController+AKIExtensions.swift in Sources */,
 				C9F5207C1E6874D4004FBA77 /* NSObject+AKIExtensions.swift in Sources */,
+				C992F4721E6EC3A700E77BBF /* AKIFacebookLoginProvider.swift in Sources */,
 				C94CF2AD1E48C0E200D467BA /* AKICurrentPositionContext.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
 				C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */,

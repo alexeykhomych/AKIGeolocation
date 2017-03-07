@@ -14,7 +14,8 @@ import RxCocoa
 import FBSDKLoginKit
 
 class AKILoginViewController: UIViewController, Tappable, contextObserver {
-    var viewModel: AKIViewModel?
+    
+    var userModel: AKIUser?
     
     private let kAKILogoutButtonText = "Logout"
     let disposeBag = DisposeBag()
@@ -25,12 +26,12 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.initModel()
         
 //        _ = self.loginWithAccessToken()
         
-        self.loginView?.addBindsToViewModel(self.viewModel)
+        self.userModel = AKIUser()
+        
+        self.loginView?.addBindsToViewModel(self.userModel!)
         
         self.initLoginButton()
         self.initSignupButton()
@@ -44,10 +45,10 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     private func initLoginButton() {
         _ = self.loginView?.loginButton?.rx.tap
             .flatMap( { result in
-                return Observable.from(AKILoginContext(self.viewModel).execute())
+                return Observable.from(AKILoginContext(self.userModel).execute())
             })
             .subscribe(onNext: { [weak self] result in
-                self?.showLocationViewControllerWithViewModel(self?.viewModel)
+                self?.showLocationViewControllerWithViewModel(self?.userModel)
             })
             .disposed(by: self.disposeBag)
     }
@@ -63,21 +64,17 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     private func initLoginWithFacebookButton() {
         self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
-                return Observable.from(AKIFacebookLoginContext(self.viewModel).execute())
+                return Observable.from(AKIFacebookLoginContext(self.userModel).execute())
             })
             .subscribe(onNext: { [weak self] result in
-                self?.showLocationViewControllerWithViewModel(self?.viewModel)
+                self?.showLocationViewControllerWithViewModel(self?.userModel)
             })
             .disposed(by: self.disposeBag)
     }
     
-    private func initModel() {
-        self.viewModel = AKIViewModel(AKIUser())
-    }
-    
-    func showLocationViewControllerWithViewModel(_ viewModel: AKIViewModel?) {
+    func showLocationViewControllerWithViewModel(_ userModel: AKIUser?) {
         let controller = AKILocationViewController()
-        controller.viewModel = viewModel
+        controller.userModel = userModel
         self.pushViewController(controller)
     }
     

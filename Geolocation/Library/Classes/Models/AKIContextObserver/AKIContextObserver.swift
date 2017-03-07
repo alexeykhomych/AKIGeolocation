@@ -44,7 +44,7 @@ extension contextObserver {
     func subscribeToContext<R:AKIContextProtocol>(_ context: R?, onNextBlock: @escaping (() -> Void)) {
         self.subscribeToContext(context, onNextBlock: onNextBlock, onErrorBlock: { })
     }
-    
+        
     func subscribeToContext<R:AKIContextProtocol>(_ context: R?, onNextBlock: @escaping (() -> Void), onErrorBlock: @escaping (() -> Void)) {
         self.subscribeToContext(context, onNextBlock: onNextBlock, onCompletedBlock: {  }, onErrorBlock: onErrorBlock)
     }

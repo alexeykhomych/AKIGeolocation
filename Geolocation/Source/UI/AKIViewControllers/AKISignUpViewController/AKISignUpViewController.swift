@@ -18,7 +18,7 @@ class AKISignUpViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     
-    var viewModel: AKIViewModel?
+    var userModel: AKIUser?
     
     var signUpView: AKISignUpView? {
         return self.getView()
@@ -29,7 +29,7 @@ class AKISignUpViewController: UIViewController {
         
         self.initSignUpButton()
         self.initModel()
-        self.signUpView?.addBindsToViewModel(self.viewModel)
+        self.signUpView?.addBindsToViewModel(self.userModel)
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,7 +37,7 @@ class AKISignUpViewController: UIViewController {
     }
     
     func initModel() {
-        self.viewModel = AKIViewModel(AKIUser())
+        self.userModel = AKIUser()
     }
     
     func signUpWithContext(_ context: AKISignUpContext) {
@@ -47,7 +47,7 @@ class AKISignUpViewController: UIViewController {
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onCompleted: { [weak self] result in
                 let controller = AKILocationViewController()
-                controller.viewModel = self?.viewModel
+                controller.userModel = self?.userModel
                 self?.pushViewController(controller)
             }).disposed(by: self.disposeBag)
         
@@ -63,7 +63,7 @@ class AKISignUpViewController: UIViewController {
             .rx.tap
             .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                self?.signUpWithContext(AKISignUpContext(self?.viewModel))
+                self?.signUpWithContext(AKISignUpContext(self?.userModel))
             }).disposed(by: self.disposeBag)
     }
 }

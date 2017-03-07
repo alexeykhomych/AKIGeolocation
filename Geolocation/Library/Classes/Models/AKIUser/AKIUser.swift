@@ -31,7 +31,7 @@ protocol AKIUserViewModelProtocol {
     func nameValidation(_ name: String?) -> Bool
     func passwordValidation(_ password: String?) -> Bool
     func emailValidation(_ email: String?) -> Bool
-
+    
 }
 
 struct AKIUser: AKIUserViewModelProtocol {
