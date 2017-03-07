@@ -27,8 +27,6 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        _ = self.loginWithAccessToken()
-        
         self.userModel = AKIUser()
         
         self.loginView?.addBindsToViewModel(self.userModel!)
@@ -45,10 +43,10 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     private func initLoginButton() {
         _ = self.loginView?.loginButton?.rx.tap
             .flatMap( { result in
-                return Observable.from(AKILoginContext(self.userModel).execute())
+                return AKILoginService(self.userModel).login(LoginServiceType.Firebase)
             })
-            .subscribe(onNext: { [weak self] result in
-                self?.showLocationViewControllerWithViewModel(self?.userModel)
+            .subscribe(onNext: { [weak self] userModel in
+                self?.showLocationViewControllerWithViewModel(userModel)
             })
             .disposed(by: self.disposeBag)
     }
@@ -62,12 +60,12 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     }
     
     private func initLoginWithFacebookButton() {
-        self.loginView?.loginWithFBButton?.rx.tap
+        _ = self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
-                return Observable.from(AKIFacebookLoginContext(self.userModel).execute())
+                return AKILoginService(self.userModel).login(LoginServiceType.Facebook)
             })
-            .subscribe(onNext: { [weak self] result in
-                self?.showLocationViewControllerWithViewModel(self?.userModel)
+            .subscribe(onNext: { [weak self] userModel in
+                self?.showLocationViewControllerWithViewModel(userModel)
             })
             .disposed(by: self.disposeBag)
     }

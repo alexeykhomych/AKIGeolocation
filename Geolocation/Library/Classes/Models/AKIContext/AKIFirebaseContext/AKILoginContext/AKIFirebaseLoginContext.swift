@@ -1,5 +1,5 @@
 //
-//  AKILoginContext.swift
+//  AKIFirebaseLoginContext.swift
 //  Geolocation
 //
 //  Created by Alexey Khomych on 2/2/17.
@@ -14,7 +14,7 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-class AKILoginContext: AKIContextProtocol {
+class AKIFirebaseLoginContext: AKIContextProtocol {
     
     var userModel: AKIUser?
     

@@ -13,54 +13,25 @@ import RxCocoa
 
 import FBSDKLoginKit
 
-protocol AKIFacebookLoginProtocol {
-    func loginWithAccessToken() -> ((Void) -> ())
-    func login(context: AKIFacebookLoginContext)
+enum LoginServiceType {
+    case Facebook
+    case Firebase
 }
 
-extension AKIFacebookLoginProtocol where Self: UIViewController {
-    func loginWithAccessToken() -> ((Void) -> ()) {
-        let accessToken = FBSDKAccessToken.current()
-        
-        var model = AKIUser()
-        
-        if accessToken != nil {
-            model.id = accessToken?.userID
-            
-            return {
-                let controller = AKILocationViewController()
-                controller.model = model
-                self.pushViewController(controller)
-            }
-        }
-        
-        return {
-            
+class AKILoginService {
+    
+    var userModel: AKIUser?
+    
+    init(_ userModel: AKIUser?) {
+        self.userModel = userModel
+    }
+    
+    func login(_ service: LoginServiceType) -> Observable<AKIUser> {
+        switch service {
+            case .Facebook:
+                return AKIFacebookLoginProvider(self.userModel!).login()
+            case .Firebase:
+                return AKIFirebaseLoginProvider(self.userModel!).login()
         }
     }
-}
-
-protocol AKIFirebaseLoginProtocol {
-    
-    func login(context: AKILoginContext)
-    
-}
-
-class AKILoginService: AKIFacebookLoginProtocol, AKIFirebaseLoginProtocol {
-    
-    internal func login(context: AKILoginContext) {
-        
-    }
-
-    
-    internal func login(context: AKIFacebookLoginContext) {
-        
-    }
-
-    internal func loginWithAccessToken() -> ((Void) -> ()) {
-        return {
-            
-        }
-    }
-
 }
