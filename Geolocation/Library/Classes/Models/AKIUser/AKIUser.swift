@@ -36,9 +36,15 @@ protocol AKIUserViewModelProtocol {
 
 struct AKIUser: AKIUserViewModelProtocol {
     
-    var email: String?
-    var password: String?
-    var name: String?
+    var email: Variable<String>?
+    var password: Variable<String>?
+    var name: Variable<String>?
     var id: String?
 
+    init() {
+        self.email = Variable<String>("")
+        self.password = Variable<String>("")
+        self.name = Variable<String>("")
+        self.id = ""
+    }
 }

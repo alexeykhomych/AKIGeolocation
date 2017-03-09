@@ -33,8 +33,7 @@ class AKIFirebaseLoginProvider: AKIFirebaseLoginProtocol {
         return AKIFirebaseLogoutContext(self.userModel).execute()
     }
     
-    func backgroundDispatchQueue() -> ConcurrentDispatchQueueScheduler {
-        return ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))
+    func signup() -> Observable<AKIUser> {
+        return AKIFirebaseSignUpContext(self.userModel).execute()
     }
-    
 }

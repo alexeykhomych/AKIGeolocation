@@ -34,4 +34,21 @@ class AKILoginService {
                 return AKIFirebaseLoginProvider(self.userModel!).login()
         }
     }
+    
+    func loginWithFacebookAccessToken() -> Observable<AKIUser> {
+        return AKIFacebookLoginProvider(self.userModel!).loginWithAccessToken()
+    }
+    
+    func logout(_ service: LoginServiceType) -> Observable<AKIUser> {
+        switch service {
+        case .Facebook:
+            return AKIFacebookLoginProvider(self.userModel!).logout()
+        case .Firebase:
+            return AKIFirebaseLoginProvider(self.userModel!).logout()
+        }
+    }
+    
+    func signup() -> Observable<AKIUser> {
+        return AKIFirebaseLoginProvider(self.userModel!).signup()
+    }
 }

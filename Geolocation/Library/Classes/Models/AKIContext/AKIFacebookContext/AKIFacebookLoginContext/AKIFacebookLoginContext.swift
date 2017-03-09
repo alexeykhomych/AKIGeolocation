@@ -44,11 +44,11 @@ class AKIFacebookLoginContext: AKIContextProtocol {
     
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-
+            
             FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
                 
                 if (error != nil) || (result == nil) {
-                    return
+                    observer.on(.error(error!))
                 }
                 
                 FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
@@ -65,7 +65,6 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                     observer.onNext(model)
                     observer.onCompleted()
                 })
-                
             }))
 
             return Disposables.create()

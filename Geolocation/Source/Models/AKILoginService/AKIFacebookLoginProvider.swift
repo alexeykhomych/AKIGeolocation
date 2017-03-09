@@ -21,34 +21,15 @@ protocol AKIFacebookLoginProtocol {
 class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
     
     var userModel: AKIUser?
-    
-    var loginContext: AKIFacebookLoginContext?
-//    var logoutContext: AKIFacebookLogoutContext?
-    
+        
     let disposeBag = DisposeBag()
-    
-    deinit {
-//        self.loginContext.cancel()
-//        self.logoutContext.cancel()
-    }
     
     init(_ userModel: AKIUser) {
         self.userModel = userModel
     }
    
     func loginWithAccessToken() -> Observable<AKIUser> {
-//        let accessToken = FBSDKAccessToken.current()
-//        
-//        var model = AKIUser()
-//        
-//        if accessToken != nil {
-//            model.id = accessToken?.userID
-//            
-//            let controller = AKILocationViewController()
-//            controller.userModel = model
-//            self.pushViewController(controller)
-//        }
-        fatalError()
+        return (FBSDKAccessToken.current() != nil) ? self.login() : Observable<AKIUser>.empty()
     }
     
     func login() -> Observable<AKIUser> {
@@ -58,9 +39,4 @@ class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
     func logout() -> Observable<AKIUser> {
         return AKIFacebookLogoutContext(self.userModel).execute()
     }
-    
-    func backgroundDispatchQueue() -> ConcurrentDispatchQueueScheduler {
-        return ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background))
-    }
-    
 }

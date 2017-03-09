@@ -22,9 +22,9 @@ class AKIFirebaseLoginContext: AKIContextProtocol {
         self.userModel = userModel
     }
     
-    internal func execute() -> Observable<AKIUser> {
-        return Observable.create { [weak self] observer in
-            var model = self?.userModel
+    internal func execute() -> Observable<AKIUser> {        
+        return Observable.create { observer in
+            var model = self.userModel
             
             guard let email = model?.email else {
                 return Disposables.create()
@@ -34,7 +34,7 @@ class AKIFirebaseLoginContext: AKIContextProtocol {
                 return Disposables.create()
             }
             
-            FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
+            FIRAuth.auth()?.signIn(withEmail: email.value, password: password.value, completion: { (user, error) in
                 if let error = error {
                     observer.on(.error(error))
                     return

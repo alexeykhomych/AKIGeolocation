@@ -26,7 +26,7 @@ class AKIFirebaseLogoutContext: AKIContextProtocol {
         return Observable.create { observer in
             
             try? FIRAuth.auth()?.signOut()
-            
+    
             observer.onNext(AKIUser())
             observer.onCompleted()
             
