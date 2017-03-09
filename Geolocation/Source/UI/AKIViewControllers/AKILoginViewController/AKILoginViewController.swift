@@ -17,17 +17,18 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     
     var userModel: AKIUser?
     
-    private let kAKILogoutButtonText = "Logout"
     let disposeBag = DisposeBag()
     
     var loginView: AKILoginView? {
         return self.getView()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.userModel = AKIUser()
+        
+        self.loginWithAccessToken()
         
         self.loginView?.addBindsToViewModel(self.userModel!)
         
@@ -35,9 +36,18 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         self.initSignupButton()
         self.initLoginWithFacebookButton()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func loginWithAccessToken() {
+        _ = AKILoginService(self.userModel).loginWithFacebookAccessToken()
+            .subscribe(onNext: { [weak self] userModel in
+                    self?.showLocationViewControllerWithViewModel(userModel)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
     }
     
     private func initLoginButton() {
@@ -46,7 +56,9 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
                 return AKILoginService(self.userModel).login(LoginServiceType.Firebase)
             })
             .subscribe(onNext: { [weak self] userModel in
-                self?.showLocationViewControllerWithViewModel(userModel)
+                    self?.showLocationViewControllerWithViewModel(userModel)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
@@ -55,6 +67,8 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         self.loginView?.signUpButton?.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.pushViewController(AKISignUpViewController())
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
@@ -64,8 +78,11 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
             .flatMap( { result in
                 return AKILoginService(self.userModel).login(LoginServiceType.Facebook)
             })
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] userModel in
                 self?.showLocationViewControllerWithViewModel(userModel)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
@@ -75,5 +92,4 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         controller.userModel = userModel
         self.pushViewController(controller)
     }
-    
 }

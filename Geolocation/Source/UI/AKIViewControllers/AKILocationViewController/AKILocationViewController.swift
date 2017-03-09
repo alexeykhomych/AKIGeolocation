@@ -26,7 +26,7 @@ protocol AKILocationViewControllerProtocol {
 }
 
 class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
-
+    
     var userModel: AKIUser?
     
     private var timer: Disposable?
@@ -40,7 +40,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     private var locationView: AKILocationView? {
         return self.getView()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,11 +50,11 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         self.initMapView()
         self.observForMoving()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     private func initLocationManager() {
         self.locationManager = AKILocationManager()
     }
@@ -67,6 +67,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         
         self.navigationItem.setLeftBarButton(logoutButton, animated: true)
         self.navigationItem.leftBarButtonItem!.rx.tap
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onNext: { [unowned self] in
                 self.logOut()
             }).addDisposableTo(self.disposeBag)
@@ -81,6 +82,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     func initTimer() {
         _ = Observable<Int>
             .interval(RxTimeInterval(Timer.Default.interval), scheduler: ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
+            .observeOn(MainScheduler.instance)
             .subscribe({ [weak self] _ in
                 let coordinate = self?.locationManager?.coordinate
                 guard let latitude = coordinate?.latitude else {
@@ -100,10 +102,8 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             return
         }
         
-        let context = AKICurrentPositionContext(userModel, latitude: latitude, longitude: longitude)
-        let observer = context.execute().asObservable()
-        
-        observer
+        _ = AKICurrentPositionContext(userModel, latitude: latitude, longitude: longitude).execute()
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
             .subscribe(onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
@@ -113,15 +113,31 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     func observForMoving() {
         _ = self.locationManager?
             .replaySubject?
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] locations in
                 self?.locationView?.cameraPosition(locations: locations)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             }).addDisposableTo(self.disposeBag)
     }
     
     func logOut() {
-        FBSDKLoginManager().logOut()
-        try? FIRAuth.auth()?.signOut()
+        _ = AKILoginService(self.userModel).logout(LoginServiceType.Firebase)
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+            .subscribe(onNext: { [weak self] userModel in
+                //???
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
+        
+        _ = AKILoginService(self.userModel).logout(LoginServiceType.Facebook)
+            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
+            .subscribe(onNext: { [weak self] userModel in
+                //???
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
         
         _ = self.navigationController?.popToRootViewController(animated: true)
     }

@@ -29,7 +29,7 @@ class AKILoginView: UIView {
             return
         }
         
-        guard let passwordTextField = self.emailTextField else {
+        guard let passwordTextField = self.passwordTextField else {
             return
         }
         
@@ -46,14 +46,11 @@ class AKILoginView: UIView {
         }
 
         let emailValidate: Observable<Bool> = emailTextField.rx.text.map({ text -> Bool in
-            userModel.emailValidation(emailTextField.text)
-//            emailTextField.text.map { viewModel.emailValidation($0) }
+            userModel.emailValidation(text)
         }).shareReplay(1)
         
-//        let emailValidate: Observable<Bool> = emailTextField?.text.map { viewModel.emailValidation($0) }
-        
         let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map({ text -> Bool in
-            userModel.passwordValidation(passwordTextField.text)
+            userModel.passwordValidation(text)
         }).shareReplay(1)
         
         let everythingValid: Observable<Bool> = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
@@ -61,10 +58,10 @@ class AKILoginView: UIView {
         everythingValid.bindTo(loginButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-//        let mail = emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-//        _ = mail.bindTo(emailValidate)
-//        
-//        let password = passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-//        _ = password.bindTo(passwordValidate)
+        let mail = emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = mail.bindTo(userEmail)
+        
+        let password = passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
+        _ = password.bindTo(userPassword)
     }
 }

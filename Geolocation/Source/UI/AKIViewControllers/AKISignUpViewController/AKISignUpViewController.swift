@@ -31,7 +31,7 @@ class AKISignUpViewController: UIViewController {
         self.initModel()
         self.signUpView?.addBindsToViewModel(self.userModel)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -40,30 +40,18 @@ class AKISignUpViewController: UIViewController {
         self.userModel = AKIUser()
     }
     
-    func signUpWithContext(_ context: AKISignUpContext) {
-        let contextSubscriber = context.execute().shareReplay(1)
-        
-        contextSubscriber
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onCompleted: { [weak self] result in
+    private func initSignUpButton() {
+        _ = self.signUpView?.signUpButton?.rx.tap
+            .flatMap( { result in
+                return AKILoginService(self.userModel).signup()
+            })
+            .subscribe(onNext: { [weak self] userModel in
                 let controller = AKILocationViewController()
                 controller.userModel = self?.userModel
                 self?.pushViewController(controller)
-            }).disposed(by: self.disposeBag)
-        
-        contextSubscriber
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }).disposed(by: self.disposeBag)
-    }
-    
-    private func initSignUpButton() {
-        self.signUpView?.signUpButton?
-            .rx.tap
-            .debounce(Timer.Default.debounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-                self?.signUpWithContext(AKISignUpContext(self?.userModel))
-            }).disposed(by: self.disposeBag)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
+            .disposed(by: self.disposeBag)
     }
 }
