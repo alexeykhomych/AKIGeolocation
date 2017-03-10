@@ -30,7 +30,7 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         
         self.loginWithAccessToken()
         
-        self.loginView?.addBindsToViewModel(self.userModel!)
+        self.loginView?.addBinds(to: self.userModel!)
         
         self.initLoginButton()
         self.initSignupButton()

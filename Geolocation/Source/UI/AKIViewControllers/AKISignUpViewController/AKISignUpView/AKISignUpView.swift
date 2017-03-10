@@ -22,63 +22,53 @@ class AKISignUpView: UIView {
         
     let disposeBag = DisposeBag()
     
-    func addBindsToViewModel(_ userModel: AKIUser?) {
-        guard let userModel = userModel else {
-            return
-        }
+    func addBinds(to userModel: AKIUser?) {
         
-        guard let emailTextField = self.emailTextField else {
-            return
-        }
+        let userEmail = self.unwrap(value: userModel?.email, defaultValue: Variable<String>(""))
+        let userName = self.unwrap(value: userModel?.name, defaultValue: Variable<String>(""))
+        let userPassword = self.unwrap(value: userModel?.password, defaultValue: Variable<String>(""))
         
-        guard let passwordTextField = self.passwordTextField else {
+        guard let userModel = userModel,
+            let emailTextField = self.emailTextField,
+            let passwordTextField = self.passwordTextField,
+            let nameTextField = self.nameTextField,
+            let signUpButton = self.signUpButton else
+        {
             return
-        }
-        
-        guard let nameTextField = self.nameTextField else {
-            return
-        }
-        
-        guard let signUpButton = self.signUpButton else {
-            return
-        }
-        
-        guard let userEmail = userModel.email else {
-            return
-        }
-        
-        guard let userPassword = userModel.password else {
-            return
-        }
-        
-        guard let userName = userModel.name else {
-            return
-        }
+        }       
         
         let emailValidate: Observable<Bool> = emailTextField.rx.text.map({ text -> Bool in
             userModel.emailValidation(text)
-        }).shareReplay(1)
+        })
         
         let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map({ text -> Bool in
             userModel.passwordValidation(text)
-        }).shareReplay(1)
+        })
         
         let nameValidate: Observable<Bool> = nameTextField.rx.text.map({ text -> Bool in
             userModel.nameValidation(text)
-        }).shareReplay(1)
+        })
         
-        let everythingValid: Observable<Bool> = Observable.combineLatest(emailValidate, passwordValidate, nameValidate) { $0 && $1 && $2 }
-        
-        everythingValid.bindTo(signUpButton.rx.isEnabled)
+        _ = Observable.combineLatest(emailValidate, passwordValidate, nameValidate) { $0 && $1 && $2 }
+            .bindTo(signUpButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        let mail = emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = mail.bindTo(userEmail)
+        _ = emailTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userEmail)
         
-        let password = passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = password.bindTo(userPassword)
+        _ = passwordTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userPassword)
         
-        let name = nameTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = name.bindTo(userName)
+        _ = nameTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userName)
     }
 }

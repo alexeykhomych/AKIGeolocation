@@ -23,45 +23,34 @@ class AKILoginView: UIView {
     
     let disposeBag = DisposeBag()
     
-    func addBindsToViewModel(_ userModel: AKIUser) {
+    func addBinds(to userModel: AKIUser) {
+    
+        let userEmail = self.unwrap(value: userModel.email, defaultValue: Variable<String>(""))
+        let userPassword = self.unwrap(value: userModel.password, defaultValue: Variable<String>(""))
         
-        guard let emailTextField = self.emailTextField else {
-            return
+        let emailValidate:Observable<Bool> = self.emailTextField!.rx.text.map {
+            $0.flatMap { userModel.emailValidation($0) }
+                .map { Bool($0) }!
         }
         
-        guard let passwordTextField = self.passwordTextField else {
-            return
+        let passwordValidate:Observable<Bool> = self.passwordTextField!.rx.text.map {
+            userModel.passwordValidation($0)
         }
         
-        guard let loginButton = self.loginButton else {
-            return
-        }
-        
-        guard let userEmail = userModel.email else {
-            return
-        }
-        
-        guard let userPassword = userModel.password else {
-            return
-        }
-
-        let emailValidate: Observable<Bool> = emailTextField.rx.text.map({ text -> Bool in
-            userModel.emailValidation(text)
-        }).shareReplay(1)
-        
-        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map({ text -> Bool in
-            userModel.passwordValidation(text)
-        }).shareReplay(1)
-        
-        let everythingValid: Observable<Bool> = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
-        
-        everythingValid.bindTo(loginButton.rx.isEnabled)
+        _ = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
+            .bindTo(self.loginButton!.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        let mail = emailTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = mail.bindTo(userEmail)
+        _ = emailTextField?.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userEmail)
         
-        let password = passwordTextField.rx.text.orEmpty.distinctUntilChanged().observeOn(MainScheduler.instance)
-        _ = password.bindTo(userPassword)
+        _ = passwordTextField?.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userPassword)
     }
 }
