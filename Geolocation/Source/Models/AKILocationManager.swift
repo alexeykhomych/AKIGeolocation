@@ -19,6 +19,7 @@ protocol AKIGoogleLocationManager: CLLocationManagerDelegate {
 }
 
 extension AKIGoogleLocationManager {
+    
     func defaultManager() -> CLLocationManager {
         let manager = CLLocationManager()
         manager.requestAlwaysAuthorization()
@@ -39,6 +40,10 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     
     var replaySubject: ReplaySubject<[CLLocation]>?
     
+    private let defaultLatitude = 0.0
+    private let defaultLongitude = 0.0
+    private let replaySubjectBufferCount = 1
+    
     private var locationManager: CLLocationManager?
     
     var location: CLLocation? {
@@ -50,15 +55,15 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     var latitude: CLLocationDegrees? {
-        return self.unwrap(value: self.coordinate?.latitude, defaultValue: 0.0)
+        return self.unwrap(value: self.coordinate?.latitude, defaultValue: self.defaultLatitude)
     }
     
     var longitude: CLLocationDegrees? {
-        return self.coordinate?.longitude
+        return self.unwrap(value: self.coordinate?.longitude, defaultValue: self.defaultLongitude)
     }
     
     override init() {
-        self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: 1)
+        self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: self.replaySubjectBufferCount)
         super.init()
         self.locationManager = self.defaultManager()
     }

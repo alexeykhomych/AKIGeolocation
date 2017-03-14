@@ -22,7 +22,8 @@ class AKISignUpView: UIView {
         
     let disposeBag = DisposeBag()
     
-    func addBinds(to userModel: AKIUser?) { 
+    func addBinds(to userModel: AKIUser?) {
+        
         guard let userModel = userModel,
             let emailTextField = self.emailTextField,
             let passwordTextField = self.passwordTextField,

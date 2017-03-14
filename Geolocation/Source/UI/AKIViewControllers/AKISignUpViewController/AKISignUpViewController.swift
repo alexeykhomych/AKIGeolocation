@@ -29,7 +29,7 @@ class AKISignUpViewController: UIViewController {
         
         self.initSignUpButton()
         self.initModel()
-        self.signUpView?.addBinds(to :self.userModel)
+        self.signUpView?.addBinds(to: self.userModel)
     }
     
     override func didReceiveMemoryWarning() {

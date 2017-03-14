@@ -85,11 +85,10 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             .observeOn(MainScheduler.instance)
             .subscribe({ [weak self] _ in
                 let coordinate = self?.locationManager?.coordinate
-                guard let latitude = coordinate?.latitude else {
-                    return
-                }
-                
-                guard let longitude = coordinate?.longitude else {
+
+                guard let longitude = coordinate?.longitude,
+                    let latitude = coordinate?.latitude else
+                {
                     return
                 }
                 

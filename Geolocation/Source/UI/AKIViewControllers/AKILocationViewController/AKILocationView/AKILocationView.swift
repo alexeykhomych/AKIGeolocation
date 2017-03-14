@@ -14,10 +14,12 @@ class AKILocationView: UIView {
     @IBOutlet var mapView: GMSMapView?
     
     func cameraPosition(locations: [CLLocation]) {
-        let coordinate = locations.last.map {
-            return CLLocationCoordinate2D.init(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)
+        let last = locations.last.map {
+            CLLocationCoordinate2D.init(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)
         }
+        
+        guard let coordinate = last else { return }
     
-        self.mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate!, zoom: Google.Maps.Default.zoom))
+        self.mapView?.animate(with: GMSCameraUpdate.setTarget(coordinate, zoom: Google.Maps.Default.zoom))
     }
 }
