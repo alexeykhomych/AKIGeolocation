@@ -50,7 +50,7 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     var latitude: CLLocationDegrees? {
-        return self.coordinate?.latitude ?? 0.0
+        return self.unwrap(value: self.coordinate?.latitude, defaultValue: 0.0)
     }
     
     var longitude: CLLocationDegrees? {

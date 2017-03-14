@@ -11,6 +11,15 @@ import UIKit
 import RxCocoa
 import RxSwift
 
+extension UIView {
+    
+    func lift<R, G>(_ first: R?, type: G?) -> G  {
+        let q = first == nil ? type : first
+        return (first!, second!)
+    }
+    
+}
+
 class AKILoginView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
@@ -28,14 +37,10 @@ class AKILoginView: UIView {
         let userEmail = self.unwrap(value: userModel.email, defaultValue: Variable<String>(""))
         let userPassword = self.unwrap(value: userModel.password, defaultValue: Variable<String>(""))
         
-        let emailValidate:Observable<Bool> = self.emailTextField!.rx.text.map {
-            $0.flatMap { userModel.emailValidation($0) }
-                .map { Bool($0) }!
-        }
+        let userData = self.lift(self.emailTextField?.rx.text, second: self.passwordTextField?.rx.text)
         
-        let passwordValidate:Observable<Bool> = self.passwordTextField!.rx.text.map {
-            userModel.passwordValidation($0)
-        }
+        let emailValidate: Observable<Bool> = userData.0.map { userModel.emailValidation($0) }
+        let passwordValidate: Observable<Bool> = userData.1.map { userModel.passwordValidation($0) }
         
         _ = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
             .bindTo(self.loginButton!.rx.isEnabled)

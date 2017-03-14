@@ -22,12 +22,7 @@ class AKISignUpView: UIView {
         
     let disposeBag = DisposeBag()
     
-    func addBinds(to userModel: AKIUser?) {
-        
-        let userEmail = self.unwrap(value: userModel?.email, defaultValue: Variable<String>(""))
-        let userName = self.unwrap(value: userModel?.name, defaultValue: Variable<String>(""))
-        let userPassword = self.unwrap(value: userModel?.password, defaultValue: Variable<String>(""))
-        
+    func addBinds(to userModel: AKIUser?) { 
         guard let userModel = userModel,
             let emailTextField = self.emailTextField,
             let passwordTextField = self.passwordTextField,
@@ -35,19 +30,23 @@ class AKISignUpView: UIView {
             let signUpButton = self.signUpButton else
         {
             return
-        }       
+        }
         
-        let emailValidate: Observable<Bool> = emailTextField.rx.text.map({ text -> Bool in
-            userModel.emailValidation(text)
-        })
+        let userEmail = self.unwrap(value: userModel.email, defaultValue: Variable<String>(""))
+        let userName = self.unwrap(value: userModel.name, defaultValue: Variable<String>(""))
+        let userPassword = self.unwrap(value: userModel.password, defaultValue: Variable<String>(""))
         
-        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map({ text -> Bool in
-            userModel.passwordValidation(text)
-        })
+        let emailValidate: Observable<Bool> = passwordTextField.rx.text.map {
+            userModel.emailValidation($0)
+        }
         
-        let nameValidate: Observable<Bool> = nameTextField.rx.text.map({ text -> Bool in
-            userModel.nameValidation(text)
-        })
+        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map {
+            userModel.passwordValidation($0)
+        }
+        
+        let nameValidate: Observable<Bool> = nameTextField.rx.text.map {
+            userModel.nameValidation($0)
+        }
         
         _ = Observable.combineLatest(emailValidate, passwordValidate, nameValidate) { $0 && $1 && $2 }
             .bindTo(signUpButton.rx.isEnabled)
