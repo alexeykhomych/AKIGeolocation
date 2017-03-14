@@ -11,25 +11,26 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-import GoogleMaps
-
 import RxSwift
 import RxCocoa
 
-class AKICurrentPositionContext: AKIContext {
+class AKICurrentPositionContext: AKIContextProtocol {
     
-    var locations: [CLLocation]?
-    var model: AKIModel
+    private var logitude: Double?
+    private var latitude: Double?
     
-    required init(_ model: AKIModel) {
-        self.model = model
+    var userModel: AKIUser?
+    
+    required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
-    init(_ model: AKIModel, locations: [CLLocation]) {
-        self.model = model
-        self.locations = locations
+    init(_ userModel: AKIUser?, latitude: Double?, longitude: Double?) {
+        self.userModel = userModel
+        self.logitude = longitude
+        self.latitude = latitude
     }
-   
+    
     func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
         return { (error, reference) in
             if error != nil {
@@ -39,24 +40,25 @@ class AKICurrentPositionContext: AKIContext {
         }
     }
     
-    func currentPositionContext() -> PublishSubject<AnyObject> {
-        let observer = PublishSubject<AnyObject>()
+    internal func execute() -> Observable<AKIUser> {
+        let observer = PublishSubject<AKIUser>()
         _ = observer.subscribe({ observer in
-            let model = self.model as? AKIUser
+
+            guard let user = self.userModel else {
+                return
+            }
             
-            let reference = FIRDatabase.database().reference(fromURL: kAKIFirebaseURL)
-            let userReference = reference.child(kAKIRequestCoordinates).child((model?.id!)!)
+            guard let id = user.id else {
+                return
+            }
             
-            let location = self.locations?.last
+            let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
+            let userReference = reference.child(Context.Request.coordinates).child(id)
             
-            let coordinates = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!,
-                                                     longitude: (location?.coordinate.longitude)!)
-            
-            let values = [kAKIRequestCoordinatesLatitude: coordinates.latitude,
-                          kAKIRequestCoordinatesLongitude: coordinates.longitude] as [String : Any]
+            let values = [Context.Request.latitude: self.latitude as Any,
+                          Context.Request.longitude: self.logitude as Any] as [String : Any]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
-            
         })
         
         observer.onCompleted()

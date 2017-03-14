@@ -16,9 +16,11 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKIFacebookLoginContext: AKIContext {
+class AKIFacebookLoginContext: AKIContextProtocol {
     
-    var model: AKIModel
+    var controller: UIViewController?
+    
+    var userModel: AKIUser?
     
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
@@ -33,47 +35,38 @@ class AKIFacebookLoginContext: AKIContext {
     }
     
     var parameters: [AnyHashable: Any] {
-        return [kAKIRequestFields : "\(kAKIRequestID), \(kAKIRequestName), \(kAKIRequestEmail)"]
+        return [Context.Request.fields : "\(Context.Request.id), \(Context.Request.name), \(Context.Request.email)"]
     }
     
-    required init(_ model: AKIModel) {
-        self.model = model
+    required init(_ userModel: AKIUser?) {
+        self.userModel = userModel
     }
     
-    func parseJSON(_ json: Any) {
-        if let dictionary = json as? NSDictionary {
-            let model = self.model as? AKIUser
-            model?.email = dictionary[kAKIRequestEmail] as? String
-            model?.name = dictionary[kAKIRequestName] as? String
-        }
-    }
-    
-    //MARK: RxSwift
-    
-    func loginFacebook() -> Observable<AnyObject> {
+    internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            let model = self.model as? AKIUser
             
-            FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
-                if error != nil {
+            FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
+                
+                if (error != nil) || (result == nil) {
                     observer.on(.error(error!))
-                    return
                 }
                 
-                model?.id = user?.uid
-            })
-            
-            FBSDKGraphRequest(graphPath: kAKIFacebookRequestMe, parameters: self.parameters).start(completionHandler: { (connection, result, error) in
-                if error != nil {
-                    observer.on(.error(error!))
-                    return
-                }
-                
-                self.parseJSON(result!)
-            })
-            
-            observer.onCompleted()
-            
+                FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
+                    if error != nil {
+                        observer.on(.error(error!))
+                        return
+                    }
+                    
+                    guard var model = self.userModel else {
+                        return
+                    }
+                    
+                    model.id = user?.uid
+                    observer.onNext(model)
+                    observer.onCompleted()
+                })
+            }))
+
             return Disposables.create()
         }
     }

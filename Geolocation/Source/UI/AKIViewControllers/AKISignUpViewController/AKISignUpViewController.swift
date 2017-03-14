@@ -14,43 +14,44 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKISignUpViewController: AKIViewController {
+class AKISignUpViewController: UIViewController {
+    
+    let disposeBag = DisposeBag()
+    
+    var userModel: AKIUser?
     
     var signUpView: AKISignUpView? {
         return self.getView()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.initSignUpButton()
-        self.signUpView?.validateFields()
+        self.initModel()
+        self.signUpView?.addBinds(to: self.userModel)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func initSignUpButton() {
-        self.signUpView?.signUpButton?.rx.tap
-            .debounce(kAKIDebounceOneSecond, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { _ in
-                let signUpView = self.signUpView
-                
-                let model = AKIUser((signUpView?.emailTextField?.text)!,
-                                    password: (signUpView?.passwordTextField?.text)!,
-                                    name: (signUpView?.nameTextField?.text)!)
-    
-                let context = AKISignUpContext(model)
-                self.observerContext(context, observer: self.signUpObserver(context))
-            }).disposed(by: self.disposeBag)
+    func initModel() {
+        self.userModel = AKIUser()
     }
     
-    override func contextDidLoad(_ context: AKIContext) {
-        self.pushViewController(AKILocationViewController(), model: context.model)
-    }
-    
-    func signUpObserver(_ context: AKISignUpContext) -> Observable<AnyObject> {
-        return context.signUp()
+    private func initSignUpButton() {
+        _ = self.signUpView?.signUpButton?.rx.tap
+            .flatMap( { result in
+                return AKILoginService(self.userModel).signup()
+            })
+            .subscribe(onNext: { [weak self] userModel in
+                let controller = AKILocationViewController()
+                controller.userModel = self?.userModel
+                self?.pushViewController(controller)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
+            .disposed(by: self.disposeBag)
     }
 }

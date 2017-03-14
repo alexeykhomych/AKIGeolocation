@@ -11,42 +11,51 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class AKILoginView: UIView, validateStringWithPredicate {
+class AKILoginView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     
-    @IBOutlet var loginButton: UIButton!
+    @IBOutlet var loginButton: UIButton?
     @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
     
-    @IBOutlet var passwordValidLable: UILabel!
-    @IBOutlet var emailValidLable: UILabel!
-    
     let disposeBag = DisposeBag()
     
-    func validateFields() {
-        let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicateEmailFormat,
-                                                                           kAKIPredicateEmailRegex))
-        }).shareReplay(1)
+    func addBinds(to userModel: AKIUser) {
         
-        let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
-                                                                           text!.characters.count,
-                                                                           kAKIPredicateMinimalPasswordLength))
-        }).shareReplay(1)
+        guard let emailTextField = self.emailTextField,
+            let passwordTextField = self.passwordTextField else
+        {
+            return
+        }
+    
+        let userEmail = self.unwrap(value: userModel.email, defaultValue: Variable<String>(""))
+        let userPassword = self.unwrap(value: userModel.password, defaultValue: Variable<String>(""))
         
-        let everythingValid: Observable<Bool> = Observable.combineLatest(email, password) { $0 && $1 }
+        let emailValidate: Observable<Bool> = emailTextField.rx.text.map {
+            userModel.passwordValidation($0)
+        }
         
-        email.bindTo(self.emailValidLable.rx.isHidden)
+        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map {
+            userModel.passwordValidation($0)
+        }
+        
+        _ = Observable.combineLatest(emailValidate, passwordValidate) { $0 && $1 }
+            .bindTo(self.loginButton!.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        password.bindTo(self.passwordValidLable.rx.isHidden)
-            .addDisposableTo(self.disposeBag)
+        _ = emailTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userEmail)
         
-        everythingValid.bindTo(self.loginButton.rx.isEnabled)
-            .addDisposableTo(self.disposeBag)
+        _ = passwordTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userPassword)
     }
 }

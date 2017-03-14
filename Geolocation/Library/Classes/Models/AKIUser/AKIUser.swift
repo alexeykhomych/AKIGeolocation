@@ -11,23 +11,40 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class AKIUser: AKIModel {
+extension AKIUserViewModelProtocol {
     
-    var email: String?
-    var password: String?
-    var name: String?
-    var id: String?
-    
-    override init() {
-        self.email = kAKIEmptyString
-        self.password = kAKIEmptyString
-        self.name = kAKIEmptyString
-        self.id = kAKIEmptyString
+    func nameValidation(_ name: String?) -> Bool {
+        return name?.nameValidation() ?? false
     }
     
-    init(_ email: String, password: String, name: String) {
-        self.email = email
-        self.password = password
-        self.name = name
+    func passwordValidation(_ password: String?) -> Bool {
+        return password?.passwordValidation() ?? false
+    }
+    
+    func emailValidation(_ email: String?) -> Bool {
+        return email?.emailValidation() ?? false
+    }
+}
+
+protocol AKIUserViewModelProtocol {
+    
+    func nameValidation(_ name: String?) -> Bool
+    func passwordValidation(_ password: String?) -> Bool
+    func emailValidation(_ email: String?) -> Bool
+    
+}
+
+struct AKIUser: AKIUserViewModelProtocol {
+    
+    var email: Variable<String>?
+    var password: Variable<String>?
+    var name: Variable<String>?
+    var id: String?
+
+    init() {
+        self.email = Variable<String>("")
+        self.password = Variable<String>("")
+        self.name = Variable<String>("")
+        self.id = ""
     }
 }

@@ -25,18 +25,18 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
+        FIRApp.configure()
+        
+        GMSServices.provideAPIKey(Google.API.key)
+        
+        IQKeyboardManager.sharedManager().enable = true
+        
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window;
         
         let navigationController = UINavigationController(rootViewController: AKILoginViewController())
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
-        
-        FIRApp.configure()
-        
-        GMSServices.provideAPIKey(kAKIGoogleAPIKey)
-        
-        IQKeyboardManager.sharedManager().enable = true
         
         return true
     }

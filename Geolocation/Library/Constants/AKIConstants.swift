@@ -8,48 +8,68 @@
 
 import UIKit
 
-let kAKIDebounceOneSecond = 1.0
+struct Context {
+    struct Request {
+        static let fireBaseURL = "https://test-ec520.firebaseio.com/"
+        static let facebookMe = "/me"
+        static let fields = "fields"
+        static let id = "id"
+        static let name = "name"
+        static let email = "email"
+        static let users = "users"
+        static let coordinates = "coordinates"
+        static let latitude = "latitude"
+        static let longitude = "longitude"
+        static let password = "password"        
+    }
+    
+    struct Field {
+        
+    }
+    
+    struct Permission {
+        static let publicProfile = "public_profile"
+        static let email = "email"
+    }
+    
+    struct Key {
+        static let googleAPI = "AIzaSyDhCTlo2o_D_SDwFUWdtf8C1t_2i-ksHdA"
+    }
+}
 
-let kAKIAllertTitleOk = "Ok"
-let kAKIAllertTitleError = "Error"
-let kAKIAllertMessage = ""
+struct Validation {
+    static let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    static let emailFormat = "SELF MATCHES %@"
+    static let passwordFormat = "%d >= %d"
+    static let nameFormat = "SELF MATCHES %@"
+    static let nameRegex = "\\A\\w{5,18}\\z"
+    static let minimalPasswordLength = 6
+    static let minimalNameLength = 6
+}
 
-let kAKIEmptyString = ""
+struct Google {
+    struct Maps {
+        struct Default {
+            static let zoom: Float = 15.0
+            static let distanceFilter = 50
+        }
+    }
+    
+    struct API {
+        static let key = "AIzaSyDhCTlo2o_D_SDwFUWdtf8C1t_2i-ksHdA"
+    }
+}
 
-let kAKIGoogleAPIKey = "AIzaSyDhCTlo2o_D_SDwFUWdtf8C1t_2i-ksHdA"
+struct Timer {
+    struct Default {
+        static let interval = 60
+        static let debounceOneSecond = 1.0
+    }
+}
 
-let kAKIFacebookPermissionEmail = "email"
-let kAKIFacebookPermissionPublicProfile = "public_profile"
-
-let kAKIFacebookRequestMe = "/me"
-let kAKIRequestFields = "fields"
-let kAKIRequestID = "id"
-let kAKIRequestName = "name"
-let kAKIRequestEmail = "email"
-let kAKIRequestUsers = "users"
-let kAKIRequestCoordinates = "coordinates"
-let kAKIRequestCoordinatesLatitude = "latitude"
-let kAKIRequestCoordinatesLongitude = "longitude"
-let kAKIRequestPassword = "password"
-
-let kAKIAllertErrorMessage = "Enter your email and password"
-let kAKISuccessfullySignUp = "successfully signed up"
-
-let kAKIFirebaseURL = "https://test-ec520.firebaseio.com/"
-
-let kAKIDistanceFilter = 50
-let kAKIGoogleMapsDefaultZoom: Float = 15.0
-
-let kAKIPredicateEmailFormat = "SELF MATCHES %@"
-let kAKIPredicatePasswordFormat = "%d >= %d"
-
-let kAKIPredicateEmailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-let kAKIPredicateMinimalPasswordLength = 6
-
-let kAKITimerInterval = 60
-
-let kAKILogoutButtonText = "Logout"
-
-class AKIConstants: NSObject {
-
+struct UI {
+    struct AllertMessage {
+        static let titleOk = "Ok"
+        static let titleError = "Error"
+    }
 }

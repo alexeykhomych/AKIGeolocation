@@ -11,51 +11,64 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class AKISignUpView: UIView, validateStringWithPredicate {
+class AKISignUpView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
     @IBOutlet var nameTextField: UITextField?
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     
-    @IBOutlet var signUpButton: UIButton!
-    
-    @IBOutlet var passwordValidLable: UILabel!
-    @IBOutlet var emailValidLable: UILabel!
-    @IBOutlet var nameValidLable: UILabel!
-    
+    @IBOutlet var signUpButton: UIButton?
+        
     let disposeBag = DisposeBag()
     
-    func validateFields() {
-        let email: Observable<Bool> = self.emailTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicateEmailFormat,
-                                                                            kAKIPredicateEmailRegex))
-        }).shareReplay(1)
+    func addBinds(to userModel: AKIUser?) {
         
-        let password: Observable<Bool> = self.passwordTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
-                                                                          text!.characters.count,
-                                                                          kAKIPredicateMinimalPasswordLength))
-        }).shareReplay(1)
+        guard let userModel = userModel,
+            let emailTextField = self.emailTextField,
+            let passwordTextField = self.passwordTextField,
+            let nameTextField = self.nameTextField,
+            let signUpButton = self.signUpButton else
+        {
+            return
+        }
         
-        let name: Observable<Bool> = self.nameTextField!.rx.text.map({ text -> Bool in
-            self.validateStringWithPredicate(text!, predicate: NSPredicate(format: kAKIPredicatePasswordFormat,
-                                                                           text!.characters.count,
-                                                                           kAKIPredicateMinimalPasswordLength))
-        }).shareReplay(1)
+        let userEmail = self.unwrap(value: userModel.email, defaultValue: Variable<String>(""))
+        let userName = self.unwrap(value: userModel.name, defaultValue: Variable<String>(""))
+        let userPassword = self.unwrap(value: userModel.password, defaultValue: Variable<String>(""))
         
-        let everythingValid: Observable<Bool> = Observable.combineLatest(email, password, name) { $0 && $1 && $2 }
+        let emailValidate: Observable<Bool> = passwordTextField.rx.text.map {
+            userModel.emailValidation($0)
+        }
         
-        email.bindTo(self.emailValidLable.rx.isHidden)
-        .addDisposableTo(self.disposeBag)
+        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map {
+            userModel.passwordValidation($0)
+        }
         
-        password.bindTo(self.passwordValidLable.rx.isHidden)
+        let nameValidate: Observable<Bool> = nameTextField.rx.text.map {
+            userModel.nameValidation($0)
+        }
+        
+        _ = Observable.combineLatest(emailValidate, passwordValidate, nameValidate) { $0 && $1 && $2 }
+            .bindTo(signUpButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        name.bindTo(self.nameValidLable.rx.isHidden)
-            .addDisposableTo(self.disposeBag)
+        _ = emailTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userEmail)
         
-        everythingValid.bindTo(self.signUpButton.rx.isEnabled)
-        .addDisposableTo(self.disposeBag)
+        _ = passwordTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userPassword)
+        
+        _ = nameTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .observeOn(MainScheduler.instance)
+            .bindTo(userName)
     }
 }
