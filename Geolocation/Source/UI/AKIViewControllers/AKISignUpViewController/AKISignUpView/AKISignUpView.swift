@@ -53,11 +53,13 @@ class AKISignUpView: UIView {
             .bindTo(signUpButton.rx.isEnabled)
             .addDisposableTo(self.disposeBag)
         
-        _ = emailTextField.rx.text
-            .orEmpty
-            .distinctUntilChanged()
-            .observeOn(MainScheduler.instance)
-            .bindTo(userEmail)
+        userModel.email.map { (value) -> Void in
+            _ = emailTextField.rx.text
+                .orEmpty
+                .distinctUntilChanged()
+                .observeOn(MainScheduler.instance)
+                .bindTo(value)
+        }
         
         _ = passwordTextField.rx.text
             .orEmpty

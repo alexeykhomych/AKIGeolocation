@@ -40,3 +40,5 @@ class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
         return AKIFacebookLogoutContext(self.userModel).execute()
     }
 }
+
+

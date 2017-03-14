@@ -15,6 +15,8 @@ import FBSDKLoginKit
 
 class AKILoginViewController: UIViewController, Tappable, contextObserver {
     
+    var service = Servie()
+    
     var userModel: AKIUser?
     
     let disposeBag = DisposeBag()

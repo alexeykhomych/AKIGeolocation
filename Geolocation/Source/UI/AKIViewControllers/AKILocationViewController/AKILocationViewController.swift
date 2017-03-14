@@ -82,7 +82,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     func initTimer() {
         _ = Observable<Int>
             .interval(RxTimeInterval(Timer.Default.interval), scheduler: ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
-            .observeOn(MainScheduler.instance)
+            .observeOn(MainScheduler.instance).faltmap{AKICurrentPositionContext()}
             .subscribe({ [weak self] _ in
                 let coordinate = self?.locationManager?.coordinate
 
@@ -119,22 +119,20 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             }).addDisposableTo(self.disposeBag)
+        
+        self.locationManager.subs
     }
     
     func logOut() {
         _ = AKILoginService(self.userModel).logout(LoginServiceType.Firebase)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onNext: { [weak self] userModel in
-                //???
-                }, onError: { [weak self] error in
+            .subscribe( onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         
         _ = AKILoginService(self.userModel).logout(LoginServiceType.Facebook)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onNext: { [weak self] userModel in
-                //???
-                }, onError: { [weak self] error in
+            .subscribe(onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         

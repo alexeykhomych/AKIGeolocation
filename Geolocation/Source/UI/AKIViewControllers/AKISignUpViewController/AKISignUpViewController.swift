@@ -28,7 +28,7 @@ class AKISignUpViewController: UIViewController {
         super.viewDidLoad()
         
         self.initSignUpButton()
-        self.initModel()
+//        self.initModel()
         self.signUpView?.addBinds(to: self.userModel)
     }
     
@@ -36,14 +36,14 @@ class AKISignUpViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    func initModel() {
-        self.userModel = AKIUser()
-    }
+//    func initModel() {
+//        self.userModel = AKIUser()
+//    }
     
     private func initSignUpButton() {
-        _ = self.signUpView?.signUpButton?.rx.tap
+        _ = self.signUpView?.signUpButton?.rx.tap.map{-> User}
             .flatMap( { result in
-                return AKILoginService(self.userModel).signup()
+                return AKILoginService(user).signup()
             })
             .subscribe(onNext: { [weak self] userModel in
                 let controller = AKILocationViewController()

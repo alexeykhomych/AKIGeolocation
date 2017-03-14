@@ -18,9 +18,9 @@ import RxCocoa
 
 class AKIFacebookLoginContext: AKIContextProtocol {
     
-    var controller: UIViewController?
+//    weak var controller: UIViewController?
     
-    var userModel: AKIUser?
+//    var userModel: AKIUser?
     
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
@@ -45,7 +45,7 @@ class AKIFacebookLoginContext: AKIContextProtocol {
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             
-            FBSDKLoginManager.init().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
+            FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
                 
                 if (error != nil) || (result == nil) {
                     observer.on(.error(error!))
@@ -71,3 +71,5 @@ class AKIFacebookLoginContext: AKIContextProtocol {
         }
     }
 }
+
+
