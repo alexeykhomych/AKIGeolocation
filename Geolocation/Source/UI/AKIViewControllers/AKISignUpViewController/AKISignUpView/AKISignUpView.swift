@@ -22,55 +22,10 @@ class AKISignUpView: UIView {
         
     let disposeBag = DisposeBag()
     
-    func addBinds(to userModel: AKIUser?) {
-        
-        guard let userModel = userModel,
-            let emailTextField = self.emailTextField,
-            let passwordTextField = self.passwordTextField,
-            let nameTextField = self.nameTextField,
-            let signUpButton = self.signUpButton else
-        {
-            return
-        }
-        
-        let userEmail = self.unwrap(value: userModel.email, defaultValue: Variable<String>(""))
-        let userName = self.unwrap(value: userModel.name, defaultValue: Variable<String>(""))
-        let userPassword = self.unwrap(value: userModel.password, defaultValue: Variable<String>(""))
-        
-        let emailValidate: Observable<Bool> = passwordTextField.rx.text.map {
-            userModel.emailValidation($0)
-        }
-        
-        let passwordValidate: Observable<Bool> = passwordTextField.rx.text.map {
-            userModel.passwordValidation($0)
-        }
-        
-        let nameValidate: Observable<Bool> = nameTextField.rx.text.map {
-            userModel.nameValidation($0)
-        }
-        
-        _ = Observable.combineLatest(emailValidate, passwordValidate, nameValidate) { $0 && $1 && $2 }
-            .bindTo(signUpButton.rx.isEnabled)
-            .addDisposableTo(self.disposeBag)
-        
-        userModel.email.map { (value) -> Void in
-            _ = emailTextField.rx.text
-                .orEmpty
-                .distinctUntilChanged()
-                .observeOn(MainScheduler.instance)
-                .bindTo(value)
-        }
-        
-        _ = passwordTextField.rx.text
-            .orEmpty
-            .distinctUntilChanged()
-            .observeOn(MainScheduler.instance)
-            .bindTo(userPassword)
-        
-        _ = nameTextField.rx.text
-            .orEmpty
-            .distinctUntilChanged()
-            .observeOn(MainScheduler.instance)
-            .bindTo(userName)
+    func validateFields(userModel: AKIUser?) -> Bool {
+        guard let userModel = userModel else { return false }
+        return userModel.emailValidation(self.emailTextField?.text) &&
+            userModel.passwordValidation(self.passwordTextField?.text) &&
+            userModel.nameValidation(self.nameTextField?.text)
     }
 }

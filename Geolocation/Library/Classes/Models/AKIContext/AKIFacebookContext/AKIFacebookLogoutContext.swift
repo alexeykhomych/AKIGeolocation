@@ -19,11 +19,7 @@ import RxCocoa
 class AKIFacebookLogoutContext: AKIContextProtocol {
 
     var userModel: AKIUser?
-    
-    required init(_ userModel: AKIUser?) {
-        self.userModel = userModel
-    }
-    
+
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             

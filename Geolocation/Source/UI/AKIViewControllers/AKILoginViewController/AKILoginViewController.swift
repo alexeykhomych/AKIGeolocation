@@ -15,11 +15,11 @@ import FBSDKLoginKit
 
 class AKILoginViewController: UIViewController, Tappable, contextObserver {
     
-    var service = Servie()
-    
     var userModel: AKIUser?
     
     let disposeBag = DisposeBag()
+    
+    var loginService: AKILoginService?
     
     var loginView: AKILoginView? {
         return self.getView()
@@ -29,10 +29,9 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         super.viewDidLoad()
         
         self.userModel = AKIUser()
+        self.loginService = AKILoginService()
         
-        self.loginWithAccessToken()
-        
-        self.loginView?.addBinds(to: self.userModel!)
+        self.loginWithToken()
         
         self.initLoginButton()
         self.initSignupButton()
@@ -43,8 +42,10 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         super.didReceiveMemoryWarning()
     }
     
-    func loginWithAccessToken() {
-        _ = AKILoginService(self.userModel).loginWithFacebookAccessToken()
+    func loginWithToken() {
+        let userModel = self.userModel ?? AKIUser()
+        
+        _ = AKILoginService().login(with: userModel, service: LoginServiceType.FirebaseToken)
             .subscribe(onNext: { [weak self] userModel in
                     self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self] error in
@@ -53,10 +54,21 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     }
     
     private func initLoginButton() {
+        guard let userModel = self.userModel else {
+            return
+        }
+        
+//        if !(self.loginView?.validateFields(userModel: userModel))! {
+//            return
+//        }
+        
         _ = self.loginView?.loginButton?.rx.tap
-            .flatMap( { result in
-                return AKILoginService(self.userModel).login(LoginServiceType.Firebase)
-            })
+//            .filter {
+//                
+//            }
+            .flatMap { _ in
+                return AKILoginService().login(with: userModel, service: LoginServiceType.Firebase)
+            }
             .subscribe(onNext: { [weak self] userModel in
                     self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self] error in
@@ -68,7 +80,7 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     private func initSignupButton() {
         self.loginView?.signUpButton?.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.pushViewController(AKISignUpViewController())
+                    self?.pushViewController(AKISignUpViewController())
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
@@ -78,13 +90,17 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     private func initLoginWithFacebookButton() {
         _ = self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
-                return AKILoginService(self.userModel).login(LoginServiceType.Facebook)
+                return AKILoginService().login(with: self.userModel!, service: LoginServiceType.Facebook)
             })
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] userModel in
-                self?.showLocationViewControllerWithViewModel(userModel)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                
+                _ = AKILoginService().login(with: userModel, service: LoginServiceType.Firebase).subscribe(onNext: {
+                    self?.showLocationViewControllerWithViewModel($0)
+                })
+                
+            }, onError: { [weak self] error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }

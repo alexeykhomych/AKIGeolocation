@@ -18,10 +18,6 @@ import RxCocoa
 
 class AKIFacebookLoginContext: AKIContextProtocol {
     
-//    weak var controller: UIViewController?
-    
-//    var userModel: AKIUser?
-    
     var accessTokenString: String {
         return FBSDKAccessToken.current().tokenString
     }
@@ -38,33 +34,24 @@ class AKIFacebookLoginContext: AKIContextProtocol {
         return [Context.Request.fields : "\(Context.Request.id), \(Context.Request.name), \(Context.Request.email)"]
     }
     
-    required init(_ userModel: AKIUser?) {
-        self.userModel = userModel
-    }
-    
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             
-            FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: self.controller, handler: ({ result, error in
+            FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: nil, handler: ({ result, error in
                 
-                if (error != nil) || (result == nil) {
-                    observer.on(.error(error!))
+                if let error = error {
+                    observer.on(.error(error))
+                    return
                 }
                 
-                FIRAuth.auth()?.signIn(with: self.credentials, completion: { (user, error) in
-                    if error != nil {
-                        observer.on(.error(error!))
+                guard let result = result else {
                         return
-                    }
-                    
-                    guard var model = self.userModel else {
-                        return
-                    }
-                    
-                    model.id = user?.uid
-                    observer.onNext(model)
-                    observer.onCompleted()
-                })
+                }
+                var model = AKIUser()
+                model.id = result.token.userID
+                
+                observer.onNext(model)
+                observer.onCompleted()
             }))
 
             return Disposables.create()

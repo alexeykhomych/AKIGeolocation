@@ -11,29 +11,37 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+import Firebase
+import FirebaseAuth
+
 protocol AKIFirebaseLoginProtocol {
     
-    func login() -> Observable<AKIUser>
+    func login(with userModel: AKIUser) -> Observable<AKIUser>
     
 }
 
 class AKIFirebaseLoginProvider: AKIFirebaseLoginProtocol {
-    
-    var userModel: AKIUser?
-
-    init(_ userModel: AKIUser) {
-        self.userModel = userModel
-    }
        
-    func login() -> Observable<AKIUser> {
-        return AKIFirebaseLoginContext(self.userModel).execute()
+    func login(with userModel: AKIUser) -> Observable<AKIUser> {
+        return AKIFirebaseLoginContext(userModel).execute()
     }
     
-    func logout() -> Observable<AKIUser> {
-        return AKIFirebaseLogoutContext(self.userModel).execute()
+    func loginWithAccessToken(with userModel: AKIUser) -> Observable<AKIUser> {
+        guard let user = FIRAuth.auth()?.currentUser else {
+            return Observable<AKIUser>.empty()
+        }
+        
+        var userModel = userModel
+        userModel.id = user.uid
+        
+        return self.login(with: userModel)
     }
     
-    func signup() -> Observable<AKIUser> {
-        return AKIFirebaseSignUpContext(self.userModel).execute()
+    func logout(with userModel: AKIUser) -> Observable<AKIUser> {
+        return AKIFirebaseLogoutContext(userModel).execute()
+    }
+    
+    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+        return AKIFirebaseSignUpContext(userModel).execute()
     }
 }

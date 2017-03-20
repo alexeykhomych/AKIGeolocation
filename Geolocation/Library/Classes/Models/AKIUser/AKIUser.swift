@@ -11,7 +11,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-extension AKIUserViewModelProtocol {
+extension AKIUser {
     
     func nameValidation(_ name: String?) -> Bool {
         return name?.nameValidation() ?? false
@@ -26,27 +26,17 @@ extension AKIUserViewModelProtocol {
     }
 }
 
-protocol AKIUserViewModelProtocol {
-    
-    func nameValidation(_ name: String?) -> Bool
-    func passwordValidation(_ password: String?) -> Bool
-    func emailValidation(_ email: String?) -> Bool
-    
-}
-
-struct AKIUser: AKIUserViewModelProtocol {
+struct AKIUser {
     
     let email: String
-    
-    var email: Variable<String>
-    var password: Variable<String>
-    var name: Variable<String>
+    var password: String
+    var name: String
     var id: String
 
     init() {
-        self.email = Variable<String>("")
-        self.password = Variable<String>("")
-        self.name = Variable<String>("")
+        self.email = ""
+        self.password = ""
+        self.name = ""
         self.id = ""
     }
 }

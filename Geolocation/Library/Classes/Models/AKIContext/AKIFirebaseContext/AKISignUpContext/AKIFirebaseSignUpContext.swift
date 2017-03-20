@@ -28,16 +28,8 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
                 return Disposables.create()
             }
             
-            guard let email = user.email else {
-                return Disposables.create()
-            }
-            
-            guard let password = user.password else {
-                return Disposables.create()
-            }
-            
-            FIRAuth.auth()?.createUser(withEmail: email.value,
-                                       password: password.value,
+            FIRAuth.auth()?.createUser(withEmail: user.email,
+                                       password: user.password,
                                        completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
@@ -58,13 +50,13 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
             let userReference = reference.child(Context.Request.users).child(Context.Request.users)
             
-            let values = [Context.Request.name: model.name?.value,
-                          Context.Request.email: model.email?.value,
-                          Context.Request.password: model.password?.value]
+            let values = [Context.Request.name: model.name,
+                          Context.Request.email: model.email,
+                          Context.Request.password: model.password]
             
             userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
             
-            model.id = user?.uid
+            model.id = user?.uid ?? ""
             
             observer?.onNext(model)
             observer?.onCompleted()

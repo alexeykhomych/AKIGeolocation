@@ -48,12 +48,8 @@ class AKICurrentPositionContext: AKIContextProtocol {
                 return
             }
             
-            guard let id = user.id else {
-                return
-            }
-            
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child(id)
+            let userReference = reference.child(Context.Request.coordinates).child(user.id)
             
             let values = [Context.Request.latitude: self.latitude as Any,
                           Context.Request.longitude: self.logitude as Any] as [String : Any]

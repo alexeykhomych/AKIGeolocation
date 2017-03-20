@@ -30,7 +30,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <textInputTraits key="textInputTraits"/>
+                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                 </textField>
                 <navigationBar contentMode="scaleToFill" id="vdY-qt-JBU">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -53,9 +53,7 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8aq-vk-iiD">
                     <rect key="frame" x="166" y="405" width="140" height="42"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="SignUp" image="download">
-                        <color key="titleColor" red="1" green="0.96985571780000002" blue="0.0004047529727" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
+                    <state key="normal" backgroundImage="download"/>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geolocation" id="EID-51-jNv">
                     <rect key="frame" x="0.0" y="44" width="320" height="248"/>

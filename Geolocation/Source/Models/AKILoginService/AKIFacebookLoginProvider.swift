@@ -14,30 +14,29 @@ import RxSwift
 import RxCocoa
 
 protocol AKIFacebookLoginProtocol {
-    func loginWithAccessToken() -> Observable<AKIUser>
-    func login() -> Observable<AKIUser>
+    func loginWithAccessToken(with userModel: AKIUser) -> Observable<AKIUser>
+    func login(with userModel: AKIUser) -> Observable<AKIUser>
 }
 
 class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
-    
-    var userModel: AKIUser?
-        
-    let disposeBag = DisposeBag()
-    
-    init(_ userModel: AKIUser) {
-        self.userModel = userModel
-    }
    
-    func loginWithAccessToken() -> Observable<AKIUser> {
-        return (FBSDKAccessToken.current() != nil) ? self.login() : Observable<AKIUser>.empty()
+    func loginWithAccessToken(with userModel: AKIUser) -> Observable<AKIUser> {
+        guard let user = FBSDKAccessToken.current() else {
+            return Observable<AKIUser>.empty()
+        }
+        
+        var userModel = userModel
+        userModel.id = user.userID
+        
+        return self.login(with: userModel)
     }
     
-    func login() -> Observable<AKIUser> {
-        return AKIFacebookLoginContext(self.userModel).execute()
+    func login(with userModel: AKIUser) -> Observable<AKIUser> {
+        return AKIFacebookLoginContext().execute()
     }
     
-    func logout() -> Observable<AKIUser> {
-        return AKIFacebookLogoutContext(self.userModel).execute()
+    func logout(with userModel: AKIUser) -> Observable<AKIUser> {
+        return AKIFacebookLogoutContext().execute()
     }
 }
 

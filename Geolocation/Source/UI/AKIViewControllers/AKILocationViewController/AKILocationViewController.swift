@@ -21,7 +21,6 @@ import RxCocoa
 protocol AKILocationViewControllerProtocol {
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
     func observForMoving()
-    func initTimer()
     func logOut()
 }
 
@@ -45,7 +44,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         super.viewDidLoad()
         
         self.initLeftBarButtonItem()
-        self.initTimer()
         self.initLocationManager()
         self.initMapView()
         self.observForMoving()
@@ -79,23 +77,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         mapView?.settings.myLocationButton = true
     }
     
-    func initTimer() {
-        _ = Observable<Int>
-            .interval(RxTimeInterval(Timer.Default.interval), scheduler: ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
-            .observeOn(MainScheduler.instance).faltmap{AKICurrentPositionContext()}
-            .subscribe({ [weak self] _ in
-                let coordinate = self?.locationManager?.coordinate
-
-                guard let longitude = coordinate?.longitude,
-                    let latitude = coordinate?.latitude else
-                {
-                    return
-                }
-                
-                self?.subscribeCurrentPositionContext(longitude, latitude: latitude)
-            }).addDisposableTo(self.disposeBag)
-    }
-    
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
         guard let userModel = self.userModel else {
             return
@@ -119,18 +100,20 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             }).addDisposableTo(self.disposeBag)
-        
-        self.locationManager.subs
     }
     
     func logOut() {
-        _ = AKILoginService(self.userModel).logout(LoginServiceType.Firebase)
+        guard let userModel = self.userModel else {
+            return
+        }
+        
+        _ = AKILoginService().logout(with: userModel, service: LoginServiceType.Firebase)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe( onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         
-        _ = AKILoginService(self.userModel).logout(LoginServiceType.Facebook)
+        _ = AKILoginService().logout(with: userModel, service: LoginServiceType.Facebook)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)

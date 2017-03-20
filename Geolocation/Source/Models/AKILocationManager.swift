@@ -44,7 +44,11 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     private let defaultLongitude = 0.0
     private let replaySubjectBufferCount = 1
     
+    private let disposeBag = DisposeBag()
+    
     private var locationManager: CLLocationManager?
+    
+    var timerInterval: Int?
     
     var location: CLLocation? {
         return self.locationManager?.location
@@ -66,6 +70,7 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
         self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: self.replaySubjectBufferCount)
         super.init()
         self.locationManager = self.defaultManager()
+        self.initTimer()
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -75,6 +80,27 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.sendLocationsForSubscribers(locations)
+    }
+    
+    private func initTimer() {
+        _ = Observable<Int>
+            .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
+            .observeOn(MainScheduler.instance)
+            .subscribe({ [weak self] _ in
+                let coordinate = self?.coordinate
+                
+                guard let longitude = coordinate?.longitude,
+                    let latitude = coordinate?.latitude else
+                {
+                    return
+                }
+                
+                self?.sendLocationsForSubscribers([CLLocation(latitude: latitude, longitude: longitude)])
+            }).addDisposableTo(self.disposeBag)
+    }
+    
+    private func sendLocationsForSubscribers(_ locations: [CLLocation]) {
         _ = self.replaySubject?.onNext(locations)
     }
 }

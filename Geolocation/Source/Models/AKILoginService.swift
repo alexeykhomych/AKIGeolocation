@@ -16,55 +16,37 @@ import FBSDKLoginKit
 enum LoginServiceType {
     case Facebook
     case Firebase
+    case FacebookToken
+    case FirebaseToken
 }
 
 class AKILoginService {
     
-    var userModel: AKIUser?
-    
-    init(_ userModel: AKIUser?) {
-        self.userModel = userModel
-    }
-    
-    func login(_ service: LoginServiceType) -> Observable<AKIUser> {
-        guard let userModel = self.userModel else {
-            return Observable<AKIUser>.empty()
-        }
-        
+    func login(with userModel: AKIUser, service: LoginServiceType) -> Observable<AKIUser> {
         switch service {
             case .Facebook:
-                return AKIFacebookLoginProvider(userModel).login()
+                return AKIFacebookLoginProvider().login(with: userModel)
             case .Firebase:
-                return AKIFirebaseLoginProvider(userModel).login()
+                return AKIFirebaseLoginProvider().login(with: userModel)
+            case .FacebookToken:
+                return AKIFacebookLoginProvider().loginWithAccessToken(with: userModel)
+            case .FirebaseToken:
+                return AKIFirebaseLoginProvider().loginWithAccessToken(with: userModel)
         }
     }
     
-    func loginWithFacebookAccessToken() -> Observable<AKIUser> {
-        guard let userModel = self.userModel else {
-            return Observable<AKIUser>.empty()
-        }
-        
-        return AKIFacebookLoginProvider(userModel).loginWithAccessToken()
-    }
-    
-    func logout(_ service: LoginServiceType) -> Observable<AKIUser> {
-        guard let userModel = self.userModel else {
-            return Observable<AKIUser>.empty()
-        }
-        
+    func logout(with userModel: AKIUser, service: LoginServiceType) -> Observable<AKIUser> {
         switch service {
-        case .Facebook:
-            return AKIFacebookLoginProvider(userModel).logout()
-        case .Firebase:
-            return AKIFirebaseLoginProvider(userModel).logout()
+            case .Facebook:
+                return AKIFacebookLoginProvider().logout(with: userModel)
+            case .Firebase:
+                return AKIFirebaseLoginProvider().logout(with: userModel)
+            default:
+                return Observable<AKIUser>.empty()
         }
     }
     
-    func signup() -> Observable<AKIUser> {
-        guard let userModel = self.userModel else {
-            return Observable<AKIUser>.empty()
-        }
-        
-        return AKIFirebaseLoginProvider(userModel).signup()
+    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+        return AKIFirebaseLoginProvider().signup(with: userModel)
     }
 }
