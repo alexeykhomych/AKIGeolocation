@@ -13,7 +13,9 @@ import RxCocoa
 
 import FBSDKLoginKit
 
-class AKILoginViewController: UIViewController, Tappable, contextObserver {
+class AKILoginViewController: UIViewController, Tappable {
+    
+    // MARK: Accessors
     
     var userModel: AKIUser?
     
@@ -25,6 +27,8 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         return self.getView()
     }
     
+    // MARK: View Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,30 +37,21 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
         
         self.loginWithToken()
         
-        self.initLoginButton()
-        self.initSignupButton()
-        self.initLoginWithFacebookButton()
+        self.loginFirebaseButton()
+        self.signupButton()
+        self.loginFacebookButton()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func loginWithToken() {
-        let userModel = self.userModel ?? AKIUser()
-        
-        _ = AKILoginService().login(with: userModel, service: LoginServiceType.FirebaseToken)
-            .subscribe(onNext: { [weak self] userModel in
-                    self?.showLocationViewControllerWithViewModel(userModel)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-    }
+    // MARK: Initializations and Deallocations
     
-    private func initLoginButton() {
+    private func loginFirebaseButton() {
         guard let loginView = self.loginView else { return }
         
-        var userModel: AKIUser?
+        var userModel = self.userModel
         
         _ = loginView.loginButton?.rx.tap
             .map { _ in
@@ -79,7 +74,7 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
             .disposed(by: self.disposeBag)
     }
     
-    private func initSignupButton() {
+    private func signupButton() {
         self.loginView?.signUpButton?.rx.tap
             .subscribe(onNext: { [weak self] in
                     self?.pushViewController(AKISignUpViewController())
@@ -89,27 +84,36 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
             .disposed(by: self.disposeBag)
     }
     
-    private func initLoginWithFacebookButton() {
+    private func loginFacebookButton() {
         _ = self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
                 return AKILoginService().login(with: self.userModel, service: LoginServiceType.Facebook)
             })
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] userModel in
-                
-                _ = AKILoginService().login(with: userModel, service: LoginServiceType.Firebase).subscribe(onNext: {
-                    self?.showLocationViewControllerWithViewModel($0)
-                })
-                
+                self?.showLocationViewControllerWithViewModel(userModel)
             }, onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
     
-    func showLocationViewControllerWithViewModel(_ userModel: AKIUser?) {
+    // MARK: Private methods
+    
+    private func showLocationViewControllerWithViewModel(_ userModel: AKIUser?) {
         let controller = AKILocationViewController()
         controller.userModel = userModel
         self.pushViewController(controller)
+    }
+    
+    private func loginWithToken() {
+        let userModel = self.userModel ?? AKIUser()
+        
+        _ = AKILoginService().login(with: userModel, service: LoginServiceType.FirebaseToken)
+            .subscribe(onNext: { [weak self] userModel in
+                    self?.showLocationViewControllerWithViewModel(userModel)
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
     }
 }

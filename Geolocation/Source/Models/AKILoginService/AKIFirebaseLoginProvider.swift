@@ -26,15 +26,8 @@ class AKIFirebaseLoginProvider: AKIFirebaseLoginProtocol {
         return AKIFirebaseLoginContext(userModel).execute()
     }
     
-    func loginWithAccessToken() -> Observable<AKIUser> {
-        if FIRAuth.auth()?.currentUser == nil {
-            return Observable<AKIUser>.empty()
-        }
-        
-        let userModel = AKIUser()
-//        userModel.id = (FIRAuth.auth()?.currentUser?.uid)!
-        
-        return self.login(with: userModel)
+    func login(with accessToken: String?) -> Observable<AKIUser> {
+        return AKIFirebaseLoginContext(AKIUser()).login(with: accessToken)
     }
     
     func logout() -> Observable<AKIUser> {

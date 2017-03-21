@@ -25,12 +25,12 @@ class AKILoginView: UIView {
     }
     
     func fillModel() -> (AKIUser?, Bool) {
-        var userModel: AKIUser?
+        var userModel = AKIUser()
         
         let isValid = self.validateFields(userModel: userModel)
         if isValid {
-            userModel?.password = self.passwordTextField?.text ?? ""
-            userModel?.email = self.emailTextField?.text ?? ""
+            userModel.password = self.passwordTextField?.text ?? ""
+            userModel.email = self.emailTextField?.text ?? ""
         }        
         
         return (userModel, isValid)

@@ -20,6 +20,10 @@ protocol AKIFacebookLoginProtocol {
 
 class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
    
+    var accessToken: FBSDKAccessToken? {
+        return FBSDKAccessToken.current()
+    }
+    
     func loginWithAccessToken() -> Observable<AKIUser> {
         if FBSDKAccessToken.current() == nil {
             return Observable<AKIUser>.empty()

@@ -11,8 +11,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-import FBSDKLoginKit
-
 enum LoginServiceType {
     case Facebook
     case Firebase
@@ -22,16 +20,22 @@ enum LoginServiceType {
 
 class AKILoginService {
     
+    private let disposeBag = DisposeBag()
+    
+    // MARK: Public methods
+    
     func login(with userModel: AKIUser?, service: LoginServiceType) -> Observable<AKIUser> {
         switch service {
             case .Facebook:
-                return AKIFacebookLoginProvider().login()
+            return self.loginProcess()
+//                return AKIFacebookLoginProvider().login()
             case .Firebase:
                 return AKIFirebaseLoginProvider().login(with: userModel)
             case .FacebookToken:
                 return AKIFacebookLoginProvider().loginWithAccessToken()
             case .FirebaseToken:
-                return AKIFirebaseLoginProvider().loginWithAccessToken()
+                return AKIFirebaseLoginProvider().login(with: AKIFacebookLoginProvider().accessToken?.tokenString)
+//            return self.loginProcess()
         }
     }
     
@@ -48,5 +52,15 @@ class AKILoginService {
     
     func signup(with userModel: AKIUser?) -> Observable<AKIUser> {
         return AKIFirebaseLoginProvider().signup(with: userModel)
+    }
+    
+    // MARK: Private methods
+    
+    private func loginProcess() -> Observable<AKIUser> {
+        var signal = AKIFacebookLoginProvider().login().subscribe(onNext: { _ in
+            AKIFirebaseLoginProvider().login(with: AKIFacebookLoginProvider().accessToken?.tokenString)
+        }).addDisposableTo(self.disposeBag)
+        
+        return signal
     }
 }

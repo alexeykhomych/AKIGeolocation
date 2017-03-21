@@ -16,27 +16,9 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKIFacebookLoginContext: AKIContextProtocol {
-    
-    var accessTokenString: String {
-        return FBSDKAccessToken.current().tokenString
-    }
-    
-    var credentials: FIRAuthCredential {
-        return FIRFacebookAuthProvider.credential(withAccessToken: self.accessTokenString)
-    }
-    
-    var accessToken: FBSDKAccessToken? {
-        return FBSDKAccessToken.current()
-    }
-    
-    var parameters: [AnyHashable: Any] {
-        return [Context.Request.fields : "\(Context.Request.id), \(Context.Request.name), \(Context.Request.email)"]
-    }
-    
+class AKIFacebookLoginContext: AKIContextProtocol {    
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
-            
             FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: nil, handler: ({ result, error in
                 
                 if let error = error {
@@ -44,9 +26,8 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                     return
                 }
                 
-                guard let result = result else {
-                        return
-                }
+                guard let result = result else { return }
+                
                 var model = AKIUser()
                 model.id = result.token.userID
                 
