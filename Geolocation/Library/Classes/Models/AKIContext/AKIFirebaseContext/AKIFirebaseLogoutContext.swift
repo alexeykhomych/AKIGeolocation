@@ -14,14 +14,7 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-class AKIFirebaseLogoutContext: AKIContextProtocol {
-    
-    var userModel: AKIUser?
-    
-    required init(_ userModel: AKIUser?) {
-        self.userModel = userModel
-    }
-    
+class AKIFirebaseLogoutContext: AKIContextProtocol {    
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             

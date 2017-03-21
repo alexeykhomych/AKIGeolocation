@@ -103,17 +103,13 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     }
     
     func logOut() {
-        guard let userModel = self.userModel else {
-            return
-        }
-        
-        _ = AKILoginService().logout(with: userModel, service: LoginServiceType.Firebase)
+        _ = AKILoginService().logout(service: LoginServiceType.Firebase)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe( onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         
-        _ = AKILoginService().logout(with: userModel, service: LoginServiceType.Facebook)
+        _ = AKILoginService().logout(service: LoginServiceType.Facebook)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)

@@ -22,31 +22,31 @@ enum LoginServiceType {
 
 class AKILoginService {
     
-    func login(with userModel: AKIUser, service: LoginServiceType) -> Observable<AKIUser> {
+    func login(with userModel: AKIUser?, service: LoginServiceType) -> Observable<AKIUser> {
         switch service {
             case .Facebook:
-                return AKIFacebookLoginProvider().login(with: userModel)
+                return AKIFacebookLoginProvider().login()
             case .Firebase:
                 return AKIFirebaseLoginProvider().login(with: userModel)
             case .FacebookToken:
-                return AKIFacebookLoginProvider().loginWithAccessToken(with: userModel)
+                return AKIFacebookLoginProvider().loginWithAccessToken()
             case .FirebaseToken:
-                return AKIFirebaseLoginProvider().loginWithAccessToken(with: userModel)
+                return AKIFirebaseLoginProvider().loginWithAccessToken()
         }
     }
     
-    func logout(with userModel: AKIUser, service: LoginServiceType) -> Observable<AKIUser> {
+    func logout(service: LoginServiceType) -> Observable<AKIUser> {
         switch service {
             case .Facebook:
-                return AKIFacebookLoginProvider().logout(with: userModel)
+                return AKIFacebookLoginProvider().logout()
             case .Firebase:
-                return AKIFirebaseLoginProvider().logout(with: userModel)
+                return AKIFirebaseLoginProvider().logout()
             default:
                 return Observable<AKIUser>.empty()
         }
     }
     
-    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+    func signup(with userModel: AKIUser?) -> Observable<AKIUser> {
         return AKIFirebaseLoginProvider().signup(with: userModel)
     }
 }

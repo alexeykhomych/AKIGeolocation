@@ -28,7 +28,7 @@ extension AKIUser {
 
 struct AKIUser {
     
-    let email: String
+    var email: String
     var password: String
     var name: String
     var id: String

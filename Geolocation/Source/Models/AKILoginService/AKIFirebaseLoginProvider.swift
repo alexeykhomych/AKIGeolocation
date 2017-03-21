@@ -16,32 +16,32 @@ import FirebaseAuth
 
 protocol AKIFirebaseLoginProtocol {
     
-    func login(with userModel: AKIUser) -> Observable<AKIUser>
+    func login(with userModel: AKIUser?) -> Observable<AKIUser>
     
 }
 
 class AKIFirebaseLoginProvider: AKIFirebaseLoginProtocol {
        
-    func login(with userModel: AKIUser) -> Observable<AKIUser> {
+    func login(with userModel: AKIUser?) -> Observable<AKIUser> {
         return AKIFirebaseLoginContext(userModel).execute()
     }
     
-    func loginWithAccessToken(with userModel: AKIUser) -> Observable<AKIUser> {
-        guard let user = FIRAuth.auth()?.currentUser else {
+    func loginWithAccessToken() -> Observable<AKIUser> {
+        if FIRAuth.auth()?.currentUser == nil {
             return Observable<AKIUser>.empty()
         }
         
-        var userModel = userModel
-        userModel.id = user.uid
+        let userModel = AKIUser()
+//        userModel.id = (FIRAuth.auth()?.currentUser?.uid)!
         
         return self.login(with: userModel)
     }
     
-    func logout(with userModel: AKIUser) -> Observable<AKIUser> {
-        return AKIFirebaseLogoutContext(userModel).execute()
+    func logout() -> Observable<AKIUser> {
+        return AKIFirebaseLogoutContext().execute()
     }
     
-    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+    func signup(with userModel: AKIUser?) -> Observable<AKIUser> {
         return AKIFirebaseSignUpContext(userModel).execute()
     }
 }
