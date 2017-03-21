@@ -54,18 +54,20 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     }
     
     private func initLoginButton() {
-        guard let userModel = self.userModel else {
-            return
-        }
+        guard let loginView = self.loginView else { return }
         
-//        if !(self.loginView?.validateFields(userModel: userModel))! {
-//            return
-//        }
+        var userModel: AKIUser?
         
-        _ = self.loginView?.loginButton?.rx.tap
-//            .filter {
-//                
-//            }
+        _ = loginView.loginButton?.rx.tap
+            .map { _ in
+                let tupleResult = loginView.fillModel()
+                tupleResult.1 ? userModel = tupleResult.0 : self.presentAlertErrorMessage("Your email or password is incorrect", style: .alert)
+                
+                return tupleResult.1
+            }
+            .filter {
+                $0 == true
+            }
             .flatMap { _ in
                 return AKILoginService().login(with: userModel, service: LoginServiceType.Firebase)
             }
@@ -90,7 +92,7 @@ class AKILoginViewController: UIViewController, Tappable, contextObserver {
     private func initLoginWithFacebookButton() {
         _ = self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
-                return AKILoginService().login(with: self.userModel!, service: LoginServiceType.Facebook)
+                return AKILoginService().login(with: self.userModel, service: LoginServiceType.Facebook)
             })
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] userModel in

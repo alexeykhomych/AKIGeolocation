@@ -8,9 +8,6 @@
 
 import UIKit
 
-import RxCocoa
-import RxSwift
-
 class AKILoginView: UIView {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
     
@@ -21,11 +18,21 @@ class AKILoginView: UIView {
     @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
     
-    let disposeBag = DisposeBag()
-    
     func validateFields(userModel: AKIUser?) -> Bool {
         guard let userModel = userModel else { return false }
         return userModel.emailValidation(self.emailTextField?.text) &&
             userModel.passwordValidation(self.passwordTextField?.text)
+    }
+    
+    func fillModel() -> (AKIUser?, Bool) {
+        var userModel: AKIUser?
+        
+        let isValid = self.validateFields(userModel: userModel)
+        if isValid {
+            userModel?.password = self.passwordTextField?.text ?? ""
+            userModel?.email = self.emailTextField?.text ?? ""
+        }        
+        
+        return (userModel, isValid)
     }
 }
