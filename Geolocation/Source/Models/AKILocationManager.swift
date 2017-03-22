@@ -38,6 +38,8 @@ extension AKIGoogleLocationManager {
 
 class AKILocationManager: NSObject, AKIGoogleLocationManager {
     
+    // MARK: Accessors
+    
     var replaySubject: ReplaySubject<[CLLocation]>?
     
     private let defaultLatitude = 0.0
@@ -73,6 +75,8 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
         self.initTimer()
     }
     
+    // MARK: Public methods
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             print("User allowed us to access location")
@@ -82,6 +86,8 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.sendLocationsForSubscribers(locations)
     }
+    
+    // MARK: Private methods
     
     private func initTimer() {
         _ = Observable<Int>

@@ -48,7 +48,7 @@ class AKILoginViewController: UIViewController, Tappable {
     
     // MARK: Initializations and Deallocations
     
-    private func loginFirebaseButton() {
+    func loginFirebaseButton() {
         guard let loginView = self.loginView else { return }
         
         var userModel = self.userModel
@@ -74,7 +74,7 @@ class AKILoginViewController: UIViewController, Tappable {
             .disposed(by: self.disposeBag)
     }
     
-    private func signupButton() {
+    func signupButton() {
         self.loginView?.signUpButton?.rx.tap
             .subscribe(onNext: { [weak self] in
                     self?.pushViewController(AKISignUpViewController())
@@ -84,7 +84,7 @@ class AKILoginViewController: UIViewController, Tappable {
             .disposed(by: self.disposeBag)
     }
     
-    private func loginFacebookButton() {
+    func loginFacebookButton() {
         _ = self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
                 return AKILoginService().login(with: self.userModel, service: LoginServiceType.Facebook)

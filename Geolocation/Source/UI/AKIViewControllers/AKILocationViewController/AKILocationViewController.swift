@@ -26,6 +26,8 @@ protocol AKILocationViewControllerProtocol {
 
 class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
     
+    // MARK: Accessors
+    
     var userModel: AKIUser?
     
     private var timer: Disposable?
@@ -40,10 +42,12 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         return self.getView()
     }
     
+    // MARK: View Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initLeftBarButtonItem()
+        self.leftBarButtonItem()
         self.initLocationManager()
         self.initMapView()
         self.observForMoving()
@@ -57,7 +61,9 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         self.locationManager = AKILocationManager()
     }
     
-    private func initLeftBarButtonItem() {
+    // MARK: Initializations and Deallocations
+    
+    func leftBarButtonItem() {
         let logoutButton = UIBarButtonItem.init(title: self.logoutButtonText,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
@@ -71,11 +77,15 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             }).addDisposableTo(self.disposeBag)
     }
     
+    // MARK: Private methods
+    
     private func initMapView() {
         let mapView = self.locationView?.mapView
         mapView?.isMyLocationEnabled = true
         mapView?.settings.myLocationButton = true
     }
+    
+    // MARK: AKILocationViewControllerProtocol
     
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
         guard let userModel = self.userModel else {
@@ -106,13 +116,13 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         _ = AKILoginService().logout(service: LoginServiceType.Firebase)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe( onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         
         _ = AKILoginService().logout(service: LoginServiceType.Facebook)
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe(onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         
         _ = self.navigationController?.popToRootViewController(animated: true)

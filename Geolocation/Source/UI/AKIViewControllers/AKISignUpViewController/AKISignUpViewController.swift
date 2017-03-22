@@ -16,6 +16,8 @@ import RxCocoa
 
 class AKISignUpViewController: UIViewController {
     
+    // MARK: Accessors
+    
     let disposeBag = DisposeBag()
     
     var userModel: AKIUser?
@@ -25,6 +27,8 @@ class AKISignUpViewController: UIViewController {
     var signUpView: AKISignUpView? {
         return self.getView()
     }
+    
+    // MARK: View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +41,9 @@ class AKISignUpViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    private func initSignUpButton() {
+    // MARK: Initializations and Deallocations
+    
+    func initSignUpButton() {
         guard let signUpView = self.signUpView else {
             return
         }
