@@ -31,10 +31,23 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                 var model = AKIUser()
                 model.id = result.token.userID
                 
-                observer.onNext(model)
-                observer.onCompleted()
+                _ = AKIFirebaseLoginContext(model).login(with: FBSDKAccessToken.current().tokenString).subscribe(onNext: { userModel in
+                    observer.onNext(userModel)
+                    observer.onCompleted()
+                })
             }))
 
+            return Disposables.create()
+        }
+    }
+    
+    func loginWithToken() -> Observable<AKIUser> {
+        return Observable.create { observer in
+            var user = AKIUser()
+            user.id = FBSDKAccessToken.current().tokenString
+            observer.onNext(user)
+            observer.onCompleted()
+            
             return Disposables.create()
         }
     }

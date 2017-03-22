@@ -19,6 +19,8 @@ protocol AKIFacebookLoginProtocol {
 }
 
 class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
+    
+    private let disposeBag = DisposeBag()
    
     var accessToken: FBSDKAccessToken? {
         return FBSDKAccessToken.current()
@@ -29,7 +31,7 @@ class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
             return Observable<AKIUser>.empty()
         }
         
-        return self.login()
+        return AKIFacebookLoginContext().loginWithToken()
     }
     
     func login() -> Observable<AKIUser> {
@@ -40,5 +42,3 @@ class AKIFacebookLoginProvider: AKIFacebookLoginProtocol {
         return AKIFacebookLogoutContext().execute()
     }
 }
-
-
