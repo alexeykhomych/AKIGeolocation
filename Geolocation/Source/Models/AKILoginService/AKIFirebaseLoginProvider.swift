@@ -22,7 +22,7 @@ protocol AKIFirebaseLoginProtocol {
 
 class AKIFirebaseLoginProvider: AKIFirebaseLoginProtocol {
        
-    func login(with userModel: AKIUser?) -> Observable<AKIUser> {
+    func login(with userModel: AKIUser) -> Observable<AKIUser> {
         return AKIFirebaseLoginContext(userModel).execute()
     }
     

@@ -27,7 +27,7 @@ class AKILoginService {
             case .Facebook:
                 return AKIFacebookLoginProvider().login()
             case .Firebase:
-                return AKIFirebaseLoginProvider().login(with: userModel)
+                return AKIFirebaseLoginProvider().login(with: userModel) -> 
             case .FacebookToken:
                 return AKIFacebookLoginProvider().loginWithAccessToken()
             case .FirebaseToken:

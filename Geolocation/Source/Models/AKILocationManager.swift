@@ -68,6 +68,8 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
         return self.unwrap(value: self.coordinate?.longitude, defaultValue: self.defaultLongitude)
     }
     
+    // MARK: Initializations and Deallocations
+
     override init() {
         self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: self.replaySubjectBufferCount)
         super.init()
