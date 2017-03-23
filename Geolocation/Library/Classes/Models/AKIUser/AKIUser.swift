@@ -13,15 +13,15 @@ import RxSwift
 
 extension AKIUser {
     
-    func nameValidation() -> Bool {
+    func nameValidate() -> Bool {
         return self.name.nameValidation()
     }
     
-    func passwordValidation() -> Bool {
+    func passwordValidate() -> Bool {
         return self.password.passwordValidation()
     }
     
-    func emailValidation() -> Bool {
+    func emailValidate() -> Bool {
         return self.email.emailValidation()
     }
 }

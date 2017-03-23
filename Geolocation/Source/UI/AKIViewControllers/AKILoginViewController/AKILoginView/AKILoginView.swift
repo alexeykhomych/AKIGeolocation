@@ -17,12 +17,4 @@ class AKILoginView: UIView {
     @IBOutlet var loginButton: UIButton?
     @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
-    
-    func fillModel(_ userModel: AKIUser) -> AKIUser {
-        
-        userModel.password = self.passwordTextField?.text ?? ""
-        userModel.email = self.emailTextField?.text ?? ""
-        
-        return userModel
-    }
 }

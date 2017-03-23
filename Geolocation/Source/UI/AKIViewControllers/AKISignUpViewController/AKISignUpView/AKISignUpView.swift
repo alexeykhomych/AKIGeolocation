@@ -16,13 +16,4 @@ class AKISignUpView: UIView {
     @IBOutlet var passwordTextField: UITextField?
     
     @IBOutlet var signUpButton: UIButton?
-    
-    func fillModel(_ userModel: AKIUser) -> AKIUser {
-        var userModel = userModel
-        userModel.password = self.passwordTextField?.text ?? ""
-        userModel.email = self.emailTextField?.text ?? ""
-        userModel.name = self.nameTextField?.text ?? ""
-        
-        return userModel
-    }
 }

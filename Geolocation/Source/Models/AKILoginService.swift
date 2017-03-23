@@ -14,10 +14,16 @@ import RxCocoa
 import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
+
+protocol AKIAuthProviderProtocol {
+    associatedtype Value
+//    func login(viewController: UIViewController) -> Observable<Value>
+}
+
 enum LoginServiceType {
-    case Facebook
-    case Email
-    case Token
+    case facebook
+    case email
+    case token
 }
 
 class AKILoginService {
@@ -29,24 +35,15 @@ class AKILoginService {
     
     // MARK: Public methods
     
-    func login(with userModel: AKIUser, service: LoginServiceType) -> Observable<AKIUser> {
-        return self.login(with: userModel, service: service, viewController: nil)
-    }
-    
-    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController?) -> Observable<AKIUser> {
+    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<AKIUser> {
         switch service {
-            case .Facebook:
-                guard let viewController = viewController else {
-                    print("viewController is nil in AKILoginService")
-                    return Observable<AKIUser>.empty()
-                }
-                
+            case .facebook:
                 return self.facebookLoginProvider.login(viewController: viewController).flatMap {
                     return self.firebaseLoginProvider.login(credential: $0)
                 }
-            case .Email:
+            case .email:
                 return self.firebaseLoginProvider.login(with: userModel)
-            case .Token:
+            case .token:
                 if firebaseLoginProvider.currentUser == nil {
                     print("FIR user is nil")
                     return Observable<AKIUser>.empty()

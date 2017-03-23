@@ -13,12 +13,7 @@ import FBSDKLoginKit
 import RxSwift
 import RxCocoa
 
-protocol AKIAuthProviderProtocol {
-    associatedtype Value
-    func login(viewController: UIViewController) -> Observable<Value>
-}
-
-class AKIFacebookAuthProvider: AKIFacebookAuthProtocol {
+class AKIFacebookAuthProvider {
     
     var credential:FBSDKAccessToken? {
         return FBSDKAccessToken.current()

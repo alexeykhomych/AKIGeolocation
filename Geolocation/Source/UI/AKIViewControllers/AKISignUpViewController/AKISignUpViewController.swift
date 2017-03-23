@@ -43,25 +43,16 @@ class AKISignUpViewController: UIViewController {
     // MARK: Initializations and Deallocations
     
     func initSignUpButton() {
-        guard let signUpView = self.signUpView,
-        var userModel = self.userModel else {
-            return
-        }
+        guard let signUpView = self.signUpView else { return }
+        
+        let userModel = AKIUser()
         
         _ = signUpView.signUpButton?.rx.tap
             .map { _ in
-                userModel = signUpView.fillModel(userModel)
-                
-                let isValid = userModel.emailValidation() && userModel.passwordValidation()
-                
-                if !isValid {
-                    self.presentAlertErrorMessage("Your email or password is incorrect", style: .alert)
-                }
-                
-                return isValid
+                self.fillModel()
             }
             .filter {
-                $0 == true
+                $0.emailValidate() && $0.passwordValidate() && $0.nameValidate()
             }
             .flatMap { _ in
                 self.loginService.signup(with: userModel)
@@ -74,5 +65,15 @@ class AKISignUpViewController: UIViewController {
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
+    }
+    
+    private func fillModel() -> AKIUser {
+        var userModel = AKIUser()
+        let rootView = self.signUpView
+        userModel.password = rootView?.passwordTextField?.text ?? ""
+        userModel.email = rootView?.emailTextField?.text ?? ""
+        userModel.name = rootView?.nameTextField?.text ?? ""
+        
+        return userModel
     }
 }
