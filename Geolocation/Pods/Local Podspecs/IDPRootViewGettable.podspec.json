@@ -1,0 +1,29 @@
+{
+  "name": "IDPRootViewGettable",
+  "version": "0.1.0",
+  "summary": "Getter property for UIViewController which help avoid code duplication",
+  "description": "This is simple protocol and UIViewController extension which allow reducing code duplication when you use custom root view for UIViewController.",
+  "homepage": "https://github.com/idapgroup/IDPRootViewGettable",
+  "license": {
+    "type": "New BSD",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "IDAP Group": "hello@idapgroup.com"
+  },
+  "source": {
+    "git": "https://github.com/idapgroup/IDPRootViewGettable.git",
+    "tag": "0.1.0"
+  },
+  "requires_arc": true,
+  "platforms": {
+    "ios": "9.0"
+  },
+  "header_mappings_dir": "Source",
+  "source_files": "Source/**/*.{swift,h,m,c,cpp}",
+  "dependencies": {
+    "IDPCastable": [
+
+    ]
+  }
+}
