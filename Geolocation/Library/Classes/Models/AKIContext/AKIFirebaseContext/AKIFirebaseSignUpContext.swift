@@ -46,6 +46,8 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
             guard var model = self.userModel else {
                 return
             }
+            
+            // MARK: need to refactor
 
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
             let userReference = reference.child(Context.Request.users).child(Context.Request.users)
@@ -54,21 +56,16 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
                           Context.Request.email: model.email,
                           Context.Request.password: model.password]
             
-            userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
-            
-            model.id = user?.uid ?? ""
-            
-            observer?.onNext(model)
+            userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
+                if let error = error {
+                    observer?.onError(error)
+                } else {
+                    model.id = user?.uid ?? ""
+                    observer?.onNext(model)
+                }
+            })
+        
             observer?.onCompleted()
-        }
-    }
-    
-    func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
-        return { (error, reference) in
-            if error != nil {
-                print(error?.localizedDescription as Any)
-                return
-            }
         }
     }
 }

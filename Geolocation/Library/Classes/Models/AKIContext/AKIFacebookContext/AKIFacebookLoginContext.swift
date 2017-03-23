@@ -21,14 +21,15 @@ class AKIFacebookLoginContext {
         return Observable.create { observer in
             FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: viewController, handler: ({ result, error in
                 
-                if let error = error {
-                    observer.on(.error(error))
-                    return
+                let token = result?.token
+                
+                if error != nil || token == nil {
+                    observer.onError(error ?? RxError.unknown)
+//                    return
+                } else {
+                    observer.onNext(token!)
                 }
                 
-                guard let result = result else { return }
-                
-                observer.onNext(result.token)
                 observer.onCompleted()
             }))
 

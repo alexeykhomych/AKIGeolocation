@@ -19,46 +19,48 @@ class AKICurrentPositionContext: AKIContextProtocol {
     private var logitude: Double?
     private var latitude: Double?
     
-    var userModel: AKIUser?
+    var userModel: AKIUser
     
-    required init(_ userModel: AKIUser?) {
+    required init(_ userModel: AKIUser) {
         self.userModel = userModel
     }
     
-    init(_ userModel: AKIUser?, latitude: Double?, longitude: Double?) {
+    init(_ userModel: AKIUser, latitude: Double?, longitude: Double?) {
         self.userModel = userModel
         self.logitude = longitude
         self.latitude = latitude
     }
     
-    func updateCompletionBlock() -> (Error?, FIRDatabaseReference) -> () {
+    func updateCompletionBlock(observer: AnyObserver<AKIUser>) -> (Error?, FIRDatabaseReference) -> () {
         return { (error, reference) in
-            if error != nil {
-                print(error?.localizedDescription as Any)
+            if let error = error {
+                observer.onError(error)
                 return
             }
         }
     }
     
     internal func execute() -> Observable<AKIUser> {
-        let observer = PublishSubject<AKIUser>()
-        _ = observer.subscribe({ observer in
-
-            guard let user = self.userModel else {
-                return
-            }
+        return PublishSubject<AKIUser>.create { observer in
+            
+            // MARK: need to refactor
             
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child(user.id)
+            let userReference = reference.child(Context.Request.coordinates).child(self.userModel.id)
             
             let values = [Context.Request.latitude: self.latitude as Any,
                           Context.Request.longitude: self.logitude as Any] as [String : Any]
             
-            userReference.updateChildValues(values, withCompletionBlock: self.updateCompletionBlock())
-        })
-        
-        observer.onCompleted()
-        
-        return observer
+            userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
+                if let error = error {
+                    observer.onError(error)
+                    return
+                }
+            })
+            
+            observer.onCompleted()
+            
+            return Disposables.create()
+        }
     }
 }

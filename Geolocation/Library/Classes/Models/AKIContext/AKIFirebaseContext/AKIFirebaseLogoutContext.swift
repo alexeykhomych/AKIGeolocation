@@ -15,12 +15,18 @@ import RxCocoa
 import RxSwift
 
 class AKIFirebaseLogoutContext: AKIContextProtocol {    
-    internal func execute() -> Observable<AKIUser> {
+    internal func execute() -> Observable<Bool> {
         return Observable.create { observer in
             
-            try? FIRAuth.auth()?.signOut()
-    
-            observer.onNext(AKIUser())
+            // MARK: need to refactor
+            
+            do {
+                try FIRAuth.auth()?.signOut()
+            } catch let signOutError as NSError {
+                observer.onError(signOutError)
+            }
+            
+            observer.onNext((FIRAuth.auth() == nil))
             observer.onCompleted()
             
             return Disposables.create()
