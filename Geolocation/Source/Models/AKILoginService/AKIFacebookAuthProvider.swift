@@ -27,7 +27,7 @@ class AKIFacebookAuthProvider {
         return AKIFacebookLoginContext().execute(viewController: viewController)
     }
     
-    func logout() -> Observable<AKIUser> {
+    func logout() -> Observable<Bool> {
         return AKIFacebookLogoutContext().execute()
     }
 }

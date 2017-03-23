@@ -19,33 +19,24 @@ import FBSDKLoginKit
 protocol AKIFirebaseAuthProtocol {
     associatedtype AccessToken
     
-    func login(with userModel: AKIUser) -> Observable<AKIUser>
-    func login(credential: AccessToken) -> Observable<AKIUser>
-    func logout() -> Observable<AKIUser>
-    func signup(with userModel: AKIUser) -> Observable<AKIUser>
+    func login(userModel: AKIUser) -> Observable<FIRUser>
+    func logout() -> Observable<Bool>
+    func signup(userModel: AKIUser) -> Observable<FIRUser>
 }
 
 class AKIFirebaseAuthProvider: AKIFirebaseAuthProtocol {
     
     typealias AccessToken = FBSDKAccessToken
-    
-    var currentUser:FIRUser? {
-        return FIRAuth.auth()?.currentUser
-    }
        
-    func login(with userModel: AKIUser) -> Observable<AKIUser> {
-        return AKIFirebaseLoginContext(userModel).execute()
+    func login(userModel: AKIUser) -> Observable<FIRUser> {
+        return AKIFirebaseLoginContext(userModel: userModel).execute()
     }
     
-    func login(credential: FBSDKAccessToken) -> Observable<AKIUser> {
-        return AKIFirebaseLoginContext(AKIUser()).login(with: credential)
-    }
-    
-    func logout() -> Observable<AKIUser> {
+    func logout() -> Observable<Bool> {
         return AKIFirebaseLogoutContext().execute()
     }
     
-    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+    func signup(userModel: AKIUser) -> Observable<FIRUser> {
         return AKIFirebaseSignUpContext(userModel).execute()
     }
 }

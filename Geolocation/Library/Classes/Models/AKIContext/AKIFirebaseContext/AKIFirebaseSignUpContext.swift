@@ -22,7 +22,7 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
         self.userModel = userModel
     }
     
-    internal func execute() -> Observable<AKIUser> {
+    internal func execute() -> Observable<FIRUser> {
         return Observable.create { observer in
             guard let user = self.userModel else {
                 return Disposables.create()
@@ -36,32 +36,27 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
         }
     }
     
-    func userCompletionHandler(_ observer: AnyObserver<AKIUser>?) -> (FIRUser?, Error?) -> () {
+    func userCompletionHandler(_ observer: AnyObserver<FIRUser>?) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             
             if error != nil {
                 observer?.onError(error!)
             }
-            
-            guard var model = self.userModel else {
-                return
-            }
-            
+            let userModel = self.userModel
             // MARK: need to refactor
 
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
             let userReference = reference.child(Context.Request.users).child(Context.Request.users)
             
-            let values = [Context.Request.name: model.name,
-                          Context.Request.email: model.email,
-                          Context.Request.password: model.password]
+            let values = [Context.Request.name: userModel?.name,
+                          Context.Request.email: userModel?.email,
+                          Context.Request.password: userModel?.password]
             
             userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
                 if let error = error {
                     observer?.onError(error)
                 } else {
-                    model.id = user?.uid ?? ""
-                    observer?.onNext(model)
+                    observer?.onNext(user!)
                 }
             })
         

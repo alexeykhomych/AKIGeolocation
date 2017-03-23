@@ -23,7 +23,6 @@ protocol AKIAuthProviderProtocol {
 enum LoginServiceType {
     case facebook
     case email
-    case token
 }
 
 class AKIAuthService {
@@ -35,30 +34,23 @@ class AKIAuthService {
     
     // MARK: Public methods
     
-    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<AKIUser> {
+    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<FIRUser> {
         switch service {
             case .facebook:
-                return self.facebookLoginProvider.login(viewController: viewController).flatMap {
-                    return self.firebaseLoginProvider.login(credential: $0)
+                return self.facebookLoginProvider.login(viewController: viewController).flatMap { _ in
+//                    return self.firebaseLoginProvider.login(userModel: $0)
+                    return self.firebaseLoginProvider.login(userModel: userModel)
                 }
             case .email:
-                return self.firebaseLoginProvider.login(with: userModel)
-            case .token:
-                if firebaseLoginProvider.currentUser == nil {
-                    print("FIR user is nil")
-                    return Observable<AKIUser>.empty()
-                }
-                return self.firebaseLoginProvider.login(credential: facebookLoginProvider.credential!)
+                return self.firebaseLoginProvider.login(userModel: userModel)
         }
     }
     
-    func logout() -> Observable<AKIUser> {
-        return self.facebookLoginProvider.logout().flatMap { _ in
-            return self.firebaseLoginProvider.logout()
-        }
+    func logout() -> Observable<Bool> {
+        return self.firebaseLoginProvider.logout()
     }
     
-    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
-        return self.firebaseLoginProvider.signup(with: userModel)
+    func signup(with userModel: AKIUser) -> Observable<FIRUser> {
+        return self.firebaseLoginProvider.signup(userModel: userModel)
     }
 }

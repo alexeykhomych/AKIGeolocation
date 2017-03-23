@@ -26,7 +26,7 @@ class AKIFirebaseLogoutContext: AKIContextProtocol {
                 observer.onError(signOutError)
             }
             
-            observer.onNext((FIRAuth.auth() == nil))
+            observer.onNext((FIRAuth.auth()?.currentUser == nil))
             observer.onCompleted()
             
             return Disposables.create()

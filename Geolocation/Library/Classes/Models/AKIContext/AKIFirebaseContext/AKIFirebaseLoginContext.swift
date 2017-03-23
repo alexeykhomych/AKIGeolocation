@@ -18,45 +18,47 @@ import FBSDKLoginKit
 
 class AKIFirebaseLoginContext: AKIContextProtocol {
     
-    var userModel: AKIUser?
+    var userModel: AKIUser
     
-    required init(_ userModel: AKIUser?) {
+    required init(userModel: AKIUser) {
         self.userModel = userModel
     }
     
-    internal func execute() -> Observable<AKIUser> {        
+    internal func execute() -> Observable<FIRUser> {
         return Observable.create { observer in
-            guard let model = self.userModel else {
+            
+            // MARK: need to refactor
+            
+            let currentUser = FIRAuth.auth()?.currentUser
+            
+            if currentUser != nil {
+                observer.onNext(currentUser!)
                 return Disposables.create()
             }
             
-            FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
+            let token = FBSDKAccessToken.current()
             
-            return Disposables.create()
-        }
-    }
-
-    func login(with accessFacebookToken: FBSDKAccessToken) -> Observable<AKIUser> {
-        return Observable.create { observer in
-            
-            let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessFacebookToken.tokenString)
-            FIRAuth.auth()?.signIn(with: credential, completion: self.userCompletionHandler(observer))
+            if token != nil {
+                let credential = FIRFacebookAuthProvider.credential(withAccessToken: (token?.tokenString)!)
+                FIRAuth.auth()?.signIn(with: credential, completion: self.userCompletionHandler(observer))
+            } else {
+                let model = self.userModel
+                FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
+            }
             
             return Disposables.create()
         }
     }
     
-    private func userCompletionHandler(_ observer: AnyObserver<AKIUser>?) -> (FIRUser?, Error?) -> () {
+    private func userCompletionHandler(_ observer: AnyObserver<FIRUser>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             if let error = error {
-                observer?.on(.error(error))
+                observer.onError(error)
                 return
             }
             
-            var model = AKIUser()
-            model.id = user?.uid ?? ""
-            observer?.onNext(model)
-            observer?.onCompleted()
+            observer.onNext(user!)
+            observer.onCompleted()
         }
     }
 }

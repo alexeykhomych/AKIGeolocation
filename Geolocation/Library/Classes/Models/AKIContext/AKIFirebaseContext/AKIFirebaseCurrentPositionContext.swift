@@ -16,28 +16,15 @@ import RxCocoa
 
 class AKICurrentPositionContext: AKIContextProtocol {
     
-    private var logitude: Double?
-    private var latitude: Double?
+    private var logitude: Double
+    private var latitude: Double
     
     var userModel: AKIUser
     
-    required init(_ userModel: AKIUser) {
-        self.userModel = userModel
-    }
-    
-    init(_ userModel: AKIUser, latitude: Double?, longitude: Double?) {
+    init(userModel: AKIUser, latitude: Double, longitude: Double) {
         self.userModel = userModel
         self.logitude = longitude
         self.latitude = latitude
-    }
-    
-    func updateCompletionBlock(observer: AnyObserver<AKIUser>) -> (Error?, FIRDatabaseReference) -> () {
-        return { (error, reference) in
-            if let error = error {
-                observer.onError(error)
-                return
-            }
-        }
     }
     
     internal func execute() -> Observable<AKIUser> {

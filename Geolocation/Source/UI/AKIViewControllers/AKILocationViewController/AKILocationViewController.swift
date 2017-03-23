@@ -85,7 +85,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             return
         }
         
-        _ = AKICurrentPositionContext(userModel, latitude: latitude, longitude: longitude).execute()
+        _ = AKICurrentPositionContext(userModel: userModel, latitude: latitude, longitude: longitude).execute()
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
             .subscribe(onError: { [weak self] error in
@@ -107,11 +107,13 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     
     func logOut() {
         _ = self.loginService.logout()
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe( onError: { [weak self] error in
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { 
+                if $0 {
+                    _ = self.navigationController?.popToRootViewController(animated: true)
+                }
+            }, onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
-        
-        _ = self.navigationController?.popToRootViewController(animated: true)
     }
 }

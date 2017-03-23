@@ -13,6 +13,9 @@ import RxCocoa
 
 import IDPRootViewGettable
 
+import Firebase
+import FirebaseAuth
+
 class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     
     typealias RootViewType = AKILoginView
@@ -40,7 +43,7 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     // MARK: Initializations and Deallocations
     
     func loginFirebaseButton() {
-        let userModel = AKIUser()
+        var userModel = AKIUser()
         
         _ = self.rootView?.loginButton?.rx.tap
             .map { _ in
@@ -52,11 +55,10 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
             .flatMap { _ in
                 return self.loginService.login(with: userModel, service: LoginServiceType.email, viewController: self)
             }
-            .subscribe(onNext: { [weak self] userModel in
+            .subscribe(onNext: { [weak self] firUser in
+                    userModel.id = firUser.uid
                     self?.showLocationViewControllerWithViewModel(userModel)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+                })
             .disposed(by: self.disposeBag)
     }
     
@@ -71,13 +73,14 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     }
     
     func loginFacebookButton() {
+        var userModel = AKIUser()
         _ = self.rootView?.loginWithFBButton?.rx.tap
-            .map { _ in AKIUser() }
             .flatMap {
-                return self.loginService.login(with: $0, service: LoginServiceType.facebook, viewController: self)
+                return self.loginService.login(with: userModel, service: LoginServiceType.facebook, viewController: self)
             }
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] userModel in
+            .subscribe(onNext: { [weak self] firUser in
+                userModel.id = firUser.uid
                 self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self]  error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
@@ -92,10 +95,12 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
         controller.userModel = userModel
         self.pushViewController(controller)
     }
-    
+
     private func loginWithToken() {
-        _ = self.loginService.login(with: AKIUser(), service: LoginServiceType.token, viewController: self)
-            .subscribe(onNext: { [weak self] userModel in
+        var userModel = AKIUser()
+        _ = self.loginService.login(with: AKIUser(), service: LoginServiceType.email, viewController: self)
+            .subscribe(onNext: { [weak self] firUser in
+                userModel.id = firUser.uid
                 self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)

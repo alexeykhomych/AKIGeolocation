@@ -23,9 +23,10 @@ class AKIFacebookLoginContext {
                 
                 let token = result?.token
                 
+                // MARK: need to refactor
+                
                 if error != nil || token == nil {
                     observer.onError(error ?? RxError.unknown)
-//                    return
                 } else {
                     observer.onNext(token!)
                 }

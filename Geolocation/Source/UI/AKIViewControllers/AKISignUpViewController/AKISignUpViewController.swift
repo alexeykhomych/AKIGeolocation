@@ -36,7 +36,7 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
     // MARK: Initializations and Deallocations
     
     func initSignUpButton() {
-        let userModel = AKIUser()
+        var userModel = AKIUser()
         
         _ = self.rootView?.signUpButton?.rx.tap
             .map { _ in
@@ -48,8 +48,9 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
             .flatMap { _ in
                 self.loginService.signup(with: userModel)
             }
-            .subscribe(onNext: { [weak self] userModel in
+            .subscribe(onNext: { [weak self] firUser in
                     let controller = AKILocationViewController()
+                    userModel.id = firUser.uid
                     controller.userModel = userModel
                     self?.pushViewController(controller)
                 }, onError: { [weak self] error in
