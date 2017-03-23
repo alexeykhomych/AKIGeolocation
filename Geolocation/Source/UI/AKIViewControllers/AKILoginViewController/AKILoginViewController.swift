@@ -115,7 +115,7 @@ class AKILoginViewController: UIViewController, Tappable {
     private func loginWithToken() {
         guard let userModel = self.userModel else { return }
         
-        _ = self.loginService.login(with: userModel, service: LoginServiceType.Email)
+        _ = self.loginService.login(with: userModel, service: LoginServiceType.Token)
             .subscribe(onNext: { [weak self] userModel in
                 self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self] error in

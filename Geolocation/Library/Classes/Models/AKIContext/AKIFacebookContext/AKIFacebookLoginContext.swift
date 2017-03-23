@@ -17,7 +17,7 @@ import RxSwift
 import RxCocoa
 
 class AKIFacebookLoginContext {    
-    internal func execute(viewController: UIViewController) -> Observable<FBSDKLoginManagerLoginResult> {
+    internal func execute(viewController: UIViewController) -> Observable<FBSDKAccessToken> {
         return Observable.create { observer in
             FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: viewController, handler: ({ result, error in
                 
@@ -28,7 +28,7 @@ class AKIFacebookLoginContext {
                 
                 guard let result = result else { return }
                 
-                observer.onNext(result)
+                observer.onNext(result.token)
                 observer.onCompleted()
             }))
 
@@ -36,11 +36,9 @@ class AKIFacebookLoginContext {
         }
     }
     
-    func loginWithToken() -> Observable<FBSDKLoginManagerLoginResult> {
+    func loginWithToken() -> Observable<FBSDKAccessToken> {
         return Observable.create { observer in
-            var user = AKIUser()
-            user.id = FBSDKAccessToken.current().tokenString
-            observer.onNext(FBSDKLoginManagerLoginResult)
+            observer.onNext(FBSDKAccessToken.current())
             observer.onCompleted()
             
             return Disposables.create()

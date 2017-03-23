@@ -16,6 +16,7 @@ import FBSDKLoginKit
 enum LoginServiceType {
     case Facebook
     case Email
+    case Token
 }
 
 class AKILoginService {
@@ -40,10 +41,16 @@ class AKILoginService {
                 }
                 
                 return self.facebookLoginProvider.login(viewController: viewController).flatMap {
-                    return self.firebaseLoginProvider.login(credential: $0.token)
+                    return self.firebaseLoginProvider.login(credential: $0)
                 }
             case .Email:
                 return self.firebaseLoginProvider.login(with: userModel)
+            case .Token:
+                guard let credential = facebookLoginProvider.credential else {
+                    print("FBSDK access token is nil")
+                    return Observable<AKIUser>.empty()
+                }
+                return self.firebaseLoginProvider.login(credential: credential)
         }
     }
     

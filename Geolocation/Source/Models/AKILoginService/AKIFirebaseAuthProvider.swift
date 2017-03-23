@@ -30,6 +30,12 @@ class AKIFirebaseAuthProvider: AKIFirebaseAuthProtocol {
     typealias AccessToken = FBSDKAccessToken
        
     func login(with userModel: AKIUser) -> Observable<AKIUser> {        
+        let token = FBSDKAccessToken.current()
+        
+        if token != nil {
+            return self.login(credential: token!)
+        }
+        
         return AKIFirebaseLoginContext(userModel).execute()
     }
     

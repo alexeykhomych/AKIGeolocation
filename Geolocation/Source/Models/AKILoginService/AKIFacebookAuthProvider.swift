@@ -14,12 +14,16 @@ import RxSwift
 import RxCocoa
 
 protocol AKIFacebookAuthProtocol {
-    func login(viewController: UIViewController) -> Observable<FBSDKLoginManagerLoginResult>
+    func login(viewController: UIViewController) -> Observable<FBSDKAccessToken>
 }
 
 class AKIFacebookAuthProvider: AKIFacebookAuthProtocol {
     
-    func login(viewController: UIViewController) -> Observable<FBSDKLoginManagerLoginResult> {
+    var credential:FBSDKAccessToken? {
+        return FBSDKAccessToken.current()
+    }
+    
+    func login(viewController: UIViewController) -> Observable<FBSDKAccessToken> {
         if FBSDKAccessToken.current() != nil {
             return AKIFacebookLoginContext().loginWithToken()
         }
