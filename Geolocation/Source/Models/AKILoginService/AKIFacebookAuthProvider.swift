@@ -13,8 +13,9 @@ import FBSDKLoginKit
 import RxSwift
 import RxCocoa
 
-protocol AKIFacebookAuthProtocol {
-    func login(viewController: UIViewController) -> Observable<FBSDKAccessToken>
+protocol AKIAuthProviderProtocol {
+    associatedtype Value
+    func login(viewController: UIViewController) -> Observable<Value>
 }
 
 class AKIFacebookAuthProvider: AKIFacebookAuthProtocol {

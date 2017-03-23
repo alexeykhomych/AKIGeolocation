@@ -34,7 +34,6 @@ class AKISignUpViewController: UIViewController {
         super.viewDidLoad()
         
         self.initSignUpButton()
-        self.loginService = AKILoginService()
     }
     
     override func didReceiveMemoryWarning() {

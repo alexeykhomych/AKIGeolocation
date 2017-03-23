@@ -12,7 +12,8 @@ import RxSwift
 import RxCocoa
 
 import FBSDKLoginKit
-
+import Firebase
+import FirebaseAuth
 enum LoginServiceType {
     case Facebook
     case Email
@@ -46,11 +47,11 @@ class AKILoginService {
             case .Email:
                 return self.firebaseLoginProvider.login(with: userModel)
             case .Token:
-                guard let credential = facebookLoginProvider.credential else {
-                    print("FBSDK access token is nil")
+                if firebaseLoginProvider.currentUser == nil {
+                    print("FIR user is nil")
                     return Observable<AKIUser>.empty()
                 }
-                return self.firebaseLoginProvider.login(credential: credential)
+                return self.firebaseLoginProvider.login(credential: facebookLoginProvider.credential!)
         }
     }
     

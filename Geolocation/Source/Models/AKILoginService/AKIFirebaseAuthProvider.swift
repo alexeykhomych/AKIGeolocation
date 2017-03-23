@@ -28,14 +28,12 @@ protocol AKIFirebaseAuthProtocol {
 class AKIFirebaseAuthProvider: AKIFirebaseAuthProtocol {
     
     typealias AccessToken = FBSDKAccessToken
+    
+    var currentUser:FIRUser? {
+        return FIRAuth.auth()?.currentUser
+    }
        
-    func login(with userModel: AKIUser) -> Observable<AKIUser> {        
-        let token = FBSDKAccessToken.current()
-        
-        if token != nil {
-            return self.login(credential: token!)
-        }
-        
+    func login(with userModel: AKIUser) -> Observable<AKIUser> {
         return AKIFirebaseLoginContext(userModel).execute()
     }
     
