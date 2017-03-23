@@ -1,5 +1,5 @@
 //
-//  AKILoginService.swift
+//  AKIAuthService.swift
 //  Geolocation
 //
 //  Created by Alexey Khomych on 3/6/17.
@@ -26,7 +26,7 @@ enum LoginServiceType {
     case token
 }
 
-class AKILoginService {
+class AKIAuthService {
     
     // MARK: Accessors
     

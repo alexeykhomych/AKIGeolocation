@@ -8,13 +8,14 @@
 
 import UIKit
 
-import Firebase
-import FirebaseAuth
-
 import RxSwift
 import RxCocoa
 
-class AKISignUpViewController: UIViewController {
+import IDPRootViewGettable
+
+class AKISignUpViewController: UIViewController, RootViewGettable {
+    
+    typealias RootViewType = AKISignUpView
     
     // MARK: Accessors
     
@@ -22,11 +23,7 @@ class AKISignUpViewController: UIViewController {
     
     var userModel: AKIUser?
     
-    var loginService = AKILoginService()
-    
-    var signUpView: AKISignUpView? {
-        return self.getView()
-    }
+    var loginService = AKIAuthService()
     
     // MARK: View Lifecycle
     
@@ -36,18 +33,12 @@ class AKISignUpViewController: UIViewController {
         self.initSignUpButton()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
     // MARK: Initializations and Deallocations
     
     func initSignUpButton() {
-        guard let signUpView = self.signUpView else { return }
-        
         let userModel = AKIUser()
         
-        _ = signUpView.signUpButton?.rx.tap
+        _ = self.rootView?.signUpButton?.rx.tap
             .map { _ in
                 self.fillModel()
             }
@@ -69,7 +60,8 @@ class AKISignUpViewController: UIViewController {
     
     private func fillModel() -> AKIUser {
         var userModel = AKIUser()
-        let rootView = self.signUpView
+        let rootView = self.rootView
+        
         userModel.password = rootView?.passwordTextField?.text ?? ""
         userModel.email = rootView?.emailTextField?.text ?? ""
         userModel.name = rootView?.nameTextField?.text ?? ""

@@ -10,13 +10,10 @@ import UIKit
 
 import GoogleMaps
 
-import FBSDKLoginKit
-
-import Firebase
-import FirebaseAuth
-
 import RxSwift
 import RxCocoa
+
+import IDPRootViewGettable
 
 protocol AKILocationViewControllerProtocol {
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
@@ -24,11 +21,13 @@ protocol AKILocationViewControllerProtocol {
     func logOut()
 }
 
-class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
+class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol, RootViewGettable {
+    
+    typealias RootViewType = AKILocationView
     
     // MARK: Accessors
     
-    var loginService = AKILoginService()
+    var loginService = AKIAuthService()
     
     var userModel: AKIUser?
     
@@ -40,10 +39,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     
     private let logoutButtonText = "Log out"
     
-    private var locationView: AKILocationView? {
-        return self.getView()
-    }
-    
     // MARK: View Lifecycle
     
     override func viewDidLoad() {
@@ -54,11 +49,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         self.initMapView()
         self.observForMoving()
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
+
     private func initLocationManager() {
         self.locationManager = AKILocationManager()
     }
@@ -82,7 +73,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     // MARK: Private methods
     
     private func initMapView() {
-        let mapView = self.locationView?.mapView
+        let mapView = self.rootView?.mapView
         mapView?.isMyLocationEnabled = true
         mapView?.settings.myLocationButton = true
     }
@@ -108,7 +99,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] locations in
-                self?.locationView?.cameraPosition(locations: locations)
+                self?.rootView?.cameraPosition(locations: locations)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             }).addDisposableTo(self.disposeBag)

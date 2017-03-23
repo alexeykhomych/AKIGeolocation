@@ -11,26 +11,24 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-import FBSDKLoginKit
+import IDPRootViewGettable
 
-class AKILoginViewController: UIViewController, Tappable {
+class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
+    
+    typealias RootViewType = AKILoginView
     
     // MARK: Accessors
     
     let disposeBag = DisposeBag()
     
-    var loginService = AKILoginService()
-    
-    var loginView: AKILoginView? {
-        return self.getView()
-    }
+    var loginService = AKIAuthService()
     
     // MARK: View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.loginService = AKILoginService()
+        self.loginService = AKIAuthService()
         
         self.loginWithToken()
         
@@ -42,10 +40,9 @@ class AKILoginViewController: UIViewController, Tappable {
     // MARK: Initializations and Deallocations
     
     func loginFirebaseButton() {
-        guard let loginView = self.loginView else { return }
         let userModel = AKIUser()
         
-        _ = loginView.loginButton?.rx.tap
+        _ = self.rootView?.loginButton?.rx.tap
             .map { _ in
                 return self.fillModel()
             }
@@ -64,7 +61,7 @@ class AKILoginViewController: UIViewController, Tappable {
     }
     
     func signupButton() {
-        self.loginView?.signUpButton?.rx.tap
+        self.rootView?.signUpButton?.rx.tap
             .subscribe(onNext: { [weak self] in
                     self?.pushViewController(AKISignUpViewController())
                 }, onError: { [weak self] error in
@@ -74,15 +71,16 @@ class AKILoginViewController: UIViewController, Tappable {
     }
     
     func loginFacebookButton() {
-        _ = self.loginView?.loginWithFBButton?.rx.tap
-            .flatMap( { result in
-                return self.loginService.login(with: AKIUser(), service: LoginServiceType.facebook, viewController: self)
-            })
+        _ = self.rootView?.loginWithFBButton?.rx.tap
+            .map { _ in AKIUser() }
+            .flatMap {
+                return self.loginService.login(with: $0, service: LoginServiceType.facebook, viewController: self)
+            }
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] userModel in
                 self?.showLocationViewControllerWithViewModel(userModel)
-            }, onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                }, onError: { [weak self]  error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
@@ -106,9 +104,10 @@ class AKILoginViewController: UIViewController, Tappable {
     
     private func fillModel() -> AKIUser {
         var userModel = AKIUser()
-        let loginView = self.loginView
-        userModel.password = loginView?.passwordTextField?.text ?? ""
-        userModel.email = loginView?.emailTextField?.text ?? ""
+        let rootView = self.rootView
+        
+        userModel.password = rootView?.passwordTextField?.text ?? ""
+        userModel.email = rootView?.emailTextField?.text ?? ""
         
         return userModel
     }
