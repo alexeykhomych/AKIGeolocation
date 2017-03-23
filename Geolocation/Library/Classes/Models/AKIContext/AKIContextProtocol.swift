@@ -12,8 +12,7 @@ import RxSwift
 import RxCocoa
 
 protocol AKIContextProtocol {
-    associatedtype AKIContext
+    associatedtype Value
     
-    func execute() -> Observable<AKIContext>
-
+    func execute() -> Observable<Value>
 }

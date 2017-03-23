@@ -14,6 +14,8 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
+import FBSDKLoginKit
+
 class AKIFirebaseLoginContext: AKIContextProtocol {
     
     var userModel: AKIUser?
@@ -34,11 +36,10 @@ class AKIFirebaseLoginContext: AKIContextProtocol {
         }
     }
 
-    func login(with accessFacebookToken: String?) -> Observable<AKIUser> {
+    func login(with accessFacebookToken: FBSDKAccessToken) -> Observable<AKIUser> {
         return Observable.create { observer in
-            guard let accessFacebookToken = accessFacebookToken else { return Disposables.create() }
             
-            let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessFacebookToken)
+            let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessFacebookToken.tokenString)
             FIRAuth.auth()?.signIn(with: credential, completion: self.userCompletionHandler(observer))
             
             return Disposables.create()

@@ -22,7 +22,7 @@ class AKISignUpViewController: UIViewController {
     
     var userModel: AKIUser?
     
-    var loginService: AKILoginService?
+    var loginService = AKILoginService()
     
     var signUpView: AKISignUpView? {
         return self.getView()
@@ -44,24 +44,28 @@ class AKISignUpViewController: UIViewController {
     // MARK: Initializations and Deallocations
     
     func initSignUpButton() {
-        guard let signUpView = self.signUpView else {
+        guard let signUpView = self.signUpView,
+        var userModel = self.userModel else {
             return
         }
         
-        var userModel: AKIUser?
-        
         _ = signUpView.signUpButton?.rx.tap
             .map { _ in
-                let tupleResult = signUpView.fillModel()
-                tupleResult.1 ? userModel = tupleResult.0 : self.presentAlertErrorMessage("Your email or password is incorrect", style: .alert)
-
-                return tupleResult.1
+                userModel = signUpView.fillModel(userModel)
+                
+                let isValid = userModel.emailValidation() && userModel.passwordValidation()
+                
+                if !isValid {
+                    self.presentAlertErrorMessage("Your email or password is incorrect", style: .alert)
+                }
+                
+                return isValid
             }
             .filter {
                 $0 == true
             }
             .flatMap { _ in
-                AKILoginService().signup(with: userModel)
+                self.loginService.signup(with: userModel)
             }
             .subscribe(onNext: { [weak self] userModel in
                     let controller = AKILocationViewController()

@@ -28,6 +28,8 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     
     // MARK: Accessors
     
+    var loginService = AKILoginService()
+    
     var userModel: AKIUser?
     
     private var timer: Disposable?
@@ -113,15 +115,9 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     }
     
     func logOut() {
-        _ = AKILoginService().logout(service: LoginServiceType.Firebase)
+        _ = self.loginService.logout()
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .subscribe( onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-        
-        _ = AKILoginService().logout(service: LoginServiceType.Facebook)
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
         

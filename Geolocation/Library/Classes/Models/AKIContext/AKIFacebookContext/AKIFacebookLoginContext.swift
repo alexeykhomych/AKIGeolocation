@@ -16,10 +16,10 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
-class AKIFacebookLoginContext: AKIContextProtocol {    
-    internal func execute() -> Observable<AKIUser> {
+class AKIFacebookLoginContext {    
+    internal func execute(viewController: UIViewController) -> Observable<FBSDKLoginManagerLoginResult> {
         return Observable.create { observer in
-            FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: nil, handler: ({ result, error in
+            FBSDKLoginManager().logIn(withReadPermissions: [Context.Permission.publicProfile], from: viewController, handler: ({ result, error in
                 
                 if let error = error {
                     observer.on(.error(error))
@@ -28,29 +28,22 @@ class AKIFacebookLoginContext: AKIContextProtocol {
                 
                 guard let result = result else { return }
                 
-                var model = AKIUser()
-                model.id = result.token.userID
-                
-                _ = AKIFirebaseLoginContext(model).login(with: FBSDKAccessToken.current().tokenString).subscribe(onNext: { userModel in
-                    observer.onNext(userModel)
-                    observer.onCompleted()
-                })
+                observer.onNext(result)
+                observer.onCompleted()
             }))
 
             return Disposables.create()
         }
     }
     
-    func loginWithToken() -> Observable<AKIUser> {
+    func loginWithToken() -> Observable<FBSDKLoginManagerLoginResult> {
         return Observable.create { observer in
             var user = AKIUser()
             user.id = FBSDKAccessToken.current().tokenString
-            observer.onNext(user)
+            observer.onNext(FBSDKLoginManagerLoginResult)
             observer.onCompleted()
             
             return Disposables.create()
         }
     }
 }
-
-

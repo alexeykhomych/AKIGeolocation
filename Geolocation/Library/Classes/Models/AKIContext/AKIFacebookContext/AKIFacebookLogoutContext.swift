@@ -17,9 +17,6 @@ import RxSwift
 import RxCocoa
 
 class AKIFacebookLogoutContext: AKIContextProtocol {
-
-    var userModel: AKIUser?
-
     internal func execute() -> Observable<AKIUser> {
         return Observable.create { observer in
             
@@ -30,6 +27,5 @@ class AKIFacebookLogoutContext: AKIContextProtocol {
             
             return Disposables.create()
         }
-    }
-    
+    }    
 }

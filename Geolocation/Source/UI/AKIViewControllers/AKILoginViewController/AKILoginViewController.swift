@@ -21,7 +21,7 @@ class AKILoginViewController: UIViewController, Tappable {
     
     let disposeBag = DisposeBag()
     
-    var loginService: AKILoginService?
+    var loginService = AKILoginService()
     
     var loginView: AKILoginView? {
         return self.getView()
@@ -49,22 +49,26 @@ class AKILoginViewController: UIViewController, Tappable {
     // MARK: Initializations and Deallocations
     
     func loginFirebaseButton() {
-        guard let loginView = self.loginView else { return }
-        
-        var userModel = self.userModel
+        guard let loginView = self.loginView,
+        var userModel = self.userModel else { return }
         
         _ = loginView.loginButton?.rx.tap
             .map { _ in
-                let tupleResult = loginView.fillModel()
-                tupleResult.1 ? userModel = tupleResult.0 : self.presentAlertErrorMessage("Your email or password is incorrect", style: .alert)
+                userModel = loginView.fillModel(userModel)
                 
-                return tupleResult.1
+                let isValid = userModel.emailValidation() && userModel.passwordValidation()
+                
+                if !isValid {
+                    self.presentAlertErrorMessage("Your email or password is incorrect", style: .alert)
+                }
+                
+                return isValid
             }
             .filter {
                 $0 == true
             }
             .flatMap { _ in
-                return AKILoginService().login(with: userModel, service: LoginServiceType.Firebase)
+                return self.loginService.login(with: userModel, service: LoginServiceType.Email)
             }
             .subscribe(onNext: { [weak self] userModel in
                     self?.showLocationViewControllerWithViewModel(userModel)
@@ -85,9 +89,11 @@ class AKILoginViewController: UIViewController, Tappable {
     }
     
     func loginFacebookButton() {
+        guard let userModel = self.userModel else { return }
+        
         _ = self.loginView?.loginWithFBButton?.rx.tap
             .flatMap( { result in
-                return AKILoginService().login(with: self.userModel, service: LoginServiceType.Facebook)
+                return self.loginService.login(with: userModel, service: LoginServiceType.Facebook, viewController: self)
             })
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] userModel in
@@ -107,11 +113,11 @@ class AKILoginViewController: UIViewController, Tappable {
     }
     
     private func loginWithToken() {
-        let userModel = self.userModel ?? AKIUser()
+        guard let userModel = self.userModel else { return }
         
-        _ = AKILoginService().login(with: userModel, service: LoginServiceType.FirebaseToken)
+        _ = self.loginService.login(with: userModel, service: LoginServiceType.Email)
             .subscribe(onNext: { [weak self] userModel in
-                    self?.showLocationViewControllerWithViewModel(userModel)
+                self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })

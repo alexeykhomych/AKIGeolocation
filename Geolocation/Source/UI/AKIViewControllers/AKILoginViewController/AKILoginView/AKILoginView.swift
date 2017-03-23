@@ -18,21 +18,11 @@ class AKILoginView: UIView {
     @IBOutlet var loginWithFBButton: UIButton?
     @IBOutlet var signUpButton: UIButton?
     
-    func validateFields(userModel: AKIUser?) -> Bool {
-        guard let userModel = userModel else { return false }
-        return userModel.emailValidation(self.emailTextField?.text) &&
-            userModel.passwordValidation(self.passwordTextField?.text)
-    }
-    
-    func fillModel() -> (AKIUser?, Bool) {
-        var userModel = AKIUser()
+    func fillModel(_ userModel: AKIUser) -> AKIUser {
+        var userModel = userModel
+        userModel.password = self.passwordTextField?.text ?? ""
+        userModel.email = self.emailTextField?.text ?? ""
         
-        let isValid = self.validateFields(userModel: userModel)
-        if isValid {
-            userModel.password = self.passwordTextField?.text ?? ""
-            userModel.email = self.emailTextField?.text ?? ""
-        }        
-        
-        return (userModel, isValid)
+        return userModel
     }
 }

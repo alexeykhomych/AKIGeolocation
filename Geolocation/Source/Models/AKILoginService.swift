@@ -11,42 +11,49 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+import FBSDKLoginKit
+
 enum LoginServiceType {
     case Facebook
-    case Firebase
-    case FacebookToken
-    case FirebaseToken
+    case Email
 }
 
 class AKILoginService {
     
+    // MARK: Accessors
+    
+    private var facebookLoginProvider = AKIFacebookAuthProvider()
+    private var firebaseLoginProvider = AKIFirebaseAuthProvider()
+    
     // MARK: Public methods
     
-    func login(with userModel: AKIUser?, service: LoginServiceType) -> Observable<AKIUser> {
+    func login(with userModel: AKIUser, service: LoginServiceType) -> Observable<AKIUser> {
+        return self.login(with: userModel, service: service, viewController: nil)
+    }
+    
+    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController?) -> Observable<AKIUser> {
         switch service {
             case .Facebook:
-                return AKIFacebookLoginProvider().login()
-            case .Firebase:
-                return AKIFirebaseLoginProvider().login(with: userModel) -> 
-            case .FacebookToken:
-                return AKIFacebookLoginProvider().loginWithAccessToken()
-            case .FirebaseToken:
-                return AKIFirebaseLoginProvider().login(with: AKIFacebookLoginProvider().accessToken?.tokenString)
+                guard let viewController = viewController else {
+                    print("viewController is nil in AKILoginService")
+                    return Observable<AKIUser>.empty()
+                }
+                
+                return self.facebookLoginProvider.login(viewController: viewController).flatMap {
+                    return self.firebaseLoginProvider.login(credential: $0.token)
+                }
+            case .Email:
+                return self.firebaseLoginProvider.login(with: userModel)
         }
     }
     
-    func logout(service: LoginServiceType) -> Observable<AKIUser> {
-        switch service {
-            case .Facebook:
-                return AKIFacebookLoginProvider().logout()
-            case .Firebase:
-                return AKIFirebaseLoginProvider().logout()
-            default:
-                return Observable<AKIUser>.empty()
+    func logout() -> Observable<AKIUser> {
+        return self.facebookLoginProvider.logout().flatMap { _ in
+            return self.firebaseLoginProvider.logout()
         }
     }
     
-    func signup(with userModel: AKIUser?) -> Observable<AKIUser> {
-        return AKIFirebaseLoginProvider().signup(with: userModel)
+    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+        return self.firebaseLoginProvider.signup(with: userModel)
     }
 }
