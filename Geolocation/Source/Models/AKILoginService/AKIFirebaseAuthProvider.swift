@@ -16,20 +16,21 @@ import FirebaseAuth
 
 import FBSDKLoginKit
 
-protocol AKIFirebaseAuthProtocol {
-    associatedtype AccessToken
-    
-    func login(userModel: AKIUser) -> Observable<FIRUser>
-    func logout() -> Observable<Bool>
-    func signup(userModel: AKIUser) -> Observable<FIRUser>
-}
+//protocol AKIFirebaseAuthProtocol {
+//    associatedtype AccessToken
+//    
+//    func login(userModel: AKIUser) -> Observable<FIRUser>
+//    func logout() -> Observable<Bool>
+//    func signup(userModel: AKIUser) -> Observable<FIRUser>
+//}
 
-class AKIFirebaseAuthProvider: AKIFirebaseAuthProtocol {
-    
+//class AKIFirebaseAuthProvider: AKIFirebaseAuthProtocol {
+class AKIFirebaseAuthProvider {
+
     typealias AccessToken = FBSDKAccessToken
        
-    func login(userModel: AKIUser) -> Observable<FIRUser> {
-        return AKIFirebaseLoginContext(userModel: userModel).execute()
+    func login(userModel: AKIUser, token: String?) -> Observable<FIRUser> {
+        return AKIFirebaseLoginContext(userModel: userModel, token: token).execute()
     }
     
     func logout() -> Observable<Bool> {

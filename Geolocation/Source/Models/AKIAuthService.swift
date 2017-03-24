@@ -47,12 +47,12 @@ class AKIAuthService {
     func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<AKIUser> {
         switch service {
             case .facebook:
-                return self.facebookLoginProvider.login(viewController: viewController).flatMap { _ in
-                    self.firebaseLoginProvider.login(userModel: userModel).map {
+                return self.facebookLoginProvider.login(viewController: viewController).flatMap {
+                    self.firebaseLoginProvider.login(userModel: userModel, token: $0.tokenString).map {
                         $0.fill(userModel: userModel)
                     }}
             case .email:
-                return self.firebaseLoginProvider.login(userModel: userModel).map {
+                return self.firebaseLoginProvider.login(userModel: userModel, token: nil).map {
                     $0.fill(userModel: userModel)
                 }
         }

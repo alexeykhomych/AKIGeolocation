@@ -28,7 +28,7 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.loginWithToken()
+        self.loginWithUser()
         
         self.loginFirebaseButton()
         self.signupButton()
@@ -89,7 +89,7 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
         self.pushViewController(controller)
     }
 
-    private func loginWithToken() {
+    private func loginWithUser() {
         _ = self.loginService.login(with: AKIUser(), service: LoginServiceType.email, viewController: self)
             .subscribe(onNext: { [weak self] user in
                 self?.showLocationViewControllerWithViewModel(user)
