@@ -10,9 +10,6 @@ import UIKit
 
 import FBSDKLoginKit
 
-import Firebase
-import FirebaseAuth
-
 import RxSwift
 import RxCocoa
 
@@ -23,15 +20,12 @@ class AKIFacebookLoginContext {
                 
                 let token = result?.token
                 
-                // MARK: need to refactor
-                
                 if error != nil || token == nil {
                     observer.onError(error ?? RxError.unknown)
                 } else {
                     observer.onNext(token!)
+                    observer.onCompleted()
                 }
-                
-                observer.onCompleted()
             }))
 
             return Disposables.create()

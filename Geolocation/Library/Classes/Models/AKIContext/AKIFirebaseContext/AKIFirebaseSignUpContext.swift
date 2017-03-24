@@ -16,18 +16,15 @@ import RxCocoa
 
 class AKIFirebaseSignUpContext: AKIContextProtocol{
     
-    var userModel: AKIUser?
+    var userModel: AKIUser
     
-    required init(_ userModel: AKIUser?) {
+    required init(_ userModel: AKIUser) {
         self.userModel = userModel
     }
     
     internal func execute() -> Observable<FIRUser> {
         return Observable.create { observer in
-            guard let user = self.userModel else {
-                return Disposables.create()
-            }
-            
+            let user = self.userModel
             FIRAuth.auth()?.createUser(withEmail: user.email,
                                        password: user.password,
                                        completion: self.userCompletionHandler(observer))
@@ -39,28 +36,30 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
     func userCompletionHandler(_ observer: AnyObserver<FIRUser>?) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             
-            if error != nil {
-                observer?.onError(error!)
+            if let error = error {
+                observer?.onError(error)
             }
+            
             let userModel = self.userModel
             // MARK: need to refactor
 
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
             let userReference = reference.child(Context.Request.users).child(Context.Request.users)
             
-            let values = [Context.Request.name: userModel?.name,
-                          Context.Request.email: userModel?.email,
-                          Context.Request.password: userModel?.password]
+            let values = [Context.Request.name: userModel.name,
+                          Context.Request.email: userModel.email,
+                          Context.Request.password: userModel.password]
             
             userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
                 if let error = error {
                     observer?.onError(error)
+                    return
                 } else {
-                    observer?.onNext(user!)
+                    guard let user = user else { return }
+                    observer?.onNext(user)
+                    observer?.onCompleted()
                 }
             })
-        
-            observer?.onCompleted()
         }
     }
 }

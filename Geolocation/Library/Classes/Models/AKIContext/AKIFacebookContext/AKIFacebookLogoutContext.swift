@@ -10,9 +10,6 @@ import UIKit
 
 import FBSDKLoginKit
 
-import Firebase
-import FirebaseAuth
-
 import RxSwift
 import RxCocoa
 
