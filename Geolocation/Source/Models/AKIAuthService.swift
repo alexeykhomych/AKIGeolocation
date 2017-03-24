@@ -34,7 +34,7 @@ class AKIAuthService {
     
     // MARK: Public methods
     
-    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<FIRUser> {
+    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<AuthUser> {
         switch service {
             case .facebook:
                 return self.facebookLoginProvider.login(viewController: viewController).flatMap { _ in

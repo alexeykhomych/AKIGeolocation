@@ -14,7 +14,7 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-import FBSDKLoginKit
+//import FBSDKLoginKit
 
 enum LoginType {
     case email

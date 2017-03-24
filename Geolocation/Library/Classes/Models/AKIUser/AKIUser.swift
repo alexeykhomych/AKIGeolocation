@@ -40,3 +40,7 @@ struct AKIUser {
         self.id = ""
     }
 }
+
+struct AuthUser {
+    let user: AKIUser
+}

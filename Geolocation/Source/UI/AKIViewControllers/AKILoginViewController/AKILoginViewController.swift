@@ -13,8 +13,8 @@ import RxCocoa
 
 import IDPRootViewGettable
 
-import Firebase
-import FirebaseAuth
+//import Firebase
+//import FirebaseAuth
 
 class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     
@@ -43,12 +43,10 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     // MARK: Initializations and Deallocations
     
     func loginFirebaseButton() {
-        var userModel = AKIUser()
         
         _ = self.rootView?.loginButton?.rx.tap
             .map { _ in
-                userModel = self.fillModel()
-                return userModel
+                self.fillModel()
             }
             .filter {
                 $0.emailValidate() && $0.passwordValidate()
@@ -102,7 +100,7 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     private func loginWithToken() {
         var userModel = AKIUser()
         _ = self.loginService.login(with: AKIUser(), service: LoginServiceType.email, viewController: self)
-            .subscribe(onNext: { [weak self] firUser in
+            .subscribe(onNext: { [weak self] AKIUser in
                 userModel.id = firUser.uid
                 self?.showLocationViewControllerWithViewModel(userModel)
                 }, onError: { [weak self] error in
