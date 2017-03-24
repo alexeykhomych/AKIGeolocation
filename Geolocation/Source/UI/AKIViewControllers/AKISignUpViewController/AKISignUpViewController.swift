@@ -36,30 +36,27 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
     // MARK: Initializations and Deallocations
     
     func initSignUpButton() {
-        var userModel = AKIUser()
-        
         _ = self.rootView?.signUpButton?.rx.tap
             .map { _ in
-                self.fillModel()
+                self.fill(userModel: AKIUser())
             }
             .filter {
                 $0.emailValidate() && $0.passwordValidate() && $0.nameValidate()
             }
-            .flatMap { _ in
-                self.loginService.signup(with: userModel)
+            .flatMap {
+                self.loginService.signup(with: $0)
             }
-            .subscribe(onNext: { [weak self] firUser in
-                    let controller = AKILocationViewController()
-                    userModel.id = firUser.uid
-                    controller.userModel = userModel
-                    self?.pushViewController(controller)
+            .subscribe(onNext: { [weak self] user in
+                    self?.showLocationViewControllerWithViewModel(user)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
     
-    private func fillModel() -> AKIUser {
+    // MARK: Private methods
+    
+    private func fill(userModel: AKIUser) -> AKIUser {
         var userModel = AKIUser()
         let rootView = self.rootView
         
@@ -68,5 +65,11 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
         userModel.name = rootView?.nameTextField?.text ?? ""
         
         return userModel
+    }
+    
+    private func showLocationViewControllerWithViewModel(_ userModel: AKIUser) {
+        let controller = AKILocationViewController()
+        controller.userModel = userModel
+        self.pushViewController(controller)
     }
 }

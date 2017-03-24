@@ -25,6 +25,16 @@ enum LoginServiceType {
     case email
 }
 
+extension FIRUser {
+    func fill(userModel: AKIUser) -> AKIUser {
+        var userModel = userModel
+        userModel.email = self.email ?? ""
+        userModel.id = self.uid
+        
+        return userModel
+    }
+}
+
 class AKIAuthService {
     
     // MARK: Accessors
@@ -34,26 +44,27 @@ class AKIAuthService {
     
     // MARK: Public methods
     
-    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<AuthUser> {
+    func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Observable<AKIUser> {
         switch service {
             case .facebook:
                 return self.facebookLoginProvider.login(viewController: viewController).flatMap { _ in
-//                    return self.firebaseLoginProvider.login(userModel: $0)
-                    return self.firebaseLoginProvider.login(userModel: userModel)
-                }
+                    self.firebaseLoginProvider.login(userModel: userModel).map {
+                        $0.fill(userModel: userModel)
+                    }}
             case .email:
-                return self.firebaseLoginProvider.login(userModel: userModel)
+                return self.firebaseLoginProvider.login(userModel: userModel).map {
+                    $0.fill(userModel: userModel)
+                }
         }
     }
     
     func logout() -> Observable<Bool> {
         return self.firebaseLoginProvider.logout()
-//        return self.facebookLoginProvider.logout().flatMap { _ in
-//            return self.firebaseLoginProvider.logout()
-//        }
     }
     
-    func signup(with userModel: AKIUser) -> Observable<FIRUser> {
-        return self.firebaseLoginProvider.signup(userModel: userModel)
+    func signup(with userModel: AKIUser) -> Observable<AKIUser> {
+        return self.firebaseLoginProvider.signup(userModel: userModel).map {
+            $0.fill(userModel: userModel)
+        }
     }
 }
