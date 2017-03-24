@@ -14,44 +14,47 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-//import FBSDKLoginKit
-
-enum LoginType {
-    case email
-    case token
-    case none
-}
-
-class AKIFirebaseLoginContext: AKIContextProtocol {
+class AKIFirebaseLoginContext {
     
-    var userModel: AKIUser
-    
-    required init(userModel: AKIUser) {
-        self.userModel = userModel
+    var userModel: AKIUser?
+    var token: String?
+
+    init<R>(userModel: R) {
+        self.userModel = userModel as? AKIUser
     }
     
-    internal func execute() -> Observable<FIRUser> {
+    init<R>(token: R) {
+        self.token = token as? String
+    }
+    
+    func execute() -> Observable<FIRUser> {
+        if self.token != nil {
+            return self.login(token: self.token!)
+        }
+        
         return Observable.create { observer in
-            
-            // MARK: need to refactor
-            
             if let currentUser = FIRAuth.auth()?.currentUser {
                 observer.onNext(currentUser)
-                return Disposables.create()
-            }
-        
-            let type = self.typeLogin(userModel: self.userModel)
-            
-            if type == LoginType.token {
-                guard let token = FBSDKAccessToken.current()?.tokenString else { return Disposables.create() }
-                let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
-                FIRAuth.auth()?.signIn(with: credential, completion: self.userCompletionHandler(observer))
-            }
-            
-            if type == LoginType.email {
-                let model = self.userModel
+                observer.onCompleted()
+            } else {
+                guard let model = self.userModel else {
+                    observer.onError(RxError.unknown)
+                    
+                    // MARK: need to refactor
+                    return Disposables.create()
+                }
                 FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
             }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func login(token: String) -> Observable<FIRUser> {
+        return Observable.create { observer in
+            
+            let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
+            FIRAuth.auth()?.signIn(with: credential, completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
         }
@@ -68,19 +71,6 @@ class AKIFirebaseLoginContext: AKIContextProtocol {
             
             observer.onNext(user)
             observer.onCompleted()
-        }
-    }
-    
-    private func typeLogin(userModel: AKIUser) -> LoginType {
-        let empty = userModel.email.isEmpty && userModel.password.isEmpty
-        
-        switch empty {
-        case true == (FBSDKAccessToken.current() != nil && FIRAuth.auth()?.currentUser == nil):
-            return .token
-        case false:
-            return .email
-        default:
-            return .none
         }
     }
 }
