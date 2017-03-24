@@ -47,18 +47,21 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
         
         _ = self.rootView?.loginButton?.rx.tap
             .map { _ in
-                return self.fillModel()
+                userModel = self.fillModel()
+                return userModel
             }
             .filter {
                 $0.emailValidate() && $0.passwordValidate()
             }
-            .flatMap { _ in
-                return self.loginService.login(with: userModel, service: LoginServiceType.email, viewController: self)
+            .flatMap {
+                return self.loginService.login(with: $0, service: LoginServiceType.email, viewController: self)
             }
             .subscribe(onNext: { [weak self] firUser in
                     userModel.id = firUser.uid
                     self?.showLocationViewControllerWithViewModel(userModel)
-                })
+                }, onError: { [weak self] error in
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            })
             .disposed(by: self.disposeBag)
     }
     

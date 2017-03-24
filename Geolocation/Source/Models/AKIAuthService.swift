@@ -48,6 +48,9 @@ class AKIAuthService {
     
     func logout() -> Observable<Bool> {
         return self.firebaseLoginProvider.logout()
+//        return self.facebookLoginProvider.logout().flatMap { _ in
+//            return self.firebaseLoginProvider.logout()
+//        }
     }
     
     func signup(with userModel: AKIUser) -> Observable<FIRUser> {

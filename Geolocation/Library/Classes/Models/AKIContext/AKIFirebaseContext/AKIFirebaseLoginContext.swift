@@ -16,6 +16,12 @@ import RxSwift
 
 import FBSDKLoginKit
 
+enum LoginType {
+    case email
+    case token
+    case none
+}
+
 class AKIFirebaseLoginContext: AKIContextProtocol {
     
     var userModel: AKIUser
@@ -29,19 +35,20 @@ class AKIFirebaseLoginContext: AKIContextProtocol {
             
             // MARK: need to refactor
             
-            let currentUser = FIRAuth.auth()?.currentUser
-            
-            if currentUser != nil {
-                observer.onNext(currentUser!)
+            if let currentUser = FIRAuth.auth()?.currentUser {
+                observer.onNext(currentUser)
                 return Disposables.create()
             }
+        
+            let type = self.typeLogin(userModel: self.userModel)
             
-            let token = FBSDKAccessToken.current()
-            
-            if token != nil {
-                let credential = FIRFacebookAuthProvider.credential(withAccessToken: (token?.tokenString)!)
+            if type == LoginType.token {
+                guard let token = FBSDKAccessToken.current()?.tokenString else { return Disposables.create() }
+                let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
                 FIRAuth.auth()?.signIn(with: credential, completion: self.userCompletionHandler(observer))
-            } else {
+            }
+            
+            if type == LoginType.email {
                 let model = self.userModel
                 FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
             }
@@ -57,8 +64,23 @@ class AKIFirebaseLoginContext: AKIContextProtocol {
                 return
             }
             
-            observer.onNext(user!)
+            guard let user = user else { return observer.onError(RxError.unknown) }
+            
+            observer.onNext(user)
             observer.onCompleted()
+        }
+    }
+    
+    private func typeLogin(userModel: AKIUser) -> LoginType {
+        let empty = userModel.email.isEmpty && userModel.password.isEmpty
+        
+        switch empty {
+        case true == (FBSDKAccessToken.current() != nil && FIRAuth.auth()?.currentUser == nil):
+            return .token
+        case false:
+            return .email
+        default:
+            return .none
         }
     }
 }
