@@ -16,15 +16,12 @@ import RxSwift
 
 class AKIFirebaseLoginContext {
     
-    var userModel: AKIUser?
+    var userModel: AKIUser
     var token: String?
-
-    init<R>(userModel: R) {
-        self.userModel = userModel as? AKIUser
-    }
     
-    init<R>(token: R) {
-        self.token = token as? String
+    init(userModel: AKIUser, token: String?) {
+        self.userModel = userModel
+        self.token = token
     }
     
     func execute() -> Observable<FIRUser> {
@@ -37,12 +34,7 @@ class AKIFirebaseLoginContext {
                 observer.onNext(currentUser)
                 observer.onCompleted()
             } else {
-                guard let model = self.userModel else {
-                    observer.onError(RxError.unknown)
-                    
-                    // MARK: need to refactor
-                    return Disposables.create()
-                }
+                let model = self.userModel
                 FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
             }
             
