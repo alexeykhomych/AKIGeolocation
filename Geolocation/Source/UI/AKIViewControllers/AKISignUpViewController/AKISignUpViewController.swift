@@ -47,7 +47,7 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
                 self.loginService.signup(with: $0)
             }
             .subscribe(onNext: { [weak self] user in
-                    self?.showLocationViewControllerWithViewModel(user)
+                    self?.segueLocationViewController(with: user)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
@@ -67,7 +67,7 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
         return userModel
     }
     
-    private func showLocationViewControllerWithViewModel(_ userModel: AKIUser) {
+    private func segueLocationViewController(with userModel: AKIUser) {
         let controller = AKILocationViewController()
         controller.userModel = userModel
         self.pushViewController(controller)

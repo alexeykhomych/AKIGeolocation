@@ -46,10 +46,10 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
                 $0.emailValidate() && $0.passwordValidate()
             }
             .flatMap {
-                return self.loginService.login(with: $0, service: LoginServiceType.email, viewController: self)
+                return self.loginService.login(with: $0, service: .email, viewController: self)
             }
             .subscribe(onNext: { [weak self] user in
-                    self?.showLocationViewControllerWithViewModel(user)
+                self?.segueLocationViewController(with: user)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
@@ -70,11 +70,11 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
         let userModel = AKIUser()
         _ = self.rootView?.loginWithFBButton?.rx.tap
             .flatMap {
-                return self.loginService.login(with: userModel, service: LoginServiceType.facebook, viewController: self)
+                return self.loginService.login(with: userModel, service: .facebook, viewController: self)
             }
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] user in
-                self?.showLocationViewControllerWithViewModel(user)
+                self?.segueLocationViewController(with: user)
                 }, onError: { [weak self]  error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
@@ -83,16 +83,16 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     
     // MARK: Private methods
     
-    private func showLocationViewControllerWithViewModel(_ userModel: AKIUser?) {
+    private func segueLocationViewController(with userModel: AKIUser?) {
         let controller = AKILocationViewController()
         controller.userModel = userModel
         self.pushViewController(controller)
     }
 
     private func loginWithUser() {
-        _ = self.loginService.login(with: AKIUser(), service: LoginServiceType.email, viewController: self)
+        _ = self.loginService.login(with: AKIUser(), service: .email, viewController: self)
             .subscribe(onNext: { [weak self] user in
-                self?.showLocationViewControllerWithViewModel(user)
+                self?.segueLocationViewController(with: user)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })

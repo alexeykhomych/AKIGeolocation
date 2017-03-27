@@ -73,3 +73,7 @@ struct UI {
         static let titleError = "Error"
     }
 }
+
+struct AKIError {
+    static let internetConnection = "No Internet connections"
+}

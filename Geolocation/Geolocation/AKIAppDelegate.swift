@@ -34,6 +34,8 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window;
         
+        _ = LaunchScreenViewController().magick()
+        
         let navigationController = UINavigationController(rootViewController: AKILoginViewController())
         window.rootViewController = navigationController
         window.makeKeyAndVisible()

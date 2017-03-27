@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		164C9780D044AB12E9912C0C /* Pods_Geolocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 523A570F04911F530045D246 /* Pods_Geolocation.framework */; };
-		C93B7EFA1E83F0B2007C1CF9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C93B7EF91E83F0B2007C1CF9 /* LaunchScreen.xib */; };
 		C94CF2AA1E48966400D467BA /* AKIUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94CF2A41E48966400D467BA /* AKIUser.swift */; };
 		C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */; };
 		C95263021E4356CE0021124E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C95263001E4356CE0021124E /* Main.storyboard */; };
@@ -44,6 +43,8 @@
 		C992F4721E6EC3A700E77BBF /* AKIFacebookAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992F4711E6EC3A700E77BBF /* AKIFacebookAuthProvider.swift */; };
 		C992F4741E6F009A00E77BBF /* AKIFirebaseAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C992F4731E6F009A00E77BBF /* AKIFirebaseAuthProvider.swift */; };
 		C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C994D58C1E4481C30096C8AA /* AKIConstants.swift */; };
+		C9A5532C1E89030F00B471EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9A5532B1E89030F00B471EB /* LaunchScreen.storyboard */; };
+		C9A5532E1E89032700B471EB /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A5532D1E89032700B471EB /* LaunchScreenViewController.swift */; };
 		C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */; };
 		C9F5207C1E6874D4004FBA77 /* NSObject+AKIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */; };
 /* End PBXBuildFile section */
@@ -51,7 +52,6 @@
 /* Begin PBXFileReference section */
 		523A570F04911F530045D246 /* Pods_Geolocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geolocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.release.xcconfig"; sourceTree = "<group>"; };
-		C93B7EF91E83F0B2007C1CF9 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		C94CF2A41E48966400D467BA /* AKIUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIUser.swift; sourceTree = "<group>"; };
 		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKIAppDelegate.swift; sourceTree = "<group>"; };
@@ -90,6 +90,8 @@
 		C992F4731E6F009A00E77BBF /* AKIFirebaseAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIFirebaseAuthProvider.swift; sourceTree = "<group>"; };
 		C994D58C1E4481C30096C8AA /* AKIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIConstants.swift; sourceTree = "<group>"; };
 		C994D58E1E44E8730096C8AA /* Geolocation.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geolocation.entitlements; sourceTree = "<group>"; };
+		C9A5532B1E89030F00B471EB /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C9A5532D1E89032700B471EB /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILocationManager.swift; sourceTree = "<group>"; };
 		C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+AKIExtensions.swift"; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
@@ -194,7 +196,6 @@
 			isa = PBXGroup;
 			children = (
 				C95263111E43591F0021124E /* AKIViewControllers */,
-				C93B7EF91E83F0B2007C1CF9 /* LaunchScreen.xib */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -202,6 +203,7 @@
 		C95263111E43591F0021124E /* AKIViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				C9A5532A1E8902EE00B471EB /* LaunchScreen */,
 				C952631C1E43651B0021124E /* AKILocationViewController */,
 				C95263411E4390BE0021124E /* AKISignUpViewController */,
 				C95263121E4359350021124E /* AKILoginViewController */,
@@ -368,6 +370,15 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
+		C9A5532A1E8902EE00B471EB /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				C9A5532B1E89030F00B471EB /* LaunchScreen.storyboard */,
+				C9A5532D1E89032700B471EB /* LaunchScreenViewController.swift */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
 		C9F5207A1E6874AA004FBA77 /* NSObject + AKIExtensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -454,11 +465,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9A5532C1E89030F00B471EB /* LaunchScreen.storyboard in Resources */,
 				C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */,
 				C95263071E4356CE0021124E /* LaunchScreen.storyboard in Resources */,
 				C95263481E4390F50021124E /* AKISignUpViewController.xib in Resources */,
 				C95263041E4356CE0021124E /* Assets.xcassets in Resources */,
-				C93B7EFA1E83F0B2007C1CF9 /* LaunchScreen.xib in Resources */,
 				C95263211E4365460021124E /* AKILocationViewController.xib in Resources */,
 				C95263021E4356CE0021124E /* Main.storyboard in Resources */,
 				C952632E1E4381AF0021124E /* GoogleService-Info.plist in Resources */,
@@ -527,6 +538,7 @@
 				C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */,
 				C981CAB21E81640B0087D949 /* AKIFirebaseLoginContext.swift in Sources */,
 				C981CAB11E81640B0087D949 /* AKIFirebaseCurrentPositionContext.swift in Sources */,
+				C9A5532E1E89032700B471EB /* LaunchScreenViewController.swift in Sources */,
 				C981CAAE1E81640B0087D949 /* AKIContextProvider.swift in Sources */,
 				C981CAAF1E81640B0087D949 /* AKIFacebookLoginContext.swift in Sources */,
 				C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */,
