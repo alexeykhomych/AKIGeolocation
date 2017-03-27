@@ -25,24 +25,32 @@ class AKIFirebaseLoginContext {
     }
     
     func execute() -> Observable<FIRUser> {
-        if self.token != nil {
-            return self.login(token: self.token!)
+        if let currentUser = FIRAuth.auth()?.currentUser {
+            return self.login(with: currentUser)
+        }
+        
+        if let token = self.token {
+            return self.login(token: token)
         }
         
         return Observable.create { observer in
-            if let currentUser = FIRAuth.auth()?.currentUser {
-                observer.onNext(currentUser)
-                observer.onCompleted()
-            } else {
-                let model = self.userModel
-                FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
-            }
+            let model = self.userModel
+            FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
         }
     }
     
-    func login(token: String) -> Observable<FIRUser> {
+    private func login(with user: FIRUser) -> Observable<FIRUser> {
+        return Observable.create { observer in
+            observer.onNext(user)
+            observer.onCompleted()
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func login(token: String) -> Observable<FIRUser> {
         return Observable.create { observer in
             
             let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)

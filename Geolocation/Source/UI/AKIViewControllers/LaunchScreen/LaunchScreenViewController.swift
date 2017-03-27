@@ -76,14 +76,14 @@ class LaunchScreenViewController: UIViewController {
         let viewController = AKILoginViewController()
         let userModel = AKIUser()
         
-        _ = self.loginService.login(with: userModel, service: .email, viewController: viewController)
+        _ = self.loginService.login(with: userModel, service: .facebook, viewController: viewController)
             .subscribe(onNext: { [weak self] user in
                     let locationViewController = AKILocationViewController()
                     locationViewController.userModel = user
-                    self?.present(locationViewController, animated: true, completion: nil)
+                    self?.navigationController?.pushViewController(locationViewController)
                 }, onError: { [weak self] error in
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+                })
             .disposed(by: self.disposeBag)
     }
 }
