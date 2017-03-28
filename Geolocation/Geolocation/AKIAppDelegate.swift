@@ -32,12 +32,9 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.sharedManager().enable = true
         
         let window = UIWindow(frame: UIScreen.main.bounds)
-        self.window = window;
+        self.window = window
         
-        _ = LaunchScreenViewController().magick()
-        
-        let navigationController = UINavigationController(rootViewController: AKILoginViewController())
-        window.rootViewController = navigationController
+        window.rootViewController = SplashScreenViewController()
         window.makeKeyAndVisible()
         
         return true

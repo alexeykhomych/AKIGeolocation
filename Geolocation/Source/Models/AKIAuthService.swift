@@ -15,11 +15,6 @@ import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
 
-protocol AKIAuthProviderProtocol {
-    associatedtype Value
-//    func login(viewController: UIViewController) -> Observable<Value>
-}
-
 enum LoginServiceType {
     case facebook
     case email
@@ -49,7 +44,7 @@ class AKIAuthService {
             case .facebook:
                 return self.facebookLoginProvider.login(viewController: viewController).flatMap {
                     self.firebaseLoginProvider.login(userModel: userModel, token: $0.tokenString).map {
-                        $0.fill(userModel: userModel)
+                        $0.fill(userModel: userModel) 
                     }}
             case .email:
                 return self.firebaseLoginProvider.login(userModel: userModel, token: nil).map {

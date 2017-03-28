@@ -13,7 +13,10 @@ import SystemConfiguration
 import RxSwift
 import RxCocoa
 
-class LaunchScreenViewController: UIViewController {
+import Firebase
+import FirebaseAuth
+
+class SplashScreenViewController: UIViewController {
     
     // MARK: Accessors
     
@@ -31,22 +34,14 @@ class LaunchScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.showNextViewController()
     }
     
     
     // MARK: Public methods
     
-    func chooseLoginType() {
-//        if !self.isInternetAvailable() {
-//            self.presentAlertErrorMessage(AKIError.internetConnection, style: .alert)
-//            self.pushViewController(AKILoginViewController())
-//        }
-//        
-//        self.pushViewController(AKILoginViewController())
-    }
-    
-    func isInternetAvailable() -> Bool
-    {
+    func isInternetAvailable() -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
         zeroAddress.sin_family = sa_family_t(AF_INET)
@@ -72,9 +67,32 @@ class LaunchScreenViewController: UIViewController {
     
     // MARK: Private methods
     
+    private func showNextViewController() {
+        let loginViewController = AKILoginViewController()
+        
+        let navigationViewController = UINavigationController(rootViewController: loginViewController)
+        UIApplication.shared.windows.first?.rootViewController = loginViewController
+        
+        
+        _ = AKIFirebaseAuthProvider().userChangesListener().map { (auth, user) -> FIRUser? in
+            return user
+            }.subscribe(onNext: { [weak self] result in
+                let locationViewController = AKILocationViewController()
+                let user = AKIUser()
+                locationViewController.userModel = result?.fill(userModel: user)
+                navigationViewController.pushViewController(locationViewController, animated: true)
+//                self?.present(navigationViewController, animated:true, completion: nil)
+                }, onError: { [weak self] error in
+//                navigationViewController.pushViewController(loginViewController, animated: false)
+//                    self?.present(loginViewController, animated:true, completion: nil)
+                    navigationViewController.show(loginViewController, sender: nil)
+            })
+    }
+    
     private func loginWithCurrentUser() {
         let viewController = AKILoginViewController()
         let userModel = AKIUser()
+            
         
         _ = self.loginService.login(with: userModel, service: .facebook, viewController: viewController)
             .subscribe(onNext: { [weak self] user in

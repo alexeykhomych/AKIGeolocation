@@ -15,20 +15,8 @@ import Firebase
 import FirebaseAuth
 
 import FBSDKLoginKit
-
-//protocol AKIFirebaseAuthProtocol {
-//    associatedtype AccessToken
-//    
-//    func login(userModel: AKIUser) -> Observable<FIRUser>
-//    func logout() -> Observable<Bool>
-//    func signup(userModel: AKIUser) -> Observable<FIRUser>
-//}
-
-//class AKIFirebaseAuthProvider: AKIFirebaseAuthProtocol {
-class AKIFirebaseAuthProvider {
-
-    typealias AccessToken = FBSDKAccessToken
-       
+    
+class AKIFirebaseAuthProvider {       
     func login(userModel: AKIUser, token: String?) -> Observable<FIRUser> {
         return AKIFirebaseLoginContext(userModel: userModel, token: token).execute()
     }
@@ -39,5 +27,47 @@ class AKIFirebaseAuthProvider {
     
     func signup(userModel: AKIUser) -> Observable<FIRUser> {
         return AKIFirebaseSignUpContext(userModel).execute()
+    }
+    
+    var currentUser: FIRUser {
+        var returnedUser:FIRUser? = nil
+        FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
+            returnedUser = user
+        }
+        
+        return returnedUser!
+    }
+    
+    func sendResetPassword(with email: String) -> Observable<Bool> {
+        return Observable<Bool>.create { observer in
+            FIRAuth.auth()?.sendPasswordReset(withEmail: email, completion: { error in
+                if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onNext(true)
+                    observer.onCompleted()
+                }
+            })
+            
+            return Disposables.create()
+        }
+    }
+    
+    func userChangesListener() -> Observable<(FIRAuth, FIRUser)> {
+        return Observable.create { observer in
+            let listener = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
+                guard let user = user else {
+                    observer.onError(RxError.noElements)
+                    return
+                }
+                
+                observer.onNext((auth, user))
+                observer.onCompleted()
+            }
+            
+            listener.map { FIRAuth.auth()?.removeStateDidChangeListener($0) }
+            
+            return Disposables.create()
+        }
     }
 }

@@ -24,7 +24,9 @@ class AKIFirebaseLoginContext {
         self.token = token
     }
     
-    func execute() -> Observable<FIRUser> {
+    typealias ReturnType = Observable<FIRUser>
+    
+    func execute() -> ReturnType {
         if let currentUser = FIRAuth.auth()?.currentUser {
             return self.login(with: currentUser)
         }
@@ -41,7 +43,7 @@ class AKIFirebaseLoginContext {
         }
     }
     
-    private func login(with user: FIRUser) -> Observable<FIRUser> {
+    private func login(with user: FIRUser) -> ReturnType {
         return Observable.create { observer in
             observer.onNext(user)
             observer.onCompleted()
@@ -50,7 +52,7 @@ class AKIFirebaseLoginContext {
         }
     }
     
-    private func login(token: String) -> Observable<FIRUser> {
+    private func login(token: String) -> ReturnType {
         return Observable.create { observer in
             
             let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
