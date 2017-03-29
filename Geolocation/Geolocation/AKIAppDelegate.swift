@@ -33,7 +33,7 @@ class AKIAppDelegate: UIResponder, UIApplicationDelegate {
         
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
-        
+
         window.rootViewController = SplashScreenViewController()
         window.makeKeyAndVisible()
         

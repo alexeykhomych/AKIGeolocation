@@ -32,6 +32,16 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
         self.signupButton()
         self.loginFacebookButton()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewWillDisappear(animated)
+    }
     
     // MARK: Initializations and Deallocations
     

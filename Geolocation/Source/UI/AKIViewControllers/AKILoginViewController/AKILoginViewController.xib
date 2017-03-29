@@ -26,12 +26,6 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                 </textField>
-                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vdY-qt-JBU">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                    <items>
-                        <navigationItem title="Title" id="NFz-Ph-r0x"/>
-                    </items>
-                </navigationBar>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="drS-4g-MEC">
                     <rect key="frame" x="16" y="375" width="140" height="42"/>
                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -67,21 +61,18 @@
                 <constraint firstAttribute="bottom" secondItem="mvd-ob-Rbd" secondAttribute="bottom" id="4NS-hF-FKa"/>
                 <constraint firstItem="8aq-vk-iiD" firstAttribute="height" secondItem="drS-4g-MEC" secondAttribute="height" id="7NM-q8-1kV"/>
                 <constraint firstAttribute="bottom" secondItem="8aq-vk-iiD" secondAttribute="bottom" constant="151" id="CXo-LF-4Zt"/>
-                <constraint firstItem="vdY-qt-JBU" firstAttribute="centerX" secondItem="tLE-Iu-tAu" secondAttribute="centerX" id="Fgw-4u-l20"/>
                 <constraint firstItem="8aq-vk-iiD" firstAttribute="firstBaseline" secondItem="drS-4g-MEC" secondAttribute="baseline" id="FrM-FZ-9Fd"/>
                 <constraint firstItem="ZG7-gc-PkK" firstAttribute="leading" secondItem="tLE-Iu-tAu" secondAttribute="leading" id="GQe-b4-nm4"/>
-                <constraint firstItem="vdY-qt-JBU" firstAttribute="centerX" secondItem="mvd-ob-Rbd" secondAttribute="centerX" id="NgJ-Em-guQ"/>
                 <constraint firstItem="8aq-vk-iiD" firstAttribute="top" secondItem="drS-4g-MEC" secondAttribute="top" id="ON5-Bk-8Qd"/>
-                <constraint firstItem="vdY-qt-JBU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Uea-Gz-hkx"/>
                 <constraint firstItem="8aq-vk-iiD" firstAttribute="baseline" secondItem="drS-4g-MEC" secondAttribute="firstBaseline" id="Xzw-g3-YbI"/>
                 <constraint firstItem="drS-4g-MEC" firstAttribute="top" secondItem="tLE-Iu-tAu" secondAttribute="bottom" constant="14" id="i05-SG-otr"/>
                 <constraint firstAttribute="trailing" secondItem="tLE-Iu-tAu" secondAttribute="trailing" constant="16" id="i7E-k3-a6Q"/>
-                <constraint firstItem="vdY-qt-JBU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="iYH-Nh-OYS"/>
                 <constraint firstItem="8aq-vk-iiD" firstAttribute="width" secondItem="drS-4g-MEC" secondAttribute="width" id="ozs-HF-emd"/>
                 <constraint firstItem="tLE-Iu-tAu" firstAttribute="top" secondItem="ZG7-gc-PkK" secondAttribute="bottom" constant="8" symbolic="YES" id="pIG-i8-BYV"/>
                 <constraint firstAttribute="trailing" secondItem="8aq-vk-iiD" secondAttribute="trailing" constant="16" id="ppP-eS-GXF"/>
                 <constraint firstItem="drS-4g-MEC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="qCd-uK-EDL"/>
                 <constraint firstItem="ZG7-gc-PkK" firstAttribute="trailing" secondItem="tLE-Iu-tAu" secondAttribute="trailing" id="rup-rh-PG4"/>
+                <constraint firstItem="mvd-ob-Rbd" firstAttribute="centerX" secondItem="tLE-Iu-tAu" secondAttribute="centerX" id="t6s-O9-pI5"/>
                 <constraint firstItem="tLE-Iu-tAu" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="xFx-d1-reA"/>
             </constraints>
             <connections>

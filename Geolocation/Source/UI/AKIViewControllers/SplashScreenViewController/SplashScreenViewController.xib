@@ -19,7 +19,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Geolocation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x21-N1-V6J">
-                    <rect key="frame" x="92.5" y="312" width="191.5" height="43"/>
+                    <rect key="frame" x="92" y="312" width="192" height="43"/>
                     <fontDescription key="fontDescription" type="system" pointSize="36"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -33,7 +33,7 @@
             <connections>
                 <outlet property="nameLabel" destination="x21-N1-V6J" id="PaX-5n-je2"/>
             </connections>
-            <point key="canvasLocation" x="25.5" y="51.5"/>
+            <point key="canvasLocation" x="-126" y="19"/>
         </view>
     </objects>
 </document>

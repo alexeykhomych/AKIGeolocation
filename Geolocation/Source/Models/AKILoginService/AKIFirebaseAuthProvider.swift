@@ -16,7 +16,10 @@ import FirebaseAuth
 
 import FBSDKLoginKit
     
-class AKIFirebaseAuthProvider {       
+class AKIFirebaseAuthProvider {
+    
+    // MARK: Public methods
+    
     func login(userModel: AKIUser, token: String?) -> Observable<FIRUser> {
         return AKIFirebaseLoginContext(userModel: userModel, token: token).execute()
     }
@@ -29,24 +32,16 @@ class AKIFirebaseAuthProvider {
         return AKIFirebaseSignUpContext(userModel).execute()
     }
     
-    var currentUser: FIRUser {
-        var returnedUser:FIRUser? = nil
-        FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
-            returnedUser = user
-        }
-        
-        return returnedUser!
-    }
-    
     func sendResetPassword(with email: String) -> Observable<Bool> {
         return Observable<Bool>.create { observer in
             FIRAuth.auth()?.sendPasswordReset(withEmail: email, completion: { error in
                 if let error = error {
                     observer.onError(error)
-                } else {
-                    observer.onNext(true)
-                    observer.onCompleted()
+                    return
                 }
+                
+                observer.onNext(true)
+                observer.onCompleted()
             })
             
             return Disposables.create()

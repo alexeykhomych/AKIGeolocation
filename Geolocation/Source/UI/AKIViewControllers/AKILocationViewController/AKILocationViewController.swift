@@ -35,7 +35,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     
     private let disposeBag = DisposeBag()
     
-    private var locationManager: AKILocationManager?
+    private var locationManager = AKILocationManager()
     
     private let logoutButtonText = "Log out"
     
@@ -45,13 +45,18 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         super.viewDidLoad()
         
         self.leftBarButtonItem()
-        self.initLocationManager()
         self.initMapView()
         self.observForMoving()
     }
-
-    private func initLocationManager() {
-        self.locationManager = AKILocationManager()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        super.viewWillDisappear(animated)
     }
     
     // MARK: Initializations and Deallocations
@@ -94,7 +99,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     }
     
     func observForMoving() {
-        _ = self.locationManager?
+        _ = self.locationManager
             .replaySubject?
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
@@ -110,7 +115,9 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { 
                 if $0 {
-                    _ = self.navigationController?.popToRootViewController(animated: true)
+                    UIApplication.shared.delegate.map { (localApp) -> Void in
+                        localApp.window??.rootViewController = UINavigationController(rootViewController: AKILoginViewController())
+                    }
                 }
             }, onError: { [weak self] error in
                 self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
