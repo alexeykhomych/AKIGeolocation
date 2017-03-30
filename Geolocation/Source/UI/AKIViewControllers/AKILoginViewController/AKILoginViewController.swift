@@ -29,7 +29,7 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
         super.viewDidLoad()
         
         self.loginFirebaseButton()
-        self.signupButton()
+        self.signUpButton()
         self.loginFacebookButton()
     }
 
@@ -47,6 +47,7 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     
     func loginFirebaseButton() {
         _ = self.rootView?.loginButton?.rx.tap
+            .debounce(1, scheduler: MainScheduler.instance)
             .map { _ in
                 self.fill(userModel: AKIUser())
             }
@@ -58,36 +59,34 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
             }
             .subscribe(onNext: { [weak self] user in
                 self?.segueLocationViewController(with: user)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }, onError: { [weak self] error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
     
-    func signupButton() {
+    func signUpButton() {
         self.rootView?.signUpButton?.rx.tap
-            .subscribe(onNext: { [weak self] in
-                    self?.pushViewController(AKISignUpViewController())
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+            .bindNext { [weak self] in self?.pushViewController(AKISignUpViewController()) }
             .disposed(by: self.disposeBag)
     }
     
     func loginFacebookButton() {
         let userModel = AKIUser()
         _ = self.rootView?.loginWithFBButton?.rx.tap
+            .debounce(1, scheduler: MainScheduler.instance)
             .flatMap {
                 return self.loginService.login(with: userModel, service: .facebook, viewController: self)
             }
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] user in
                 self?.segueLocationViewController(with: user)
-                }, onError: { [weak self]  error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }, onError: { [weak self]  error in
+                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             })
             .disposed(by: self.disposeBag)
     }
+
     
     // MARK: Private methods
     
