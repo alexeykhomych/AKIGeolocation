@@ -11,6 +11,7 @@ target 'Geolocation' do
   pod 'RxCocoa',    '~> 3.0'
   pod "IDPCastable"
   pod "IDPRootViewGettable", :git => 'https://github.com/idapgroup/IDPRootViewGettable.git'
+  pod 'Result', '~> 3.0.0'
   use_frameworks!
 end
 

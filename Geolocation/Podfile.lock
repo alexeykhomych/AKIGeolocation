@@ -41,6 +41,7 @@ PODS:
   - IDPRootViewGettable (0.1.0):
     - IDPCastable
   - IQKeyboardManagerSwift (4.0.8)
+  - Result (3.0.0)
   - RxCocoa (3.2.0):
     - RxSwift (~> 3.1)
   - RxSwift (3.2.0)
@@ -53,6 +54,7 @@ DEPENDENCIES:
   - IDPCastable
   - IDPRootViewGettable (from `https://github.com/idapgroup/IDPRootViewGettable.git`)
   - IQKeyboardManagerSwift
+  - Result (~> 3.0.0)
   - RxCocoa (~> 3.0)
   - RxSwift (~> 3.0)
 
@@ -78,9 +80,10 @@ SPEC CHECKSUMS:
   IDPCastable: 15051ffccffca8408dd633fbc2a19584e2e11e9c
   IDPRootViewGettable: a558b25533b43500531885a5b8ba5d51c372ccdc
   IQKeyboardManagerSwift: c04bc9f68473823f825eb44d958fce98d921bead
+  Result: 1b3e431f37cbcd3ad89c6aa9ab0ae55515fae3b6
   RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
   RxSwift: 46574f70d416b7923c237195939cc488a7fbf3a0
 
-PODFILE CHECKSUM: ef85a9c2465b4751903723497980baf7d16070ac
+PODFILE CHECKSUM: 1e4bcb9d8bd2dc97572f6bca71b980053c0b9823
 
 COCOAPODS: 1.2.0
