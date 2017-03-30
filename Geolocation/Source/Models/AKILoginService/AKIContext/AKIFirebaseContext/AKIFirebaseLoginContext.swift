@@ -14,6 +14,14 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
+import Result
+
+enum AuthError: Error {
+    case failedLogin
+    case failedConnection
+    case noneError
+}
+
 class AKIFirebaseLoginContext {
     
     var userModel: AKIUser
@@ -24,7 +32,7 @@ class AKIFirebaseLoginContext {
         self.token = token
     }
     
-    typealias ReturnType = Observable<FIRUser>
+    typealias ReturnType = Observable<Result<FIRUser, AuthError>>
     
     func execute() -> ReturnType {
         if let currentUser = FIRAuth.auth()?.currentUser {
@@ -45,7 +53,7 @@ class AKIFirebaseLoginContext {
     
     private func login(with user: FIRUser) -> ReturnType {
         return Observable.create { observer in
-            observer.onNext(user)
+            observer.onNext(Result<user, AuthError.noneError>)
             observer.onCompleted()
             
             return Disposables.create()
