@@ -16,15 +16,9 @@ import RxSwift
 
 import Result
 
-enum AuthError: Error {
-    case failedLogin
-    case failedConnection
-    case noneError
-}
-
 class AKIFirebaseLoginContext {
     
-    typealias ReturnType = Observable<Result<FIRUser, AuthError>>
+    typealias Signal = Observable<Result<FIRUser, AuthError>>
     
     var userModel: AKIUser
     var token: String?
@@ -34,7 +28,7 @@ class AKIFirebaseLoginContext {
         self.token = token
     }
     
-    func execute() -> ReturnType {
+    func execute() -> Signal {
         if let currentUser = FIRAuth.auth()?.currentUser {
             return self.login(with: currentUser)
         }
@@ -51,7 +45,7 @@ class AKIFirebaseLoginContext {
         }
     }
     
-    private func login(with user: FIRUser) -> ReturnType {
+    private func login(with user: FIRUser) -> Signal {
         return Observable.create { observer in
             
             observer.onNext(.success(user))
@@ -61,7 +55,7 @@ class AKIFirebaseLoginContext {
         }
     }
     
-    private func login(token: String) -> ReturnType {
+    private func login(token: String) -> Signal {
         return Observable.create { observer in
             
             let credential = FIRFacebookAuthProvider.credential(withAccessToken: token)
@@ -73,13 +67,12 @@ class AKIFirebaseLoginContext {
     
     private func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
-            if error != nil {
-//                observer.onError(error)
-                observer.onNext(.failure(.failedConnection))
+            if let error = error {
+                observer.onNext(.failure(.failed(error.localizedDescription)))
                 return
             }
             
-            guard let user = user else { return observer.onNext(.failure(.failedConnection)) }
+            guard let user = user else { return observer.onNext(.failure(.emptyUser)) }
             
             observer.onNext(.success(user))
             observer.onCompleted()
