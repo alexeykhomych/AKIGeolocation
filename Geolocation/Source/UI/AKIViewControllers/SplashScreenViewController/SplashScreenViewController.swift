@@ -16,6 +16,27 @@ import RxCocoa
 import Firebase
 import FirebaseAuth
 
+import Result
+
+extension SplashScreenViewController {
+    
+    func performResult(result: Result<FIRUser, AuthError>) {
+        let app = UIApplication.shared.delegate as? AKIAppDelegate
+        
+        switch result {
+        case let .success(user):
+            let locationViewController = AKILocationViewController()
+            locationViewController.userModel = user.fill(userModel: AKIUser())
+            app.map { (localApp) -> Void in
+                localApp.window?.rootViewController = UINavigationController(rootViewController: locationViewController)
+            }
+        case let .failure(error):
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }
+    }
+    
+}
+
 class SplashScreenViewController: UIViewController {
     
     typealias RootViewType = SplashScreenView
@@ -35,20 +56,21 @@ class SplashScreenViewController: UIViewController {
     
     // MARK: Private methods
     
-    private func showNextViewController() {
-        let app = UIApplication.shared.delegate as? AKIAppDelegate
-        
-        _ = AKIFirebaseAuthProvider().userChangesListener().map { (auth, user) -> FIRUser? in
-            return user
-        }.subscribe(onNext: { result in
-            let locationViewController = AKILocationViewController()
-            locationViewController.userModel = result?.fill(userModel: AKIUser())
-            app.map { (localApp) -> Void in
-                localApp.window?.rootViewController = UINavigationController(rootViewController: locationViewController)
-            }
-        }, onError: { error in
-            app.map { (localApp) -> Void in
-                localApp.window?.rootViewController = UINavigationController(rootViewController: AKILoginViewController())
+    private func showNextViewController() {        
+        _ = AKIFirebaseAuthProvider().userChangesListener().map { return $0 }.subscribe(onNext: { result in
+            let app = UIApplication.shared.delegate as? AKIAppDelegate
+            
+            switch result {
+            case let .success(user):
+                let locationViewController = AKILocationViewController()
+                locationViewController.userModel = user.1.fill(userModel: AKIUser())
+                app.map { (localApp) -> Void in
+                    localApp.window?.rootViewController = UINavigationController(rootViewController: locationViewController)
+                }
+            case .failure:
+                app.map { (localApp) -> Void in
+                    localApp.window?.rootViewController = UINavigationController(rootViewController: AKILoginViewController())
+                }
             }
         })
     }

@@ -25,7 +25,7 @@ class AKIFirebaseLogoutContext: AKIContextProtocol {
             do {
                 try FIRAuth.auth()?.signOut()
             } catch let signOutError as NSError {
-                observer.onNext(.failure(.failed(signOutError.localizedDescription)))
+                observer.onNext(.failure(.description(signOutError.localizedDescription)))
             }
             
             observer.onNext(.success((FIRAuth.auth()?.currentUser == nil)))

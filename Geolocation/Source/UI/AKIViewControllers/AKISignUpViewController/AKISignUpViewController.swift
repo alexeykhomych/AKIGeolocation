@@ -13,6 +13,21 @@ import RxCocoa
 
 import IDPRootViewGettable
 
+import Result
+
+extension AKISignUpViewController {
+    
+    func performResult(result: Result<AKIUser, AuthError>) {
+        switch result {
+        case let .success(user):
+            self.segueLocationViewController(with: user)
+        case let .failure(error):
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }
+    }
+    
+}
+
 class AKISignUpViewController: UIViewController, RootViewGettable {
     
     typealias RootViewType = AKISignUpView
@@ -46,10 +61,8 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
             .flatMap {
                 self.loginService.signup(with: $0)
             }
-            .subscribe(onNext: { [weak self] user in
-                    self?.segueLocationViewController(with: user)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            .subscribe(onNext: { [weak self] in
+                self?.performResult(result: $0)
             })
             .disposed(by: self.disposeBag)
     }
@@ -67,7 +80,7 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
         return userModel
     }
     
-    private func segueLocationViewController(with userModel: AKIUser) {
+    func segueLocationViewController(with userModel: AKIUser) {
         let controller = AKILocationViewController()
         controller.userModel = userModel
         self.pushViewController(controller)

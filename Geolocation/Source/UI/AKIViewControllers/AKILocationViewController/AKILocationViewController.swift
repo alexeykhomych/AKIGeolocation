@@ -15,6 +15,21 @@ import RxCocoa
 
 import IDPRootViewGettable
 
+import Result
+
+extension AKILocationViewController {
+    
+    func performResult(result: Result<[CLLocation], AuthError>) {
+        switch result {
+        case let .success(locations):
+            self.rootView?.cameraPosition(locations: locations)
+        case let .failure(error):
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }
+    }
+    
+}
+
 protocol AKILocationViewControllerProtocol {
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
     func observForMoving()
@@ -93,34 +108,36 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         _ = AKICurrentPositionContext(userModel: userModel, latitude: latitude, longitude: longitude).execute()
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
-            .subscribe(onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            .subscribe(onNext: { [weak self] result in
+                switch result {
+                case .success: break
+                case let .failure(error):
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                }
             }).disposed(by: self.disposeBag)
     }
     
     func observForMoving() {
-        _ = self.locationManager
-            .replaySubject?
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] locations in
-                self?.rootView?.cameraPosition(locations: locations)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            }).addDisposableTo(self.disposeBag)
+//        _ = self.locationManager
+//            .replaySubject?
+//            .observeOn(MainScheduler.instance)
+//            .subscribe(onNext: { result in
+//                self.performResult(result: result)
+//            }).addDisposableTo(self.disposeBag)
     }
     
     func logOut() {
         _ = self.loginService.logout()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { 
-                if $0 {
+            .bindNext { [weak self] in
+                switch $0 {
+                case .success:
                     UIApplication.shared.delegate.map { (localApp) -> Void in
                         localApp.window??.rootViewController = UINavigationController(rootViewController: AKILoginViewController())
                     }
-                }
-            }, onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+                case let .failure(error):
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            }
+        }
     }
 }

@@ -20,29 +20,31 @@ import Result
     
 class AKIFirebaseAuthProvider {
     
+    typealias Signal = Observable<Result<FIRUser, AuthError>>
+    
     // MARK: Public methods
     
-    func login(userModel: AKIUser, token: String?) -> Observable<Result<FIRUser, AuthError>> {
+    func login(userModel: AKIUser, token: String?) -> Signal {
         return AKIFirebaseLoginContext(userModel: userModel, token: token).execute()
     }
     
-    func logout() -> Observable<Bool> {
+    func logout() -> Observable<Result<Bool, AuthError>> {
         return AKIFirebaseLogoutContext().execute()
     }
     
-    func signup(userModel: AKIUser) -> Observable<FIRUser> {
+    func signup(userModel: AKIUser) -> Signal {
         return AKIFirebaseSignUpContext(userModel).execute()
     }
     
-    func sendResetPassword(with email: String) -> Observable<Bool> {
-        return Observable<Bool>.create { observer in
+    func sendResetPassword(with email: String) -> Observable<Result<Bool, AuthError>> {
+        return Observable.create { observer in
             FIRAuth.auth()?.sendPasswordReset(withEmail: email, completion: { error in
                 if let error = error {
-                    observer.onError(error)
+                    observer.onNext(.failure(.description(error.localizedDescription)))
                     return
                 }
                 
-                observer.onNext(true)
+                observer.onNext(.success(true))
                 observer.onCompleted()
             })
             
@@ -50,15 +52,15 @@ class AKIFirebaseAuthProvider {
         }
     }
     
-    func userChangesListener() -> Observable<(FIRAuth, FIRUser)> {
+    func userChangesListener() -> Observable<Result<(FIRAuth, FIRUser), AuthError>> {
         return Observable.create { observer in
             let listener = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
                 guard let user = user else {
-                    observer.onError(RxError.noElements)
+                    observer.onNext(.failure(.description("Empty user")))
                     return
                 }
                 
-                observer.onNext((auth, user))
+                observer.onNext(.success((auth, user)))
                 observer.onCompleted()
             }
             

@@ -14,7 +14,11 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
+import Result
+
 class AKICurrentPositionContext: AKIContextProtocol {
+    
+    typealias Signal = Observable<Result<AKIUser, AuthError>>
     
     private var logitude: Double
     private var latitude: Double
@@ -27,8 +31,8 @@ class AKICurrentPositionContext: AKIContextProtocol {
         self.latitude = latitude
     }
     
-    internal func execute() -> Observable<AKIUser> {
-        return PublishSubject<AKIUser>.create { observer in
+    internal func execute() -> Signal {
+        return PublishSubject.create { observer in
             
             // MARK: need to refactor
             
@@ -40,7 +44,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
             
             userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
                 if let error = error {
-                    observer.onError(error)
+                    observer.onNext(.failure(.description(error.localizedDescription)))
                     return
                 }
             })

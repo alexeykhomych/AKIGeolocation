@@ -39,7 +39,9 @@ class AKIFirebaseLoginContext {
     
         return Observable.create { observer in
             let model = self.userModel
-            FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
+            FIRAuth.auth()?.signIn(withEmail: model.email,
+                                   password: model.password,
+                                   completion: self.userCompletionHandler(observer))
             
             return Disposables.create()
         }
@@ -68,7 +70,7 @@ class AKIFirebaseLoginContext {
     private func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             if let error = error {
-                observer.onNext(.failure(.failed(error.localizedDescription)))
+                observer.onNext(.failure(.description(error.localizedDescription)))
                 return
             }
             

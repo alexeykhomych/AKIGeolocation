@@ -14,7 +14,11 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
+import Result
+
 class AKIFirebaseSignUpContext: AKIContextProtocol{
+    
+    typealias Signal = Observable<Result<FIRUser, AuthError>>
     
     var userModel: AKIUser
     
@@ -22,7 +26,7 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
         self.userModel = userModel
     }
     
-    internal func execute() -> Observable<FIRUser> {
+    internal func execute() -> Signal {
         return Observable.create { observer in
             let user = self.userModel
             FIRAuth.auth()?.createUser(withEmail: user.email,
@@ -33,14 +37,16 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
         }
     }
     
-    func userCompletionHandler(_ observer: AnyObserver<FIRUser>?) -> (FIRUser?, Error?) -> () {
+    func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>?) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             
             if let error = error {
-                observer?.onError(error)
+                observer?.onNext(.failure(.description(error.localizedDescription)))
+                return
             }
             
             let userModel = self.userModel
+            
             // MARK: need to refactor
 
             let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
@@ -52,13 +58,13 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
             
             userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
                 if let error = error {
-                    observer?.onError(error)
+                    observer?.onNext(.failure(.description(error.localizedDescription)))
                     return
-                } else {
-                    guard let user = user else { return }
-                    observer?.onNext(user)
-                    observer?.onCompleted()
                 }
+                
+                guard let user = user else { return }
+                observer?.onNext(.success(user))
+                observer?.onCompleted()
             })
         }
     }
