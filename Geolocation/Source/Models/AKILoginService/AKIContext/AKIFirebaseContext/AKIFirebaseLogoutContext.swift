@@ -14,19 +14,21 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-class AKIFirebaseLogoutContext: AKIContextProtocol {    
-    internal func execute() -> Observable<Bool> {
+import Result
+
+class AKIFirebaseLogoutContext: AKIContextProtocol {
+    
+    typealias Signal = Observable<Result<Bool, AuthError>>
+    
+    internal func execute() -> Signal {
         return Observable.create { observer in
-            
-            // MARK: need to refactor
-            
             do {
                 try FIRAuth.auth()?.signOut()
             } catch let signOutError as NSError {
-                observer.onError(signOutError)
+                observer.onNext(.failure(.failed(signOutError.localizedDescription)))
             }
             
-            observer.onNext((FIRAuth.auth()?.currentUser == nil))
+            observer.onNext(.success((FIRAuth.auth()?.currentUser == nil)))
             observer.onCompleted()
             
             return Disposables.create()
