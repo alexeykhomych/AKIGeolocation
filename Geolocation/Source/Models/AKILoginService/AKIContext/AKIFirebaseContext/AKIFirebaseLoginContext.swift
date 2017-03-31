@@ -24,6 +24,8 @@ enum AuthError: Error {
 
 class AKIFirebaseLoginContext {
     
+    typealias ReturnType = Observable<Result<FIRUser, AuthError>>
+    
     var userModel: AKIUser
     var token: String?
     
@@ -31,8 +33,6 @@ class AKIFirebaseLoginContext {
         self.userModel = userModel
         self.token = token
     }
-    
-    typealias ReturnType = Observable<Result<FIRUser, AuthError>>
     
     func execute() -> ReturnType {
         if let currentUser = FIRAuth.auth()?.currentUser {
@@ -42,7 +42,7 @@ class AKIFirebaseLoginContext {
         if let token = self.token {
             return self.login(token: token)
         }
-        
+    
         return Observable.create { observer in
             let model = self.userModel
             FIRAuth.auth()?.signIn(withEmail: model.email, password: model.password, completion: self.userCompletionHandler(observer))
@@ -53,7 +53,8 @@ class AKIFirebaseLoginContext {
     
     private func login(with user: FIRUser) -> ReturnType {
         return Observable.create { observer in
-            observer.onNext(Result<user, AuthError.noneError>)
+            
+            observer.onNext(.success(user))
             observer.onCompleted()
             
             return Disposables.create()
@@ -70,16 +71,17 @@ class AKIFirebaseLoginContext {
         }
     }
     
-    private func userCompletionHandler(_ observer: AnyObserver<FIRUser>) -> (FIRUser?, Error?) -> () {
+    private func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
-            if let error = error {
-                observer.onError(error)
+            if error != nil {
+//                observer.onError(error)
+                observer.onNext(.failure(.failedConnection))
                 return
             }
             
-            guard let user = user else { return observer.onError(RxError.unknown) }
+            guard let user = user else { return observer.onNext(.failure(.failedConnection)) }
             
-            observer.onNext(user)
+            observer.onNext(.success(user))
             observer.onCompleted()
         }
     }

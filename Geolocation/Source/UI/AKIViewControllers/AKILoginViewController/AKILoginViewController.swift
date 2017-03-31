@@ -13,6 +13,8 @@ import RxCocoa
 
 import IDPRootViewGettable
 
+import Result
+
 class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
     
     typealias RootViewType = AKILoginView
@@ -57,10 +59,14 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
             .flatMap {
                 return self.loginService.login(with: $0, service: .email, viewController: self)
             }
-            .subscribe(onNext: { [weak self] user in
-                self?.segueLocationViewController(with: user)
-            }, onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [weak self] result in
+                switch result {
+                case let .success(user):
+                    self?.segueLocationViewController(with: user)
+                case let .failure(error):
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                }
             })
             .disposed(by: self.disposeBag)
     }
@@ -79,10 +85,13 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
                 return self.loginService.login(with: userModel, service: .facebook, viewController: self)
             }
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] user in
-                self?.segueLocationViewController(with: user)
-            }, onError: { [weak self]  error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            .subscribe(onNext: { [weak self] result in
+                switch result {
+                case let .success(user):
+                    self?.segueLocationViewController(with: user)
+                case let .failure(error):
+                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+                }
             })
             .disposed(by: self.disposeBag)
     }

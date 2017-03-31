@@ -15,12 +15,14 @@ import Firebase
 import FirebaseAuth
 
 import FBSDKLoginKit
+
+import Result
     
 class AKIFirebaseAuthProvider {
     
     // MARK: Public methods
     
-    func login(userModel: AKIUser, token: String?) -> Observable<FIRUser> {
+    func login(userModel: AKIUser, token: String?) -> Observable<Result<FIRUser, AuthError>> {
         return AKIFirebaseLoginContext(userModel: userModel, token: token).execute()
     }
     
