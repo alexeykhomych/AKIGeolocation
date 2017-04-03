@@ -8,9 +8,7 @@
 
 import UIKit
 
-class AKILoginView: UIView {
-    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer?
-    
+class AKILoginView: UIView {    
     @IBOutlet var emailTextField: UITextField?
     @IBOutlet var passwordTextField: UITextField?
     

@@ -109,6 +109,7 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
                 guard let longitude = coordinate?.longitude,
                     let latitude = coordinate?.latitude else
                 {
+                    self?.replaySubject?.onNext(.failure(.description("Coordinates are empty")))
                     return
                 }
                 

@@ -29,14 +29,12 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     
     // MARK: Accessors
     
-    var loginService = AKIAuthService()
-    
     var userModel: AKIUser?
     
+    private var loginService = AKIAuthService()
     private let disposeBag = DisposeBag()
-    
     private var locationManager = AKILocationManager()
-    
+    private let tap = UITapGestureRecognizer()
     private let logoutButtonText = "Log out"
     
     // MARK: View Lifecycle
@@ -44,9 +42,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.leftBarButtonItem()
-        self.initMapView()
-        self.observForMoving()
+        self.prepareView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,14 +69,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             .subscribe(onNext: { [unowned self] in
                 self.logOut()
             }).addDisposableTo(self.disposeBag)
-    }
-    
-    // MARK: Private methods
-    
-    private func initMapView() {
-        let mapView = self.rootView?.mapView
-        mapView?.isMyLocationEnabled = true
-        mapView?.settings.myLocationButton = true
     }
     
     // MARK: AKILocationViewControllerProtocol
@@ -126,5 +114,27 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
             }
         }
+    }
+    
+    // MARK: Private methods
+    
+    private func initMapView() {
+        let mapView = self.rootView?.mapView
+        mapView?.isMyLocationEnabled = true
+        mapView?.settings.myLocationButton = true
+    }
+    
+    private func prepareView() {
+        let tap  = self.tap
+        tap.addTarget(self, action: #selector(hideKeyboard))
+        self.view.addGestureRecognizer(tap)
+        
+        self.leftBarButtonItem()
+        self.initMapView()
+        self.observForMoving()
+    }
+    
+    @objc private func hideKeyboard() {
+        self.view.endEditing(true)
     }
 }

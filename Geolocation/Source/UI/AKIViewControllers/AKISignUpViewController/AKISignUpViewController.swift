@@ -21,18 +21,17 @@ class AKISignUpViewController: UIViewController, RootViewGettable, ViewControlle
     
     // MARK: Accessors
     
-    let disposeBag = DisposeBag()
-    
-    var userModel: AKIUser?
-    
-    var loginService = AKIAuthService()
+    private let disposeBag = DisposeBag()
+    private var userModel: AKIUser?
+    private var loginService = AKIAuthService()
+    private let tap = UITapGestureRecognizer()
     
     // MARK: View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initSignUpButton()
+        self.prepareView()
     }
     
     // MARK: Initializations and Deallocations
@@ -69,9 +68,21 @@ class AKISignUpViewController: UIViewController, RootViewGettable, ViewControlle
         return userModel
     }
     
-    func segueLocationViewController(with userModel: AKIUser) {
+    private func segueLocationViewController(with userModel: AKIUser) {
         let controller = AKILocationViewController()
         controller.userModel = userModel
         self.pushViewController(controller)
+    }
+    
+    private func prepareView() {
+        let tap  = self.tap
+        tap.addTarget(self, action: #selector(hideKeyboard))
+        self.view.addGestureRecognizer(tap)
+        
+        self.initSignUpButton()
+    }
+    
+    @objc private func hideKeyboard() {
+        self.view.endEditing(true)
     }
 }

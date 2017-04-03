@@ -81,12 +81,9 @@
                 <outlet property="loginWithFBButton" destination="mvd-ob-Rbd" id="kzt-pC-x6a"/>
                 <outlet property="passwordTextField" destination="tLE-Iu-tAu" id="me7-ng-4IC"/>
                 <outlet property="signUpButton" destination="8aq-vk-iiD" id="Itc-KQ-8z9"/>
-                <outlet property="tapGestureRecognizer" destination="Fh6-WK-RYK" id="y8t-Xh-ukc"/>
-                <outletCollection property="gestureRecognizers" destination="Fh6-WK-RYK" appends="YES" id="gCA-L0-Va8"/>
             </connections>
             <point key="canvasLocation" x="26" y="52"/>
         </view>
-        <tapGestureRecognizer id="Fh6-WK-RYK"/>
     </objects>
     <resources>
         <image name="fb_login" width="205" height="50"/>

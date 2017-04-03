@@ -15,42 +15,24 @@ import IDPRootViewGettable
 
 import Result
 
-protocol ViewControllerResult {
-    func performResult<R>(result: Result<R, AuthError>, block: ((R) -> ()))
-}
-
-extension ViewControllerResult where Self: UIViewController {
-    
-    func performResult<R, E>(result: Result<R, E>, block: ((R) -> ())) {
-        switch result {
-        case let .success(user):
-            block(user)
-        case let .failure(error):
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }
-    }
-
-}
-
-class AKILoginViewController: UIViewController, Tappable, RootViewGettable, ViewControllerResult {
+class AKILoginViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
     typealias RootViewType = AKILoginView
     
     // MARK: Accessors
     
-    let disposeBag = DisposeBag()
-    var loginService = AKIAuthService()
+    private let disposeBag = DisposeBag()
+    private var loginService = AKIAuthService()
+    private let tap = UITapGestureRecognizer()
     
     // MARK: View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.loginFirebaseButton()
-        self.signUpButton()
-        self.loginFacebookButton()
+        self.prepareView()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
         super.viewWillAppear(animated)
@@ -122,5 +104,19 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable, View
         userModel.email = rootView?.emailTextField?.text ?? ""
         
         return userModel
+    }
+    
+    private func prepareView() {
+        let tap  = self.tap
+        tap.addTarget(self, action: #selector(hideKeyboard))
+        self.view.addGestureRecognizer(tap)
+        
+        self.loginFirebaseButton()
+        self.signUpButton()
+        self.loginFacebookButton()
+    }
+    
+    @objc private func hideKeyboard() {
+        self.view.endEditing(true)
     }
 }
