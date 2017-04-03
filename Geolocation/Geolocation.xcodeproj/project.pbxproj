@@ -122,6 +122,13 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		C92A51B71E9257F300EDA2FB /* Error */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
 		C942FE571E8AA18E00358F59 /* SplashScreenViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -289,6 +296,7 @@
 		C97D871B1E5DB6CA00888F0A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C92A51B71E9257F300EDA2FB /* Error */,
 				C9F5207A1E6874AA004FBA77 /* NSObject + AKIExtensions */,
 				C968E3831E5EF44800CF2F0A /* UIViewController+AKIExtensions */,
 				C97D871C1E5DB6F500888F0A /* String+AKIExtensions */,

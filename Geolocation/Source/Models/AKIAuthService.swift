@@ -17,14 +17,14 @@ import FirebaseAuth
 
 import Result
 
-enum AuthError: Error {
-    case description(String)
-    case emptyUser
-}
-
 enum LoginServiceType {
     case facebook
     case email
+}
+
+enum AuthError: Error {
+    case description(String)
+    case emptyUser
 }
 
 extension FIRUser {

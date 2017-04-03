@@ -13,6 +13,12 @@ import GoogleMaps
 import RxCocoa
 import RxSwift
 
+import Result
+
+enum LocationError: Error {
+    case description(String)
+}
+
 protocol AKIGoogleLocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
@@ -40,7 +46,9 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     
     // MARK: Accessors
     
-    var replaySubject: ReplaySubject<[CLLocation]>?
+    typealias Signal = ReplaySubject<Result<[CLLocation], LocationError>>
+    
+    var replaySubject: Signal?
     
     private let defaultLatitude = 0.0
     private let defaultLongitude = 0.0
@@ -71,7 +79,7 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     // MARK: Initializations and Deallocations
 
     override init() {
-        self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: self.replaySubjectBufferCount)
+        self.replaySubject = Signal.create(bufferSize: self.replaySubjectBufferCount)
         super.init()
         self.locationManager = self.defaultManager()
         self.initTimer()
@@ -109,6 +117,6 @@ class AKILocationManager: NSObject, AKIGoogleLocationManager {
     }
     
     private func sendLocationsForSubscribers(_ locations: [CLLocation]) {
-        _ = self.replaySubject?.onNext(locations)
+        _ = self.replaySubject?.onNext(.success(locations))
     }
 }

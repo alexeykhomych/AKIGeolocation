@@ -15,20 +15,7 @@ import IDPRootViewGettable
 
 import Result
 
-extension AKISignUpViewController {
-    
-    func performResult(result: Result<AKIUser, AuthError>) {
-        switch result {
-        case let .success(user):
-            self.segueLocationViewController(with: user)
-        case let .failure(error):
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }
-    }
-    
-}
-
-class AKISignUpViewController: UIViewController, RootViewGettable {
+class AKISignUpViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
     typealias RootViewType = AKISignUpView
     
@@ -62,7 +49,9 @@ class AKISignUpViewController: UIViewController, RootViewGettable {
                 self.loginService.signup(with: $0)
             }
             .subscribe(onNext: { [weak self] in
-                self?.performResult(result: $0)
+                self?.performResult(result: $0, block: {
+                    self?.segueLocationViewController(with: $0)
+                })
             })
             .disposed(by: self.disposeBag)
     }

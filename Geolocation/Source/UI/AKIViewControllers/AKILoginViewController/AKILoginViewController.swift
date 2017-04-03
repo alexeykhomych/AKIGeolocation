@@ -15,12 +15,16 @@ import IDPRootViewGettable
 
 import Result
 
-extension AKILoginViewController {
+protocol ViewControllerResult {
+    func performResult<R>(result: Result<R, AuthError>, block: ((R) -> ()))
+}
+
+extension ViewControllerResult where Self: UIViewController {
     
-    func performResult(result: Result<AKIUser, AuthError>) {
+    func performResult<R, E>(result: Result<R, E>, block: ((R) -> ())) {
         switch result {
         case let .success(user):
-            self.segueLocationViewController(with: user)
+            block(user)
         case let .failure(error):
             self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
         }
@@ -28,7 +32,7 @@ extension AKILoginViewController {
 
 }
 
-class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
+class AKILoginViewController: UIViewController, Tappable, RootViewGettable, ViewControllerResult {
     
     typealias RootViewType = AKILoginView
     
@@ -72,9 +76,11 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
                 self.loginService.login(with: $0, service: .email, viewController: self)
             }
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.performResult(result: $0)
-            })
+            .bindNext { [weak self] in
+                self?.performResult(result: $0, block: {
+                    self?.segueLocationViewController(with: $0)
+                })
+            }
             .disposed(by: self.disposeBag)
     }
     
@@ -92,9 +98,11 @@ class AKILoginViewController: UIViewController, Tappable, RootViewGettable {
                 self.loginService.login(with: userModel, service: .facebook, viewController: self)
             }
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.performResult(result: $0)
-            })
+            .bindNext { [weak self] in
+                self?.performResult(result: $0, block: {
+                    self?.segueLocationViewController(with: $0)
+                })
+            }
             .disposed(by: self.disposeBag)
     }
     

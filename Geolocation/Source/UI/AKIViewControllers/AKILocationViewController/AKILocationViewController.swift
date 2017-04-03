@@ -17,26 +17,13 @@ import IDPRootViewGettable
 
 import Result
 
-extension AKILocationViewController {
-    
-    func performResult(result: Result<[CLLocation], AuthError>) {
-        switch result {
-        case let .success(locations):
-            self.rootView?.cameraPosition(locations: locations)
-        case let .failure(error):
-            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-        }
-    }
-    
-}
-
 protocol AKILocationViewControllerProtocol {
     func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
     func observForMoving()
     func logOut()
 }
 
-class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol, RootViewGettable {
+class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol, RootViewGettable, ViewControllerResult {
     
     typealias RootViewType = AKILocationView
     
@@ -45,8 +32,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     var loginService = AKIAuthService()
     
     var userModel: AKIUser?
-    
-    private var timer: Disposable?
     
     private let disposeBag = DisposeBag()
     
@@ -118,12 +103,14 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     }
     
     func observForMoving() {
-//        _ = self.locationManager
-//            .replaySubject?
-//            .observeOn(MainScheduler.instance)
-//            .subscribe(onNext: { result in
-//                self.performResult(result: result)
-//            }).addDisposableTo(self.disposeBag)
+        _ = self.locationManager
+            .replaySubject?
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [weak self] result in
+                self?.performResult(result: result, block: {
+                    self?.rootView?.cameraPosition(locations: $0)
+                })
+            }).addDisposableTo(self.disposeBag)
     }
     
     func logOut() {
