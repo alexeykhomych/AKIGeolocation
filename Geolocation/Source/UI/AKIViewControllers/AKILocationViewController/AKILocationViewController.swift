@@ -7,42 +7,50 @@
 //
 
 import UIKit
-
 import GoogleMaps
-
 import RxSwift
 import RxCocoa
-
 import IDPRootViewGettable
-
 import Result
+import CoreLocation
 
-protocol AKILocationViewControllerProtocol {
-    func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
-    func observForMoving()
-    func logOut()
+private extension Reactive where Base: GMSMapView {
+    var coordinates: UIBindingObserver<Base, CLLocationCoordinate2D> {
+        return UIBindingObserver(UIElement: base) { mapView, location in
+            mapView.animate(with: GMSCameraUpdate.setTarget(location, zoom: Google.Maps.Default.zoom))
+        }
+    }
 }
 
-class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol, RootViewGettable, ViewControllerResult {
+class AKILocationViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
     typealias RootViewType = AKILocationView
     
-    // MARK: Accessors
+    // MARK: - Accessors
     
     var userModel: AKIUser?
     
     private var loginService = AKIAuthService()
     private let disposeBag = DisposeBag()
     private var locationManager = AKILocationManager()
-    private let tap = UITapGestureRecognizer()
     private let logoutButtonText = "Log out"
     
-    // MARK: View Lifecycle
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.prepareView()
+        
+        let geolocationService = AKILocationManager.instance
+        let mapView = self.rootView?.mapView
+        geolocationService.authorized
+            .drive(Variable(true))
+            .disposed(by: disposeBag)
+        
+//        geolocationService.location
+//            .drive(mapView?.rx.coordinates)
+//            .disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,7 +63,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         super.viewWillDisappear(animated)
     }
     
-    // MARK: Initializations and Deallocations
+    // MARK: - Initializations and Deallocations
     
     func leftBarButtonItem() {
         let logoutButton = UIBarButtonItem.init(title: self.logoutButtonText,
@@ -71,9 +79,9 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             }).addDisposableTo(self.disposeBag)
     }
     
-    // MARK: AKILocationViewControllerProtocol
+    // MARK: - Private methods
     
-    func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
+    private func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
         guard let userModel = self.userModel else {
             return
         }
@@ -90,7 +98,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             }).disposed(by: self.disposeBag)
     }
     
-    func observForMoving() {
+    private func observForMoving() {
         _ = self.locationManager
             .replaySubject?
             .observeOn(MainScheduler.instance)
@@ -101,7 +109,7 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             }).addDisposableTo(self.disposeBag)
     }
     
-    func logOut() {
+    @objc private func logOut() {
         _ = self.loginService.logout()
             .observeOn(MainScheduler.instance)
             .bindNext { [weak self] in
@@ -116,8 +124,6 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
         }
     }
     
-    // MARK: Private methods
-    
     private func initMapView() {
         let mapView = self.rootView?.mapView
         mapView?.isMyLocationEnabled = true
@@ -125,16 +131,10 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
     }
     
     private func prepareView() {
-        let tap  = self.tap
-        tap.addTarget(self, action: #selector(hideKeyboard))
-        self.view.addGestureRecognizer(tap)
+        self.locationManager.timerInterval = 60
         
         self.leftBarButtonItem()
         self.initMapView()
-        self.observForMoving()
-    }
-    
-    @objc private func hideKeyboard() {
-        self.view.endEditing(true)
+//        self.observForMoving()
     }
 }

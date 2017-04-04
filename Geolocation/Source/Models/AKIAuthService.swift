@@ -52,6 +52,8 @@ class AKIAuthService {
     
     typealias Signal = Observable<Result<AKIUser, AuthError>>
     
+    static let instance = AKIAuthService()
+    
     // MARK: Accessors
     
     private var facebookLoginProvider = AKIFacebookAuthProvider()

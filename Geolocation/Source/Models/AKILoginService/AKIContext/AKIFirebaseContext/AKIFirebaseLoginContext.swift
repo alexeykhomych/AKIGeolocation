@@ -38,11 +38,11 @@ class AKIFirebaseLoginContext {
         }
     
         return Observable.create { observer in
-            let model = self.userModel
-            FIRAuth.auth()?.signIn(withEmail: model.email,
-                                   password: model.password,
-                                   completion: self.userCompletionHandler(observer))
-            
+                let model = self.userModel
+                FIRAuth.auth()?.signIn(withEmail: model.email,
+                                       password: model.password,
+                                       completion: self.userCompletionHandler(observer))
+    
             return Disposables.create()
         }
     }

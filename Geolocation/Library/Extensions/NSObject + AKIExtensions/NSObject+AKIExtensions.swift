@@ -9,11 +9,6 @@
 import UIKit
 
 extension NSObject {
-
-    func unwrap<T>(value: T?, defaultValue: T) -> T {
-        return value ?? defaultValue
-    }
-
     func cast<Type, Result>(_ value: Type) -> Result? {
         return value as? Result
     }
