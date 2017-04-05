@@ -50,7 +50,7 @@ struct Validation {
 struct Google {
     struct Maps {
         struct Default {
-            static let zoom: Float = 15.0
+            static let zoom: Float = 17.0
             static let distanceFilter = 50
         }
     }
@@ -71,6 +71,10 @@ struct UI {
     struct AllertMessage {
         static let titleOk = "Ok"
         static let titleError = "Error"
+    }
+    
+    struct ButtonName {
+        static let logOut = "Log out"
     }
 }
 

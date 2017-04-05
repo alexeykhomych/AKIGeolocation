@@ -30,6 +30,7 @@ class AKILocationManager {
     var replaySubject: Signal?
     var timerInterval: Int?
     var locationAccuracy: CLLocationAccuracy?
+    var distanceFilter: CLLocationDistance?
     
     private let replaySubjectBufferCount = 1
     private let disposeBag = DisposeBag()
@@ -42,17 +43,11 @@ class AKILocationManager {
 
     init() {
         self.replaySubject = Signal.create(bufferSize: self.replaySubjectBufferCount)
-        self.initManager()
-        self.initTimer()
     }
     
     // MARK: - Public methods
     
-    
-    
-    // MARK: - Private methods
-    
-    private func initManager() {
+    func initManager() {
         var locationManager = self.locationManager
         
         self.authorized = Observable.deferred { [weak locationManager] in
@@ -74,22 +69,26 @@ class AKILocationManager {
                 }
         }
         
-        locationManager.distanceFilter = self.locationAccuracy ?? kCLLocationAccuracyBestForNavigation
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.distanceFilter = self.distanceFilter ?? kCLDistanceFilterNone
+        locationManager.desiredAccuracy = self.locationAccuracy ?? kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
         
-        self.location = locationManager.rx.didUpdateLocations
+        self.initTimer()
+        self.startNotifications()
+    }
+    
+    // MARK: - Private methods
+    
+    private func startNotifications() {
+        self.location = self.locationManager.rx.didUpdateLocations
             .asDriver(onErrorJustReturn: [])
             .flatMap {
                 return $0.last.map(Driver.just) ?? Driver.empty()
             }
             .map { $0.coordinate }
         
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        
-        _ = self.location?.asObservable().subscribe(onNext: { [weak self] _ in
-            self?.combineResults()
-        })
+        self.combineResults()
     }
     
     private func initTimer() {

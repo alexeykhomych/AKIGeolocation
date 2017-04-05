@@ -23,10 +23,9 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
     var userModel: AKIUser?
     
     private var provider = AKIFirebaseAuthProvider.instance
+    private var locationManager = AKILocationManager.instance
     
     private let disposeBag = DisposeBag()
-    private var locationManager = AKILocationManager.instance
-    private let logoutButtonText = "Log out"
     
     // MARK: - View Lifecycle
     
@@ -34,23 +33,12 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         super.viewDidLoad()
         
         self.prepareView()
-        self.locationManager.locationAccuracy = kCLLocationAccuracyBestForNavigation
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-        super.viewWillDisappear(animated)
     }
     
     // MARK: - Initializations and Deallocations
     
     func leftBarButtonItem() {
-        let logoutButton = UIBarButtonItem.init(title: self.logoutButtonText,
+        let logoutButton = UIBarButtonItem.init(title: UI.ButtonName.logOut,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(logOut))
@@ -65,20 +53,21 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
     
     // MARK: - Private methods
     
-    private func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
-        guard let userModel = self.userModel else {
-            return
+    private func subscribeCurrentPositionContext(locations: [CLLocation]) {
+        let last = locations.last.map {
+            CLLocationCoordinate2D.init(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)
         }
         
-        _ = AKICurrentPositionContext(userModel: userModel, latitude: latitude, longitude: longitude).execute()
+        guard let userModel = self.userModel,
+            let coordinate = last else {
+                return
+        }
+        
+        _ = AKICurrentPositionContext(userModel: userModel, latitude: coordinate.latitude, longitude: coordinate.longitude).execute()
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] result in
-                switch result {
-                case .success: break
-                case let .failure(error):
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-                }
+                self?.performResult(result: result, block: { print("\($0)") })
             }).disposed(by: self.disposeBag)
     }
     
@@ -89,6 +78,7 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
             .subscribe(onNext: { [weak self] result in
                 self?.performResult(result: result, block: {
                     self?.rootView?.cameraPosition(locations: $0)
+                    self?.subscribeCurrentPositionContext(locations: $0)
                 })
             }).addDisposableTo(self.disposeBag)
     }
@@ -108,17 +98,23 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         }
     }
     
-    private func initMapView() {
+    private func prepareView() {
+        let manager = self.locationManager
+        manager.timerInterval = 60
+        manager.distanceFilter = kCLLocationAccuracyHundredMeters
+        manager.initManager()
+        
+        self.leftBarButtonItem()
+        self.prepareMapView()
+        self.observForMoving()
+    }
+    
+    private func prepareMapView() {
         let mapView = self.rootView?.mapView
         mapView?.isMyLocationEnabled = true
         mapView?.settings.myLocationButton = true
-    }
-    
-    private func prepareView() {
-        self.locationManager.timerInterval = 60
-        
-        self.leftBarButtonItem()
-        self.initMapView()
-        self.observForMoving()
+        mapView?.settings.compassButton = true
+        mapView?.settings.allowScrollGesturesDuringRotateOrZoom = true
+        mapView?.settings.scrollGestures = true
     }
 }
