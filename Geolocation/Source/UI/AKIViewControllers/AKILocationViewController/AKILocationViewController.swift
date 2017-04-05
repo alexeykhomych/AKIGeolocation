@@ -14,14 +14,6 @@ import IDPRootViewGettable
 import Result
 import CoreLocation
 
-private extension Reactive where Base: GMSMapView {
-    var coordinates: UIBindingObserver<Base, CLLocationCoordinate2D> {
-        return UIBindingObserver(UIElement: base) { mapView, location in
-            mapView.animate(with: GMSCameraUpdate.setTarget(location, zoom: Google.Maps.Default.zoom))
-        }
-    }
-}
-
 class AKILocationViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
     typealias RootViewType = AKILocationView
@@ -30,9 +22,10 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
     
     var userModel: AKIUser?
     
-    private var loginService = AKIAuthService()
+    private var provider = AKIFirebaseAuthProvider.instance
+    
     private let disposeBag = DisposeBag()
-    private var locationManager = AKILocationManager()
+    private var locationManager = AKILocationManager.instance
     private let logoutButtonText = "Log out"
     
     // MARK: - View Lifecycle
@@ -41,16 +34,7 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         super.viewDidLoad()
         
         self.prepareView()
-        
-        let geolocationService = AKILocationManager.instance
-        let mapView = self.rootView?.mapView
-        geolocationService.authorized
-            .drive(Variable(true))
-            .disposed(by: disposeBag)
-        
-//        geolocationService.location
-//            .drive(mapView?.rx.coordinates)
-//            .disposed(by: disposeBag)
+        self.locationManager.locationAccuracy = kCLLocationAccuracyBestForNavigation
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,7 +94,7 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
     }
     
     @objc private func logOut() {
-        _ = self.loginService.logout()
+        _ = self.provider.logout()
             .observeOn(MainScheduler.instance)
             .bindNext { [weak self] in
                 switch $0 {
@@ -135,6 +119,6 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         
         self.leftBarButtonItem()
         self.initMapView()
-//        self.observForMoving()
+        self.observForMoving()
     }
 }

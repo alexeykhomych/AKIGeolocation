@@ -37,7 +37,7 @@ class SplashScreenViewController: UIViewController {
             switch result {
             case let .success(user):
                 let locationViewController = AKILocationViewController()
-                locationViewController.userModel = user.1.fill(userModel: AKIUser())
+                locationViewController.userModel = AKIUser().fill(user: user.1)
                 app.map { (localApp) -> Void in
                     localApp.window?.rootViewController = UINavigationController(rootViewController: locationViewController)
                 }

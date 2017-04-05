@@ -19,13 +19,13 @@ class AKILoginViewController: UIViewController, RootViewGettable, ViewController
     
     typealias RootViewType = AKILoginView
     
-    // MARK: Accessors
+    // MARK: - Accessors
     
     private let disposeBag = DisposeBag()
-    private var loginService = AKIAuthService()
+    private var loginService = AKIAuthService.instance
     private let tap = UITapGestureRecognizer()
     
-    // MARK: View Lifecycle
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +43,7 @@ class AKILoginViewController: UIViewController, RootViewGettable, ViewController
         super.viewWillDisappear(animated)
     }
     
-    // MARK: Initializations and Deallocations
+    // MARK: - Initializations and Deallocations
     
     func loginFirebaseButton() {
         _ = self.rootView?.loginButton?.rx.tap
@@ -88,7 +88,7 @@ class AKILoginViewController: UIViewController, RootViewGettable, ViewController
             .disposed(by: self.disposeBag)
     }
     
-    // MARK: Private methods
+    // MARK: - Private methods
     
     func segueLocationViewController(with userModel: AKIUser?) {
         let controller = AKILocationViewController()

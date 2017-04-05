@@ -21,35 +21,41 @@ enum LocationError: Error {
 
 class AKILocationManager {
     
-    // MARK: Accessors
+    // MARK: - Accessors
     
     typealias Signal = ReplaySubject<Result<[CLLocation], LocationError>>
     
     static let instance = AKILocationManager()
     
     var replaySubject: Signal?
-    
-    private let defaultLatitude = 0.0
-    private let defaultLongitude = 0.0
-    private let replaySubjectBufferCount = 1
-    
-    private let disposeBag = DisposeBag()
-    
-    private var locationManager = CLLocationManager()
-    
     var timerInterval: Int?
+    var locationAccuracy: CLLocationAccuracy?
     
-    var authorized: Driver<Bool>
-    var location: Driver<CLLocationCoordinate2D>
+    private let replaySubjectBufferCount = 1
+    private let disposeBag = DisposeBag()
+    let locationManager = CLLocationManager()
     
-    var timer: Driver<Int>?
+    private var authorized: Driver<Bool>?
+    private var location: Driver<CLLocationCoordinate2D>?
     
-    // MARK: Initializations and Deallocations
+    // MARK: - Initializations and Deallocations
 
     init() {
         self.replaySubject = Signal.create(bufferSize: self.replaySubjectBufferCount)
+        self.initManager()
+        self.initTimer()
+    }
+    
+    // MARK: - Public methods
+    
+    
+    
+    // MARK: - Private methods
+    
+    private func initManager() {
+        var locationManager = self.locationManager
         
-        authorized = Observable.deferred { [weak locationManager] in
+        self.authorized = Observable.deferred { [weak locationManager] in
             let status = CLLocationManager.authorizationStatus()
             guard let locationManager = locationManager else {
                 return Observable.just(status)
@@ -68,10 +74,10 @@ class AKILocationManager {
                 }
         }
         
-        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.distanceFilter = self.locationAccuracy ?? kCLLocationAccuracyBestForNavigation
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         
-        location = locationManager.rx.didUpdateLocations
+        self.location = locationManager.rx.didUpdateLocations
             .asDriver(onErrorJustReturn: [])
             .flatMap {
                 return $0.last.map(Driver.just) ?? Driver.empty()
@@ -81,51 +87,23 @@ class AKILocationManager {
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
         
-//        self.initTimer()
+        _ = self.location?.asObservable().subscribe(onNext: { [weak self] _ in
+            self?.combineResults()
+        })
     }
     
-    // MARK: - Public methods
-    
-    
-    
-    // MARK: - Private methods
-    
     private func initTimer() {
-//        self.timer = Observable<Int>
         _ = Observable<Int>
             .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
             .observeOn(MainScheduler.instance)
-            .subscribe { [weak self] p in
-                let coordinate = self?.locationManager.location?.coordinate
-                
-                guard let longitude = coordinate?.longitude,
-                    let latitude = coordinate?.latitude else
-                {
-                    self?.replaySubject?.onNext(.failure(.description("Coordinates are empty")))
-                    return
-                }
-                
-                self?.sendLocationsForSubscribers([CLLocation(latitude: latitude, longitude: longitude)])
+            .subscribe { [weak self] _ in
+                self?.combineResults()
             }.addDisposableTo(self.disposeBag)
     }
-    
-    private func sendLocationsForSubscribers(_ locations: [CLLocation]) {
-        _ = self.replaySubject?.onNext(.success(locations))
-    }
-    
-    private func combineResults() {
-        //Observable.combineLatest(a, b) { $0 + $1 }
-//        let currentHours:Variable<Float> = Variable(0.0)
-//        let currentRate:Variable<Float>  = Variable(0.0)
-//        
-//        let hoursAndRate = Observable.combineLatest(currentHours.asObservable(), currentRate.asObservable()){
-//            return $0 + $1
-//        }
         
-//        Observable.combineLatest(self.location, self.timer) {
-//            $0 + $1
-//        }
-//        
-//        self.replaySubject?.onNext()
+    private func combineResults() {
+        _ = self.location?.drive(onNext: { [weak self] in
+            _ = self?.replaySubject?.onNext(.success([CLLocation(latitude: $0.latitude, longitude: $0.longitude)]))
+        })
     }
 }

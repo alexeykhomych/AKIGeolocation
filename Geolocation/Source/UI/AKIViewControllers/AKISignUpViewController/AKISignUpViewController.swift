@@ -19,14 +19,14 @@ class AKISignUpViewController: UIViewController, RootViewGettable, ViewControlle
     
     typealias RootViewType = AKISignUpView
     
-    // MARK: Accessors
+    // MARK: - Accessors
     
     private let disposeBag = DisposeBag()
     private var userModel: AKIUser?
-    private var loginService = AKIAuthService()
+    private var loginService = AKIAuthService.instance
     private let tap = UITapGestureRecognizer()
     
-    // MARK: View Lifecycle
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,7 @@ class AKISignUpViewController: UIViewController, RootViewGettable, ViewControlle
         self.prepareView()
     }
     
-    // MARK: Initializations and Deallocations
+    // MARK: - Initializations and Deallocations
     
     func initSignUpButton() {
         _ = self.rootView?.signUpButton?.rx.tap
@@ -55,7 +55,7 @@ class AKISignUpViewController: UIViewController, RootViewGettable, ViewControlle
             .disposed(by: self.disposeBag)
     }
     
-    // MARK: Private methods
+    // MARK: - Private methods
     
     private func fill(userModel: AKIUser) -> AKIUser {
         var userModel = AKIUser()

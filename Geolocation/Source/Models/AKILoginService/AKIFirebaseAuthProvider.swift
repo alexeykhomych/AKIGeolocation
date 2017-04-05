@@ -22,7 +22,9 @@ class AKIFirebaseAuthProvider {
     
     typealias Signal = Observable<Result<FIRUser, AuthError>>
     
-    // MARK: Public methods
+    static let instance = AKIFirebaseAuthProvider()
+    
+    // MARK: - Public methods
     
     func login(userModel: AKIUser, token: String?) -> Signal {
         return AKIFirebaseLoginContext(userModel: userModel, token: token).execute()

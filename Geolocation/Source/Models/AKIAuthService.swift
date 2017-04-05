@@ -27,21 +27,21 @@ enum AuthError: Error {
     case emptyUser
 }
 
-extension FIRUser {
-    func fill(userModel: AKIUser) -> AKIUser {
-        var userModel = userModel
-        userModel.email = self.email ?? ""
-        userModel.id = self.uid
+extension AKIUser {
+    func fill(user: FIRUser) -> AKIUser {
+        var userModel = self
+        userModel.email = user.email ?? ""
+        userModel.id = user.uid
         
         return userModel
     }
 }
 
 extension Result {
-    func transformTo(model: AKIUser) -> Result<AKIUser, AuthError> {
+    func fill(model: AKIUser) -> Result<AKIUser, AuthError> {
         switch self {
         case let .success(user):
-            return .success((user as? FIRUser)!.fill(userModel: model))
+            return .success(model.fill(user: user as! FIRUser))
         default:
             return .failure(AuthError.emptyUser)
         }
@@ -54,35 +54,31 @@ class AKIAuthService {
     
     static let instance = AKIAuthService()
     
-    // MARK: Accessors
+    // MARK: - Accessors
     
     private var facebookLoginProvider = AKIFacebookAuthProvider()
     private var firebaseLoginProvider = AKIFirebaseAuthProvider()
     
-    // MARK: Public methods
+    // MARK: - Public methods
     
     func login(with userModel: AKIUser, service: LoginServiceType, viewController: UIViewController) -> Signal {
         switch service {
             case .facebook:
                 return self.facebookLoginProvider.login(viewController: viewController).flatMap {
                     self.firebaseLoginProvider.login(userModel: userModel, token: $0.tokenString).map {
-                        $0.transformTo(model: userModel)
+                        $0.fill(model: userModel)
                     }
                 }
             case .email:
                 return self.firebaseLoginProvider.login(userModel: userModel, token: nil).map {
-                    $0.transformTo(model: userModel)
+                    $0.fill(model: userModel)
             }
         }
     }
     
-    func logout() -> Observable<Result<Bool, AuthError>> {
-        return self.firebaseLoginProvider.logout()
-    }
-    
     func signup(with userModel: AKIUser) -> Observable<Result<AKIUser, AuthError>> {
         return self.firebaseLoginProvider.signup(userModel: userModel).map {
-            $0.transformTo(model: userModel)
+            $0.fill(model: userModel)
         }
     }
 }

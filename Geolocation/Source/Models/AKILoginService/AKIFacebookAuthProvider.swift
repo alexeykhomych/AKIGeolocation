@@ -15,7 +15,7 @@ import RxCocoa
 
 class AKIFacebookAuthProvider {
     
-    // MARK: Public methods
+    // MARK: - Public methods
     
     var credential:FBSDKAccessToken? {
         return FBSDKAccessToken.current()
