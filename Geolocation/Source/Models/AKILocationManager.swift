@@ -34,7 +34,7 @@ class AKILocationManager {
     
     private let replaySubjectBufferCount = 1
     private let disposeBag = DisposeBag()
-    let locationManager = CLLocationManager()
+    private let locationManager = CLLocationManager()
     
     private var authorized: Driver<Bool>?
     private var location: Driver<CLLocationCoordinate2D>?
@@ -48,7 +48,7 @@ class AKILocationManager {
     // MARK: - Public methods
     
     func initManager() {
-        var locationManager = self.locationManager
+        let locationManager = self.locationManager
         
         self.authorized = Observable.deferred { [weak locationManager] in
             let status = CLLocationManager.authorizationStatus()
@@ -74,7 +74,7 @@ class AKILocationManager {
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
         
-        self.initTimer()
+//        self.initTimer()
         self.startNotifications()
     }
     
@@ -88,21 +88,48 @@ class AKILocationManager {
             }
             .map { $0.coordinate }
         
-        self.combineResults()
+        self.magick()
     }
     
     private func initTimer() {
         _ = Observable<Int>
             .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
             .observeOn(MainScheduler.instance)
-            .subscribe { [weak self] _ in
-                self?.combineResults()
+            .subscribe { [weak self] time in
+                self?.combineResults(time: time, event: nil)
             }.addDisposableTo(self.disposeBag)
     }
-        
-    private func combineResults() {
+    
+    private func magick() {
         _ = self.location?.drive(onNext: { [weak self] in
-            _ = self?.replaySubject?.onNext(.success([CLLocation(latitude: $0.latitude, longitude: $0.longitude)]))
+//            _ = self?.replaySubject?.onNext(.success([CLLocation(latitude: $0.latitude, longitude: $0.longitude)]))
+            self?.combineResults(time: nil, event: RxSwift.Event.next($0))
         })
+    }
+        
+    private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<CLLocationCoordinate2D>?) {
+//        Observable<Any>.combineLatest(time, event) { r1, r2 in
+//            return r2
+//        }
+        
+        Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 in
+            return r2
+        }
+        .subscribe { signal in
+//            let coord = [CLLocation(latitude: signal.element.map { $0 }, longitude: signal.element.map { $1 })]
+//            _ = self.replaySubject?.onNext(.success(signal))
+            let array:[CLLocation] = (signal.element?.map {
+                guard let latitude = $0.element?.latitude,
+                    let longitude = $0.element?.longitude else {
+                        _ = self.replaySubject?.onNext(.failure(.description("vsemy pizda")))
+                        
+                }
+                
+                [CLLocation(latitude: latitude, longitude: longitude)]
+            })!
+            _ = self.replaySubject?.onNext(.success(array))
+        }.disposed(by: self.disposeBag)
+        
+        //_ = self?.replaySubject?.onNext(.success([CLLocation(latitude: $0.latitude, longitude: $0.longitude)]))
     }
 }
