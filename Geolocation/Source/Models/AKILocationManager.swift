@@ -74,13 +74,13 @@ class AKILocationManager {
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
         
-//        self.initTimer()
-        self.startNotifications()
+        self.initTimer()
+        self.susbcribeToUpdateLocations()
     }
     
     // MARK: - Private methods
     
-    private func startNotifications() {
+    private func susbcribeToUpdateLocations() {
         self.location = self.locationManager.rx.didUpdateLocations
             .asDriver(onErrorJustReturn: [])
             .flatMap {
@@ -88,7 +88,7 @@ class AKILocationManager {
             }
             .map { $0.coordinate }
         
-        self.magick()
+        self.startNotifications()
     }
     
     private func initTimer() {
@@ -100,24 +100,28 @@ class AKILocationManager {
             }.addDisposableTo(self.disposeBag)
     }
     
-    private func magick() {
+    private func startNotifications() {
         _ = self.location?.drive(onNext: { [weak self] in
-//            _ = self?.replaySubject?.onNext(.success([CLLocation(latitude: $0.latitude, longitude: $0.longitude)]))
             self?.combineResults(time: nil, event: RxSwift.Event.next($0))
         })
     }
+    
+    private var coordinate:CLLocationCoordinate2D?
         
     private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<CLLocationCoordinate2D>?) {
-        Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 in
-            return r2?.element
+        Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 -> CLLocationCoordinate2D? in
+            return r2?.element ?? self.coordinate
             }
             .subscribe(onNext: { coordinate in
+                guard let latitude = coordinate?.latitude,
+                    let longitude = coordinate?.longitude else {
+                        _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
+                        return
+                }
                 
-                let latitude = coordinate?.latitude
-                let longitude = coordinate?.longitude
+                self.coordinate = coordinate
                 
-                let array = [CLLocation(latitude: latitude!, longitude: longitude!)]
-                
+                let array = [CLLocation(latitude: latitude, longitude: longitude)]
                 _ = self.replaySubject?.onNext(.success(array))
             }).disposed(by: self.disposeBag)
     }
