@@ -303,9 +303,9 @@
 			isa = PBXGroup;
 			children = (
 				C9A5533F1E891CBA00B471EB /* AKIUser */,
+				C992F4701E6EC38600E77BBF /* AKILoginService */,
 				C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */,
 				C98A61391E6DB91D004E2ADE /* AKIAuthService.swift */,
-				C992F4701E6EC38600E77BBF /* AKILoginService */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -313,9 +313,9 @@
 		C992F4701E6EC38600E77BBF /* AKILoginService */ = {
 			isa = PBXGroup;
 			children = (
+				C9A5534A1E891DFE00B471EB /* AKIContext */,
 				C992F4711E6EC3A700E77BBF /* AKIFacebookAuthProvider.swift */,
 				C992F4731E6F009A00E77BBF /* AKIFirebaseAuthProvider.swift */,
-				C9A5534A1E891DFE00B471EB /* AKIContext */,
 			);
 			path = AKILoginService;
 			sourceTree = "<group>";

@@ -108,28 +108,17 @@ class AKILocationManager {
     }
         
     private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<CLLocationCoordinate2D>?) {
-//        Observable<Any>.combineLatest(time, event) { r1, r2 in
-//            return r2
-//        }
-        
         Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 in
-            return r2
-        }
-        .subscribe { signal in
-//            let coord = [CLLocation(latitude: signal.element.map { $0 }, longitude: signal.element.map { $1 })]
-//            _ = self.replaySubject?.onNext(.success(signal))
-            let array:[CLLocation] = (signal.element?.map {
-                guard let latitude = $0.element?.latitude,
-                    let longitude = $0.element?.longitude else {
-                        _ = self.replaySubject?.onNext(.failure(.description("vsemy pizda")))
-                        
-                }
+            return r2?.element
+            }
+            .subscribe(onNext: { coordinate in
                 
-                [CLLocation(latitude: latitude, longitude: longitude)]
-            })!
-            _ = self.replaySubject?.onNext(.success(array))
-        }.disposed(by: self.disposeBag)
-        
-        //_ = self?.replaySubject?.onNext(.success([CLLocation(latitude: $0.latitude, longitude: $0.longitude)]))
+                let latitude = coordinate?.latitude
+                let longitude = coordinate?.longitude
+                
+                let array = [CLLocation(latitude: latitude!, longitude: longitude!)]
+                
+                _ = self.replaySubject?.onNext(.success(array))
+            }).disposed(by: self.disposeBag)
     }
 }
