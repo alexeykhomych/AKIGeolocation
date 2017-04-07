@@ -19,13 +19,23 @@ enum LocationError: Error {
     case description(String)
 }
 
+extension CLLocationManager {
+    func defaultManager() -> CLLocationManager {
+        let manager = CLLocationManager()
+        manager.distanceFilter = kCLDistanceFilterNone
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestAlwaysAuthorization()
+        manager.startUpdatingLocation()
+        
+        return manager
+    }
+}
+
 class AKILocationManager {
     
     // MARK: - Accessors
     
     typealias Signal = ReplaySubject<Result<[CLLocation], LocationError>>
-    
-    static let instance = AKILocationManager()
     
     var replaySubject: Signal?
     var timerInterval: Int?
@@ -34,9 +44,10 @@ class AKILocationManager {
     
     private let replaySubjectBufferCount = 1
     private let disposeBag = DisposeBag()
-    private let locationManager = CLLocationManager()
     
-    private var authorized: Driver<Bool>?
+    private let locationManager = CLLocationManager().defaultManager()
+    private var coordinate:CLLocationCoordinate2D?
+    
     private var location: Driver<CLLocationCoordinate2D>?
     
     // MARK: - Initializations and Deallocations
@@ -48,34 +59,24 @@ class AKILocationManager {
     // MARK: - Public methods
     
     func initManager() {
-        let locationManager = self.locationManager
-        
-        self.authorized = Observable.deferred { [weak locationManager] in
-            let status = CLLocationManager.authorizationStatus()
-            guard let locationManager = locationManager else {
-                return Observable.just(status)
-            }
-            return locationManager
-                .rx.didChangeAuthorizationStatus
-                .startWith(status)
-            }
-            .asDriver(onErrorJustReturn: CLAuthorizationStatus.notDetermined)
-            .map {
-                switch $0 {
-                case .authorizedAlways:
-                    return true
-                default:
-                    return false
-                }
+        if self.isAuthorizated() {
+            self.initTimer()
+            self.susbcribeToUpdateLocations()
+        } else {
+//            self.locationManager.requestWhenInUseAuthorization()
+//        _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
         }
-        
-        locationManager.distanceFilter = self.distanceFilter ?? kCLDistanceFilterNone
-        locationManager.desiredAccuracy = self.locationAccuracy ?? kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        
-        self.initTimer()
-        self.susbcribeToUpdateLocations()
+    }
+    
+    // MARK: - Public methods
+    
+    func requestWhenInUseAuthorization() {
+        self.locationManager.requestWhenInUseAuthorization()
+    }
+    
+    func isAuthorizated() -> Bool {
+        let status = CLLocationManager.authorizationStatus()
+        return status != .denied && status != .notDetermined ? true : false
     }
     
     // MARK: - Private methods
@@ -105,8 +106,6 @@ class AKILocationManager {
             self?.combineResults(time: nil, event: RxSwift.Event.next($0))
         })
     }
-    
-    private var coordinate:CLLocationCoordinate2D?
         
     private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<CLLocationCoordinate2D>?) {
         Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 -> CLLocationCoordinate2D? in
