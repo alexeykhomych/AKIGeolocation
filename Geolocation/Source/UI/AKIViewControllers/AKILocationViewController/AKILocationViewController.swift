@@ -23,7 +23,7 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
     var userModel: AKIUser?
     
     private var provider = AKIFirebaseAuthProvider.instance
-    private var locationManager = AKILocationManager.instance
+    private var locationManager = AKILocationManager()
     
     private let disposeBag = DisposeBag()
     
@@ -32,7 +32,15 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.prepareView()
+        let manager = self.locationManager
+        
+        if !manager.isAuthorizated() {
+            manager.requestWhenInUseAuthorization()
+            self.presentAlertErrorMessage("You didn't grant access to the geolocation service", style: .alert)
+        } else {
+            self.prepareView()
+            self.locationManager.requestWhenInUseAuthorization()
+        }
     }
     
     // MARK: - Initializations and Deallocations
