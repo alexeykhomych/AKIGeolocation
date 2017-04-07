@@ -12,16 +12,27 @@ import CoreLocation
     import RxCocoa
 #endif
 
-class RxCLLocationManagerDelegateProxy : DelegateProxy
-                                       , CLLocationManagerDelegate
-                                       , DelegateProxyType {
+struct NewRxCLLocationManagerDelegateProxy {
+    static func currentDelegateFor(_ object: CLLocationManager) -> DelegateProxy? {
+        return RxCLLocationManagerDelegateProxy.currentDelegateFor(object) as? DelegateProxy
+    }
     
-    class func currentDelegateFor(_ object: AnyObject) -> AnyObject? {
+    static func setCurrentDelegate(_ delegate: CLLocationManagerDelegate?, toObject object: CLLocationManager) {
+        RxCLLocationManagerDelegateProxy.setCurrentDelegate(delegate, toObject: object)
+    }
+    
+    static func proxyForObject(_ object: AnyObject) -> DelegateProxy {
+        return RxCLLocationManagerDelegateProxy.proxyForObject(object)
+    }
+}
+
+private class RxCLLocationManagerDelegateProxy : DelegateProxy, CLLocationManagerDelegate, DelegateProxyType {
+    static func currentDelegateFor(_ object: AnyObject) -> AnyObject? {
         let locationManager: CLLocationManager = object as! CLLocationManager
         return locationManager.delegate
     }
     
-    class func setCurrentDelegate(_ delegate: AnyObject?, toObject object: AnyObject) {
+    static func setCurrentDelegate(_ delegate: AnyObject?, toObject object: AnyObject) {
         let locationManager: CLLocationManager = object as! CLLocationManager
         locationManager.delegate = delegate as? CLLocationManagerDelegate
     }
