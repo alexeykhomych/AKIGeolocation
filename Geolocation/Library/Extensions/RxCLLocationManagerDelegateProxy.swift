@@ -21,7 +21,7 @@ struct NewRxCLLocationManagerDelegateProxy {
         RxCLLocationManagerDelegateProxy.setCurrentDelegate(delegate, toObject: object)
     }
     
-    static func proxyForObject(_ object: AnyObject) -> DelegateProxy {
+    static func proxyForObject(_ object: CLLocationManager) -> DelegateProxy {
         return RxCLLocationManagerDelegateProxy.proxyForObject(object)
     }
 }
