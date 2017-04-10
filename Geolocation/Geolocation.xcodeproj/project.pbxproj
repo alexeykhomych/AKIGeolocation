@@ -11,6 +11,10 @@
 		C930E3CE1E9B7BDD0083A94F /* WarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3CC1E9B7BDD0083A94F /* WarningViewController.swift */; };
 		C930E3CF1E9B7BDD0083A94F /* WarningViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C930E3CD1E9B7BDD0083A94F /* WarningViewController.xib */; };
 		C930E3D21E9B86B90083A94F /* WarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3D11E9B86B90083A94F /* WarningView.swift */; };
+		C930E3D71E9BD2210083A94F /* CLLocationManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3D61E9BD2210083A94F /* CLLocationManager+Extensions.swift */; };
+		C930E3DB1E9BD2630083A94F /* CLLocationManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3D91E9BD2630083A94F /* CLLocationManager+Rx.swift */; };
+		C930E3DC1E9BD2630083A94F /* RxCLLocationManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3DA1E9BD2630083A94F /* RxCLLocationManagerDelegateProxy.swift */; };
+		C930E3DF1E9BD3B60083A94F /* Firebase+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3DE1E9BD3B60083A94F /* Firebase+Extensions.swift */; };
 		C942FE5A1E8AA18E00358F59 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942FE581E8AA18E00358F59 /* SplashScreenViewController.swift */; };
 		C942FE5B1E8AA18E00358F59 /* SplashScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C942FE591E8AA18E00358F59 /* SplashScreenViewController.xib */; };
 		C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */; };
@@ -48,8 +52,6 @@
 		C9A5535B1E891DFE00B471EB /* AKIFirebaseLogoutContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A553531E891DFE00B471EB /* AKIFirebaseLogoutContext.swift */; };
 		C9A5535C1E891DFE00B471EB /* AKIFirebaseSignUpContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A553541E891DFE00B471EB /* AKIFirebaseSignUpContext.swift */; };
 		C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */; };
-		C9C5CBC21E92AE3800D70F29 /* CLLocationManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C5CBC01E92AE3800D70F29 /* CLLocationManager+Rx.swift */; };
-		C9C5CBC31E92AE3800D70F29 /* RxCLLocationManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C5CBC11E92AE3800D70F29 /* RxCLLocationManagerDelegateProxy.swift */; };
 		C9F5207C1E6874D4004FBA77 /* NSObject+AKIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +61,10 @@
 		C930E3CC1E9B7BDD0083A94F /* WarningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WarningViewController.swift; sourceTree = "<group>"; };
 		C930E3CD1E9B7BDD0083A94F /* WarningViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WarningViewController.xib; sourceTree = "<group>"; };
 		C930E3D11E9B86B90083A94F /* WarningView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WarningView.swift; sourceTree = "<group>"; };
+		C930E3D61E9BD2210083A94F /* CLLocationManager+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocationManager+Extensions.swift"; sourceTree = "<group>"; };
+		C930E3D91E9BD2630083A94F /* CLLocationManager+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocationManager+Rx.swift"; sourceTree = "<group>"; };
+		C930E3DA1E9BD2630083A94F /* RxCLLocationManagerDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCLLocationManagerDelegateProxy.swift; sourceTree = "<group>"; };
+		C930E3DE1E9BD3B60083A94F /* Firebase+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Firebase+Extensions.swift"; sourceTree = "<group>"; };
 		C942FE581E8AA18E00358F59 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		C942FE591E8AA18E00358F59 /* SplashScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SplashScreenViewController.xib; sourceTree = "<group>"; };
 		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,8 +105,6 @@
 		C9A553531E891DFE00B471EB /* AKIFirebaseLogoutContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIFirebaseLogoutContext.swift; sourceTree = "<group>"; };
 		C9A553541E891DFE00B471EB /* AKIFirebaseSignUpContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKIFirebaseSignUpContext.swift; sourceTree = "<group>"; };
 		C9BE364B1E647D5F0013DD6F /* AKILocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKILocationManager.swift; sourceTree = "<group>"; };
-		C9C5CBC01E92AE3800D70F29 /* CLLocationManager+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocationManager+Rx.swift"; sourceTree = "<group>"; };
-		C9C5CBC11E92AE3800D70F29 /* RxCLLocationManagerDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCLLocationManagerDelegateProxy.swift; sourceTree = "<group>"; };
 		C9F5207B1E6874D4004FBA77 /* NSObject+AKIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+AKIExtensions.swift"; sourceTree = "<group>"; };
 		D47E7CFF523F6DB4CA0F6A3B /* Pods-Geolocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -146,6 +150,31 @@
 				C930E3D11E9B86B90083A94F /* WarningView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		C930E3D51E9BD1F20083A94F /* CLLocationManager+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C930E3D61E9BD2210083A94F /* CLLocationManager+Extensions.swift */,
+			);
+			path = "CLLocationManager+Extensions";
+			sourceTree = "<group>";
+		};
+		C930E3D81E9BD2630083A94F /* RxCLLocationManager */ = {
+			isa = PBXGroup;
+			children = (
+				C930E3D91E9BD2630083A94F /* CLLocationManager+Rx.swift */,
+				C930E3DA1E9BD2630083A94F /* RxCLLocationManagerDelegateProxy.swift */,
+			);
+			path = RxCLLocationManager;
+			sourceTree = "<group>";
+		};
+		C930E3DD1E9BD3A40083A94F /* Firebase+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C930E3DE1E9BD3B60083A94F /* Firebase+Extensions.swift */,
+			);
+			path = "Firebase+Extensions";
 			sourceTree = "<group>";
 		};
 		C942FE571E8AA18E00358F59 /* SplashScreenViewController */ = {
@@ -307,8 +336,9 @@
 		C97D871B1E5DB6CA00888F0A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C9C5CBC01E92AE3800D70F29 /* CLLocationManager+Rx.swift */,
-				C9C5CBC11E92AE3800D70F29 /* RxCLLocationManagerDelegateProxy.swift */,
+				C930E3DD1E9BD3A40083A94F /* Firebase+Extensions */,
+				C930E3D81E9BD2630083A94F /* RxCLLocationManager */,
+				C930E3D51E9BD1F20083A94F /* CLLocationManager+Extensions */,
 				C9F5207A1E6874AA004FBA77 /* NSObject + AKIExtensions */,
 				C968E3831E5EF44800CF2F0A /* UIViewController+AKIExtensions */,
 				C97D871C1E5DB6F500888F0A /* String+AKIExtensions */,
@@ -551,13 +581,14 @@
 				C994D58D1E4481C30096C8AA /* AKIConstants.swift in Sources */,
 				C9A5535A1E891DFE00B471EB /* AKIFirebaseLoginContext.swift in Sources */,
 				C9A553591E891DFE00B471EB /* AKIFirebaseCurrentPositionContext.swift in Sources */,
+				C930E3D71E9BD2210083A94F /* CLLocationManager+Extensions.swift in Sources */,
 				C9A553561E891DFE00B471EB /* AKIContextProvider.swift in Sources */,
 				C930E3CE1E9B7BDD0083A94F /* WarningViewController.swift in Sources */,
-				C9C5CBC31E92AE3800D70F29 /* RxCLLocationManagerDelegateProxy.swift in Sources */,
 				C9A553571E891DFE00B471EB /* AKIFacebookLoginContext.swift in Sources */,
+				C930E3DF1E9BD3B60083A94F /* Firebase+Extensions.swift in Sources */,
 				C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */,
 				C930E3D21E9B86B90083A94F /* WarningView.swift in Sources */,
-				C9C5CBC21E92AE3800D70F29 /* CLLocationManager+Rx.swift in Sources */,
+				C930E3DB1E9BD2630083A94F /* CLLocationManager+Rx.swift in Sources */,
 				C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */,
 				C98A613A1E6DB91D004E2ADE /* AKIAuthService.swift in Sources */,
 				C95263471E4390F50021124E /* AKISignUpViewController.swift in Sources */,
@@ -571,6 +602,7 @@
 				C9F5207C1E6874D4004FBA77 /* NSObject+AKIExtensions.swift in Sources */,
 				C992F4721E6EC3A700E77BBF /* AKIFacebookAuthProvider.swift in Sources */,
 				C95263201E4365460021124E /* AKILocationViewController.swift in Sources */,
+				C930E3DC1E9BD2630083A94F /* RxCLLocationManagerDelegateProxy.swift in Sources */,
 				C9BE364C1E647D5F0013DD6F /* AKILocationManager.swift in Sources */,
 				C95263441E4390E60021124E /* AKISignUpView.swift in Sources */,
 				C95263231E4365580021124E /* AKILocationView.swift in Sources */,

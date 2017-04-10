@@ -13,39 +13,29 @@ import Result
 import Firebase
 import FirebaseAuth
 
-extension AKIContextProtocol {
-    typealias Signal = AnyObserver<Result<User, AuthError>>
-    
-    func updateChildValues(_ pathString: String,
-                           observer: Signal,
-                           values: [String : Any],
-                           block: @escaping ((Void) -> ()))
-    {
-        let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-        let userReference = reference.child(Context.Request.coordinates).child(pathString)
-        userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-            if let error = error {
-                observer.onNext(.failure(.description(error.localizedDescription)))
-                return
-            }
-            
-            block()
-        })
-    }
-}
+//extension AKIContextProtocol {
+//    typealias Signal = AnyObserver<Result<User, AuthError>>
+//    
+//    func updateChildValues(_ pathString: String,
+//                           observer: Signal,
+//                           values: [String : Any],
+//                           block: @escaping ((Void) -> ()))
+//    {
+//        let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
+//        let userReference = reference.child(Context.Request.coordinates).child(pathString)
+//        userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
+//            if let error = error {
+//                observer.onNext(.failure(.description(error.localizedDescription)))
+//                return
+//            }
+//            
+//            block()
+//        })
+//    }
+//}
 
 protocol AKIContextProtocol {
-    associatedtype Signal
-    associatedtype User
+    associatedtype Value
     
-    func execute() -> Signal
+    func execute() -> Observable<Value>
 }
-
-
-user
-- id
-
-users/userId
-
-getUser(with id) -> Observable<User>
-updateUser(_) -> Observable<User>

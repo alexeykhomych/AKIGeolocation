@@ -19,18 +19,6 @@ enum LocationError: Error {
     case description(String)
 }
 
-extension CLLocationManager {
-    func defaultManager() -> CLLocationManager {
-        let manager = CLLocationManager()
-        manager.distanceFilter = kCLDistanceFilterNone
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.requestAlwaysAuthorization()
-        manager.startUpdatingLocation()
-        
-        return manager
-    }
-}
-
 class AKILocationManager {
     
     // MARK: - Accessors
