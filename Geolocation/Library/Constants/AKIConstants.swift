@@ -75,6 +75,7 @@ struct UI {
     
     struct ButtonName {
         static let logOut = "Log out"
+        static let back = "Back"
     }
 }
 

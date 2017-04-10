@@ -44,7 +44,7 @@ class WarningViewController: UIViewController, RootViewGettable {
     }
     
     private func leftBarButtonItem() {
-        let logoutButton = UIBarButtonItem.init(title: "Back",
+        let logoutButton = UIBarButtonItem.init(title: UI.ButtonName.back,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(showMainViewController))

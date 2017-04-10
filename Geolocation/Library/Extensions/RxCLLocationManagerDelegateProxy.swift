@@ -26,7 +26,7 @@ struct NewRxCLLocationManagerDelegateProxy {
     }
 }
 
-private class RxCLLocationManagerDelegateProxy : DelegateProxy, CLLocationManagerDelegate, DelegateProxyType {
+class RxCLLocationManagerDelegateProxy : DelegateProxy, CLLocationManagerDelegate, DelegateProxyType {
     static func currentDelegateFor(_ object: AnyObject) -> AnyObject? {
         let locationManager: CLLocationManager = object as! CLLocationManager
         return locationManager.delegate

@@ -59,13 +59,8 @@ class AKILocationManager {
     // MARK: - Public methods
     
     func initManager() {
-        if self.isAuthorizated() {
-            self.initTimer()
-            self.susbcribeToUpdateLocations()
-        } else {
-//            self.locationManager.requestWhenInUseAuthorization()
-//        _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
-        }
+        self.initTimer()
+        self.susbcribeToUpdateLocations()
     }
     
     // MARK: - Public methods
