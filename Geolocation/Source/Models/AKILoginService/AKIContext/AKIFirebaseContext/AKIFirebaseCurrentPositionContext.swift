@@ -18,7 +18,7 @@ import Result
 
 class AKICurrentPositionContext: AKIContextProtocol {
     
-    typealias User = AKIUser
+    typealias Signal = Observable<Result<AKIUser, AuthError>>
     
     private var logitude: Double
     private var latitude: Double
@@ -32,11 +32,12 @@ class AKICurrentPositionContext: AKIContextProtocol {
     }
     
     internal func execute() -> Signal {
-        return PublishSubject.create { observer in
+        return PublishSubject.create { observer in            
             let values = [Context.Request.latitude: self.latitude as Any,
-                          Context.Request.longitude: self.logitude as Any]
+                          Context.Request.longitude: self.logitude as Any] as [String : Any]
             
-            self.updateChildValues(self.userModel.id, observer: observer, values: values, block: {})
+            let query = Firebase.currentPosition(id: self.userModel.id, fields: values)
+            _ = Firebase.firebaseQuery(query)
             
             observer.onCompleted()
             
