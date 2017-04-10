@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import IDPRootViewGettable
 import Result
-import CoreLocation
 
 class AKILocationViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
@@ -35,11 +34,9 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         let manager = self.locationManager
         
         if !manager.isAuthorizated() {
-            manager.requestWhenInUseAuthorization()
-            self.presentAlertErrorMessage("You didn't grant access to the geolocation service", style: .alert)
+            self.showWarningViewController()
         } else {
             self.prepareView()
-            self.locationManager.requestWhenInUseAuthorization()
         }
     }
     
@@ -124,5 +121,9 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         mapView?.settings.compassButton = true
         mapView?.settings.allowScrollGesturesDuringRotateOrZoom = true
         mapView?.settings.scrollGestures = true
+    }
+    
+    private func showWarningViewController() {
+        self.pushViewController(WarningViewController())
     }
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		164C9780D044AB12E9912C0C /* Pods_Geolocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 523A570F04911F530045D246 /* Pods_Geolocation.framework */; };
+		C930E3CE1E9B7BDD0083A94F /* WarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3CC1E9B7BDD0083A94F /* WarningViewController.swift */; };
+		C930E3CF1E9B7BDD0083A94F /* WarningViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C930E3CD1E9B7BDD0083A94F /* WarningViewController.xib */; };
+		C930E3D21E9B86B90083A94F /* WarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C930E3D11E9B86B90083A94F /* WarningView.swift */; };
 		C942FE5A1E8AA18E00358F59 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C942FE581E8AA18E00358F59 /* SplashScreenViewController.swift */; };
 		C942FE5B1E8AA18E00358F59 /* SplashScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C942FE591E8AA18E00358F59 /* SplashScreenViewController.xib */; };
 		C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95262FC1E4356CE0021124E /* AKIAppDelegate.swift */; };
@@ -53,6 +56,9 @@
 /* Begin PBXFileReference section */
 		523A570F04911F530045D246 /* Pods_Geolocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geolocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geolocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Geolocation/Pods-Geolocation.release.xcconfig"; sourceTree = "<group>"; };
+		C930E3CC1E9B7BDD0083A94F /* WarningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WarningViewController.swift; sourceTree = "<group>"; };
+		C930E3CD1E9B7BDD0083A94F /* WarningViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WarningViewController.xib; sourceTree = "<group>"; };
+		C930E3D11E9B86B90083A94F /* WarningView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WarningView.swift; sourceTree = "<group>"; };
 		C942FE581E8AA18E00358F59 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		C942FE591E8AA18E00358F59 /* SplashScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SplashScreenViewController.xib; sourceTree = "<group>"; };
 		C95262F91E4356CE0021124E /* Geolocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geolocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +128,24 @@
 				8B181F4A352AC578DD108F4A /* Pods-Geolocation.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C930E3CB1E9B7AF80083A94F /* WarningViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C930E3D01E9B86950083A94F /* View */,
+				C930E3CC1E9B7BDD0083A94F /* WarningViewController.swift */,
+				C930E3CD1E9B7BDD0083A94F /* WarningViewController.xib */,
+			);
+			path = WarningViewController;
+			sourceTree = "<group>";
+		};
+		C930E3D01E9B86950083A94F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C930E3D11E9B86B90083A94F /* WarningView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		C942FE571E8AA18E00358F59 /* SplashScreenViewController */ = {
@@ -198,6 +222,7 @@
 		C95263111E43591F0021124E /* AKIViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				C930E3CB1E9B7AF80083A94F /* WarningViewController */,
 				C952631C1E43651B0021124E /* AKILocationViewController */,
 				C95263411E4390BE0021124E /* AKISignUpViewController */,
 				C95263121E4359350021124E /* AKILoginViewController */,
@@ -453,6 +478,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C930E3CF1E9B7BDD0083A94F /* WarningViewController.xib in Resources */,
 				C95263161E43594C0021124E /* AKILoginViewController.xib in Resources */,
 				C942FE5B1E8AA18E00358F59 /* SplashScreenViewController.xib in Resources */,
 				C95263071E4356CE0021124E /* LaunchScreen.storyboard in Resources */,
@@ -526,9 +552,11 @@
 				C9A5535A1E891DFE00B471EB /* AKIFirebaseLoginContext.swift in Sources */,
 				C9A553591E891DFE00B471EB /* AKIFirebaseCurrentPositionContext.swift in Sources */,
 				C9A553561E891DFE00B471EB /* AKIContextProvider.swift in Sources */,
+				C930E3CE1E9B7BDD0083A94F /* WarningViewController.swift in Sources */,
 				C9C5CBC31E92AE3800D70F29 /* RxCLLocationManagerDelegateProxy.swift in Sources */,
 				C9A553571E891DFE00B471EB /* AKIFacebookLoginContext.swift in Sources */,
 				C95262FD1E4356CE0021124E /* AKIAppDelegate.swift in Sources */,
+				C930E3D21E9B86B90083A94F /* WarningView.swift in Sources */,
 				C9C5CBC21E92AE3800D70F29 /* CLLocationManager+Rx.swift in Sources */,
 				C952634A1E4392BF0021124E /* AKIViewController.swift in Sources */,
 				C98A613A1E6DB91D004E2ADE /* AKIAuthService.swift in Sources */,
