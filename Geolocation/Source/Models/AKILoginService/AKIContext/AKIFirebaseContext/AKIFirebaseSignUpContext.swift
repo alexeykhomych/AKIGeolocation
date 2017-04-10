@@ -18,7 +18,8 @@ import Result
 
 class AKIFirebaseSignUpContext: AKIContextProtocol{
     
-    typealias Signal = Observable<Result<FIRUser, AuthError>>
+    typealias User = FIRUser
+    typealias Signal = Observable<Result<User, AuthError>>
     
     var userModel: AKIUser
     
@@ -47,22 +48,16 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
             
             let userModel = self.userModel
             
-            // MARK: need to refactor
-
-            let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.users).child(Context.Request.users)
-            
             let values = [Context.Request.name: userModel.name,
                           Context.Request.email: userModel.email,
                           Context.Request.password: userModel.password]
             
-            userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-                if let error = error {
-                    observer?.onNext(.failure(.description(error.localizedDescription)))
+            self.updateChildValues(Context.Request.users, observer: observer!, values: values, block: {
+                guard let user = user else {
+                    observer?.onNext(.failure(.emptyUser))
                     return
                 }
                 
-                guard let user = user else { return }
                 observer?.onNext(.success(user))
                 observer?.onCompleted()
             })

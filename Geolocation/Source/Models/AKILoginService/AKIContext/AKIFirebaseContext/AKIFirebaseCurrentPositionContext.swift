@@ -18,7 +18,7 @@ import Result
 
 class AKICurrentPositionContext: AKIContextProtocol {
     
-    typealias Signal = Observable<Result<AKIUser, AuthError>>
+    typealias User = AKIUser
     
     private var logitude: Double
     private var latitude: Double
@@ -33,27 +33,13 @@ class AKICurrentPositionContext: AKIContextProtocol {
     
     internal func execute() -> Signal {
         return PublishSubject.create { observer in
+            let values = [Context.Request.latitude: self.latitude as Any,
+                          Context.Request.longitude: self.logitude as Any]
             
-            DispatchQueue.global().async {
-                
-                // MARK: need to refactor
-                
-                let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-                let userReference = reference.child(Context.Request.coordinates).child(self.userModel.id)
-                
-                let values = [Context.Request.latitude: self.latitude as Any,
-                              Context.Request.longitude: self.logitude as Any] as [String : Any]
-                
-                userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-                    if let error = error {
-                        observer.onNext(.failure(.description(error.localizedDescription)))
-                        return
-                    }
-                })
-                
-                observer.onCompleted()
-            }
-                
+            self.updateChildValues(self.userModel.id, observer: observer, values: values, block: {})
+            
+            observer.onCompleted()
+            
             return Disposables.create()
         }
     }
