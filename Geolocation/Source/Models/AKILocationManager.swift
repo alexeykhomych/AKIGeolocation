@@ -34,7 +34,6 @@ class AKILocationManager {
     private let disposeBag = DisposeBag()
     
     private let locationManager = CLLocationManager().defaultManager()
-    private var coordinate:CLLocationCoordinate2D?
     
     private var location: Observable<[CLLocation]>?
     
@@ -65,8 +64,8 @@ class AKILocationManager {
     // MARK: - Private methods
     
     private func susbcribeToUpdateLocations() {
-        _ = self.locationManager.rx.didUpdateLocations.subscribe(onNext: { [weak self] in
-            self?.combineResults(time: nil, event: RxSwift.Event.next($0))
+        _ = self.locationManager.rx.didUpdateLocations.subscribe(onNext: { _ in
+            self.combineResults()
         })
     }
     
@@ -75,16 +74,16 @@ class AKILocationManager {
             .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
             .observeOn(MainScheduler.instance)
             .subscribe { [weak self] time in
-                self?.combineResults(time: time, event: nil)
+//                self?.combineResults(time: time, event: nil)
             }.addDisposableTo(self.disposeBag)
     }
         
-    private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<[CLLocation]>?) {
+    private func combineResults() {
         let timer = Observable<Int>.interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
         let loc = self.locationManager.rx.didUpdateLocations
         
-        Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 -> [CLLocation]? in
-                return r2?.element ?? [CLLocation(latitude: 0.0, longitude: 0.0)]
+        Observable.combineLatest(Observable.just(timer), Observable.just(loc)) { s1, s2 in
+            return s2
             }
             .subscribe(onNext: { coordinate in
                 guard let coordinate = coordinate else {
@@ -92,7 +91,16 @@ class AKILocationManager {
                     return
                 }
                 
-                _ = self.replaySubject?.onNext(.success(coordinate))
+                _ = coordinate.map { coord in
+                    _ = self.replaySubject?.onNext(.success(coord.first?.coordinate))
+                }
+                print("")
+//                guard let coordinate = coordinate else {
+//                    _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
+//                    return
+//                }
+//                
+//                _ = self.replaySubject?.onNext(.success(coordinate))
             }).disposed(by: self.disposeBag)
     }
 }
