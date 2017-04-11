@@ -40,33 +40,27 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
     
     func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>?) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
-            
             if let error = error {
                 observer?.onNext(.failure(.description(error.localizedDescription)))
                 return
             }
-            
+
             let userModel = self.userModel
-            
-            let values = [Context.Request.name: userModel.name,
-                          Context.Request.email: userModel.email,
-                          Context.Request.password: userModel.password]
-            
-            let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-            let userReference = reference.child(Context.Request.coordinates).child("")
-            userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-                guard let user = user else {
-                    observer?.onNext(.failure(.emptyUser))
-                    return
-                }
+            let reference = self.reference
+            let query = self.query(.putUser(userId: user?.uid ?? "", name: userModel.name, email: userModel.email, password: userModel.password), reference: reference)
+            query.observeSingleEvent(of: .value, with: { dataSnapshot in
+                let dictionary = dataSnapshot.value as? NSDictionary
                 
-                observer?.onNext(.success(user))
-                observer?.onCompleted()
-            })
-            
-            let query = Firebase.putUser(userId: userModel.id, name: userModel.name, email: userModel.email, password: userModel.password)
-            let ref = Firebase.firebaseQuery(query)
-            ref().user
+//                observer?.onNext(.success(dataSnapshot))
+            }) { error in
+                observer?.onNext(.failure(.description("SignUp context error - 79")))
+            }
         }
+    }
+    
+    let reference = FIRDatabase.database().reference()
+    
+    func query(_ target: Firebase, reference: FIRDatabaseReference) -> FIRDatabaseQuery {
+        return target.firebaseQuery(reference)
     }
 }
