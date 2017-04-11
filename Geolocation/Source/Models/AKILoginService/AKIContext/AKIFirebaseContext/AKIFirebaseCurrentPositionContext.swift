@@ -20,6 +20,8 @@ class AKICurrentPositionContext: AKIContextProtocol {
     
     typealias Signal = Observable<Result<AKIUser, AuthError>>
     
+    let reference = FIRDatabase.database().reference()
+    
     private var logitude: Double
     private var latitude: Double
     
@@ -36,8 +38,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
             let values = [Context.Request.latitude: self.latitude as Any,
                           Context.Request.longitude: self.logitude as Any] as [String : Any]
             
-            let query = Firebase.currentPosition(id: self.userModel.id, fields: values)
-            _ = Firebase.firebaseQuery(query)
+            _ = self.query(.currentPosition(id: self.userModel.id, fields: values), reference: self.reference)
             
             observer.onCompleted()
             
