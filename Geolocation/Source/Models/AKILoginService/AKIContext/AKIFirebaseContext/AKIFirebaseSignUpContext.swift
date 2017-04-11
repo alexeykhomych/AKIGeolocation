@@ -21,6 +21,8 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
     typealias User = FIRUser
     typealias Signal = Observable<Result<User, AuthError>>
     
+    let reference = FIRDatabase.database().reference()
+    
     var userModel: AKIUser
     
     required init(_ userModel: AKIUser) {
@@ -56,11 +58,5 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
             
             observer?.onNext(.success(user))
         }
-    }
-    
-    let reference = FIRDatabase.database().reference()
-    
-    func query(_ target: Firebase, reference: FIRDatabaseReference) -> FIRDatabaseQuery {
-        return target.firebaseQuery(reference)
     }
 }

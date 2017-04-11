@@ -24,7 +24,8 @@ extension Firebase {
     public func firebaseQuery(_ reference: FIRDatabaseReference) -> FirebaseQueryType {
         switch self {
         case .putUser(let id, let name, let email, let password):
-            let userRef = reference.child(Context.Request.users + "/" + id)
+            let userPath = self.composeFirebaseNodePath(Context.Request.users, id)
+            let userRef = reference.child(userPath)
             let user: [String : Any] = [Context.Request.name: name,
                                        Context.Request.email: email,
                                        Context.Request.password: password]
@@ -35,14 +36,14 @@ extension Firebase {
             return reference.child(Context.Request.users + "/" + id)
         
         case .updateUser(let userId, let fields):
-            let userPath = composeFirebaseNodePath(Context.Request.users, userId)
+            let userPath = self.composeFirebaseNodePath(Context.Request.users, userId)
             let userRef = reference.child(userPath)
             let values = fields
             userRef.updateChildValues(values)
             return userRef
         
         case .currentPosition(let userId, let fields):
-            let userPath = composeFirebaseNodePath(Context.Request.users, userId)
+            let userPath = self.composeFirebaseNodePath(Context.Request.coordinates, userId)
             let userRef = reference.child(userPath)
             let values = fields
             userRef.updateChildValues(values)

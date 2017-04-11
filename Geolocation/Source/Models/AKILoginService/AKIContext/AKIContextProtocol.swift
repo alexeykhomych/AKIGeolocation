@@ -13,26 +13,11 @@ import Result
 import Firebase
 import FirebaseAuth
 
-//extension AKIContextProtocol {
-//    typealias Signal = AnyObserver<Result<User, AuthError>>
-//    
-//    func updateChildValues(_ pathString: String,
-//                           observer: Signal,
-//                           values: [String : Any],
-//                           block: @escaping ((Void) -> ()))
-//    {
-//        let reference = FIRDatabase.database().reference(fromURL: Context.Request.fireBaseURL)
-//        let userReference = reference.child(Context.Request.coordinates).child(pathString)
-//        userReference.updateChildValues(values, withCompletionBlock: { (error, reference) in
-//            if let error = error {
-//                observer.onNext(.failure(.description(error.localizedDescription)))
-//                return
-//            }
-//            
-//            block()
-//        })
-//    }
-//}
+extension AKIContextProtocol {    
+    func query(_ target: Firebase, reference: FIRDatabaseReference) -> FIRDatabaseQuery {
+        return target.firebaseQuery(reference)
+    }
+}
 
 protocol AKIContextProtocol {
     associatedtype Value
