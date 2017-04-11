@@ -17,10 +17,6 @@ enum Firebase {
     case currentPosition(id: String, fields: [String: Any])
 }
 
-struct FirebaseNodeName {
-    static let users = "users"
-}
-
 extension Firebase {
     
     public typealias FirebaseQueryType = FIRDatabaseQuery
@@ -28,7 +24,7 @@ extension Firebase {
     public func firebaseQuery(_ reference: FIRDatabaseReference) -> FirebaseQueryType {
         switch self {
         case .putUser(let id, let name, let email, let password):
-            let userRef = reference.child(FirebaseNodeName.users + "/" + id)
+            let userRef = reference.child(Context.Request.users + "/" + id)
             let user: [String : Any] = [Context.Request.name: name,
                                        Context.Request.email: email,
                                        Context.Request.password: password]
@@ -36,17 +32,17 @@ extension Firebase {
             return userRef
             
         case .getUser(let id):
-            return reference.child(FirebaseNodeName.users + "/" + id)
+            return reference.child(Context.Request.users + "/" + id)
         
         case .updateUser(let userId, let fields):
-            let userPath = composeFirebaseNodePath(FirebaseNodeName.users, userId)
+            let userPath = composeFirebaseNodePath(Context.Request.users, userId)
             let userRef = reference.child(userPath)
             let values = fields
             userRef.updateChildValues(values)
             return userRef
         
         case .currentPosition(let userId, let fields):
-            let userPath = composeFirebaseNodePath(FirebaseNodeName.users, userId)
+            let userPath = composeFirebaseNodePath(Context.Request.users, userId)
             let userRef = reference.child(userPath)
             let values = fields
             userRef.updateChildValues(values)
