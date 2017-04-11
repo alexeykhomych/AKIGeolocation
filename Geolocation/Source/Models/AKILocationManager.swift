@@ -36,7 +36,7 @@ class AKILocationManager {
     private let locationManager = CLLocationManager().defaultManager()
     private var coordinate:CLLocationCoordinate2D?
     
-    private var location: Driver<CLLocationCoordinate2D>?
+    private var location: Observable<[CLLocation]>?
     
     // MARK: - Initializations and Deallocations
 
@@ -65,14 +65,9 @@ class AKILocationManager {
     // MARK: - Private methods
     
     private func susbcribeToUpdateLocations() {
-        self.location = self.locationManager.rx.didUpdateLocations
-            .asDriver(onErrorJustReturn: [])
-            .flatMap {
-                return $0.last.map(Driver.just) ?? Driver.empty()
-            }
-            .map { $0.coordinate }
-        
-        self.startNotifications()
+        _ = self.locationManager.rx.didUpdateLocations.subscribe(onNext: { [weak self] in
+            self?.combineResults(time: nil, event: RxSwift.Event.next($0))
+        })
     }
     
     private func initTimer() {
@@ -83,28 +78,21 @@ class AKILocationManager {
                 self?.combineResults(time: time, event: nil)
             }.addDisposableTo(self.disposeBag)
     }
-    
-    private func startNotifications() {
-        _ = self.location?.drive(onNext: { [weak self] in
-            self?.combineResults(time: nil, event: RxSwift.Event.next($0))
-        })
-    }
         
-    private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<CLLocationCoordinate2D>?) {
-        Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 -> CLLocationCoordinate2D? in
-            return r2?.element ?? self.coordinate
+    private func combineResults(time: RxSwift.Event<Int>?, event:  RxSwift.Event<[CLLocation]>?) {
+        let timer = Observable<Int>.interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
+        let loc = self.locationManager.rx.didUpdateLocations
+        
+        Observable.combineLatest(Observable.just(time), Observable.just(event)) { r1, r2 -> [CLLocation]? in
+                return r2?.element ?? [CLLocation(latitude: 0.0, longitude: 0.0)]
             }
             .subscribe(onNext: { coordinate in
-                guard let latitude = coordinate?.latitude,
-                    let longitude = coordinate?.longitude else {
-                        _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
-                        return
+                guard let coordinate = coordinate else {
+                    _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
+                    return
                 }
                 
-                self.coordinate = coordinate
-                
-                let array = [CLLocation(latitude: latitude, longitude: longitude)]
-                _ = self.replaySubject?.onNext(.success(array))
+                _ = self.replaySubject?.onNext(.success(coordinate))
             }).disposed(by: self.disposeBag)
     }
 }
