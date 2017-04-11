@@ -47,14 +47,14 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
 
             let userModel = self.userModel
             let reference = self.reference
-            let query = self.query(.putUser(userId: user?.uid ?? "", name: userModel.name, email: userModel.email, password: userModel.password), reference: reference)
-            query.observeSingleEvent(of: .value, with: { dataSnapshot in
-                let dictionary = dataSnapshot.value as? NSDictionary
-                
-//                observer?.onNext(.success(dataSnapshot))
-            }) { error in
-                observer?.onNext(.failure(.description("SignUp context error - 79")))
+            _ = self.query(.putUser(userId: user?.uid ?? "", name: userModel.name, email: userModel.email, password: userModel.password), reference: reference)
+            
+            guard let user = user else {
+                observer?.onNext(.failure(.description("Empty user")))
+                return
             }
+            
+            observer?.onNext(.success(user))
         }
     }
     
