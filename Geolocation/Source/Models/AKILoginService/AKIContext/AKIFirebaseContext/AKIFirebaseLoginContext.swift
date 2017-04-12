@@ -20,13 +20,19 @@ class AKIFirebaseLoginContext {
     
     typealias Signal = Observable<Result<FIRUser, AuthError>>
     
+    //MARK: - Accessors
+    
     var userModel: AKIUser
     var token: String?
+    
+    //MARK: - Initializations and Deallocations
     
     init(userModel: AKIUser, token: String?) {
         self.userModel = userModel
         self.token = token
     }
+    
+    //MARK: - Public methods
     
     func execute() -> Signal {
         if let currentUser = FIRAuth.auth()?.currentUser {
@@ -46,6 +52,8 @@ class AKIFirebaseLoginContext {
             return Disposables.create()
         }
     }
+    
+    //MARK: - Private methods
     
     private func login(with user: FIRUser) -> Signal {
         return Observable.create { observer in

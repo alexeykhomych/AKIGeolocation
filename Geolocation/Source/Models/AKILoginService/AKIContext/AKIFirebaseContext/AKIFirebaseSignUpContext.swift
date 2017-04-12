@@ -17,19 +17,24 @@ import RxCocoa
 import Result
 
 class AKIFirebaseSignUpContext: AKIContextProtocol{
+
+    typealias Signal = Observable<Result<FIRUser, AuthError>>
     
-    typealias User = FIRUser
-    typealias Signal = Observable<Result<User, AuthError>>
+    //MARK: - Accessors
     
     let reference = FIRDatabase.database().reference()
     
     var userModel: AKIUser
     
-    required init(_ userModel: AKIUser) {
+    //MARK: - Initializations and Deallocations
+    
+    init(_ userModel: AKIUser) {
         self.userModel = userModel
     }
     
-    internal func execute() -> Signal {
+    //MARK: - Public methods
+    
+    func execute() -> Signal {
         return Observable.create { observer in
             let user = self.userModel
             FIRAuth.auth()?.createUser(withEmail: user.email,
@@ -40,7 +45,9 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
         }
     }
     
-    func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>?) -> (FIRUser?, Error?) -> () {
+    //MARK: - Private methods
+    
+    private func userCompletionHandler(_ observer: AnyObserver<Result<FIRUser, AuthError>>?) -> (FIRUser?, Error?) -> () {
         return { (user, error) in
             if let error = error {
                 observer?.onNext(.failure(.description(error.localizedDescription)))

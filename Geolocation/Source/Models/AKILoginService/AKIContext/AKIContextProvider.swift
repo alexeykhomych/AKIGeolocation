@@ -15,11 +15,11 @@ class AKIContextProvider: AKIContextProtocol {
     
     internal var userModel: AKIUser?
     
-    internal  required init(_ userModel: AKIUser?) {
+    init(_ userModel: AKIUser?) {
         self.userModel = userModel
     }
     
-    internal func execute() -> Observable<AKIUser> {
+    func execute() -> Observable<AKIUser> {
         print("reload execute method in child")
         fatalError()
     }

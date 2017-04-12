@@ -49,8 +49,6 @@ class AKILocationManager {
         self.combineResults()
     }
     
-    // MARK: - Public methods
-    
     func requestWhenInUseAuthorization() {
         self.locationManager.requestWhenInUseAuthorization()
     }

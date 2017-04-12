@@ -20,6 +20,8 @@ class AKICurrentPositionContext: AKIContextProtocol {
     
     typealias Signal = Observable<Result<AKIUser, AuthError>>
     
+    //MARK: - Accessors
+    
     let reference = FIRDatabase.database().reference()
     
     private var logitude: Double
@@ -27,13 +29,17 @@ class AKICurrentPositionContext: AKIContextProtocol {
     
     var userModel: AKIUser
     
+    //MARK: - Initializations and Deallocations
+    
     init(userModel: AKIUser, latitude: Double, longitude: Double) {
         self.userModel = userModel
         self.logitude = longitude
         self.latitude = latitude
     }
     
-    internal func execute() -> Signal {
+    //MARK: - Public methods
+    
+    func execute() -> Signal {
         return PublishSubject.create { observer in            
             let values = [Context.Request.latitude: self.latitude as Any,
                           Context.Request.longitude: self.logitude as Any] as [String : Any]
