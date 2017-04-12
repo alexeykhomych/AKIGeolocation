@@ -8,50 +8,81 @@
 
 import UIKit
 
-import Firebase
-import FirebaseAuth
-
 import RxSwift
 import RxCocoa
 
-class AKISignUpViewController: UIViewController {
+import IDPRootViewGettable
+
+import Result
+
+class AKISignUpViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
-    let disposeBag = DisposeBag()
+    typealias RootViewType = AKISignUpView
     
-    var userModel: AKIUser?
+    // MARK: - Accessors
     
-    var signUpView: AKISignUpView? {
-        return self.getView()
-    }
+    private let disposeBag = DisposeBag()
+    private var userModel: AKIUser?
+    private var loginService = AKIAuthService.instance
+    private let tap = UITapGestureRecognizer()
+    
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initSignUpButton()
-//        self.initModel()
-        self.signUpView?.addBinds(to: self.userModel)
+        self.prepareView()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
+    // MARK: - Initializations and Deallocations
     
-//    func initModel() {
-//        self.userModel = AKIUser()
-//    }
-    
-    private func initSignUpButton() {
-        _ = self.signUpView?.signUpButton?.rx.tap.map{-> User}
-            .flatMap( { result in
-                return AKILoginService(user).signup()
-            })
-            .subscribe(onNext: { [weak self] userModel in
-                let controller = AKILocationViewController()
-                controller.userModel = self?.userModel
-                self?.pushViewController(controller)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+    func initSignUpButton() {
+        _ = self.rootView?.signUpButton?.rx.tap
+            .map { _ in
+                self.fill(userModel: AKIUser())
+            }
+            .filter {
+                $0.emailValidate() && $0.passwordValidate() && $0.nameValidate()
+            }
+            .flatMap {
+                self.loginService.signup(with: $0)
+            }
+            .subscribe(onNext: { [weak self] in
+                self?.performResult(result: $0, block: {
+                    self?.segueLocationViewController(with: $0)
+                })
             })
             .disposed(by: self.disposeBag)
+    }
+    
+    // MARK: - Private methods
+    
+    private func fill(userModel: AKIUser) -> AKIUser {
+        var userModel = AKIUser()
+        let rootView = self.rootView
+        
+        userModel.password = rootView?.passwordTextField?.text ?? ""
+        userModel.email = rootView?.emailTextField?.text ?? ""
+        userModel.name = rootView?.nameTextField?.text ?? ""
+        
+        return userModel
+    }
+    
+    private func segueLocationViewController(with userModel: AKIUser) {
+        let controller = AKILocationViewController()
+        controller.userModel = userModel
+        self.pushViewController(controller)
+    }
+    
+    private func prepareView() {
+        let tap  = self.tap
+        tap.addTarget(self, action: #selector(hideKeyboard))
+        self.view.addGestureRecognizer(tap)
+        
+        self.initSignUpButton()
+    }
+    
+    @objc private func hideKeyboard() {
+        self.view.endEditing(true)
     }
 }

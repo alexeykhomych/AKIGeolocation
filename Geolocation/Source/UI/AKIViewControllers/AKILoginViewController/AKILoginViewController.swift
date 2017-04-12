@@ -11,87 +11,112 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-import FBSDKLoginKit
+import IDPRootViewGettable
 
-class AKILoginViewController: UIViewController, Tappable, contextObserver {
+import Result
+
+class AKILoginViewController: UIViewController, RootViewGettable, ViewControllerResult {
     
-    var service = Servie()
+    typealias RootViewType = AKILoginView
     
-    var userModel: AKIUser?
+    // MARK: - Accessors
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
+    private var loginService = AKIAuthService.instance
+    private let tap = UITapGestureRecognizer()
     
-    var loginView: AKILoginView? {
-        return self.getView()
-    }
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.userModel = AKIUser()
-        
-        self.loginWithAccessToken()
-        
-        self.loginView?.addBinds(to: self.userModel!)
-        
-        self.initLoginButton()
-        self.initSignupButton()
-        self.initLoginWithFacebookButton()
+        self.prepareView()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        super.viewWillAppear(animated)
     }
     
-    func loginWithAccessToken() {
-        _ = AKILoginService(self.userModel).loginWithFacebookAccessToken()
-            .subscribe(onNext: { [weak self] userModel in
-                    self?.showLocationViewControllerWithViewModel(userModel)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewWillDisappear(animated)
     }
     
-    private func initLoginButton() {
-        _ = self.loginView?.loginButton?.rx.tap
-            .flatMap( { result in
-                return AKILoginService(self.userModel).login(LoginServiceType.Firebase)
-            })
-            .subscribe(onNext: { [weak self] userModel in
-                    self?.showLocationViewControllerWithViewModel(userModel)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-            .disposed(by: self.disposeBag)
-    }
+    // MARK: - Initializations and Deallocations
     
-    private func initSignupButton() {
-        self.loginView?.signUpButton?.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.pushViewController(AKISignUpViewController())
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-            .disposed(by: self.disposeBag)
-    }
-    
-    private func initLoginWithFacebookButton() {
-        _ = self.loginView?.loginWithFBButton?.rx.tap
-            .flatMap( { result in
-                return AKILoginService(self.userModel).login(LoginServiceType.Facebook)
-            })
+    func loginFirebaseButton() {
+        _ = self.rootView?.loginButton?.rx.tap
+            .debounce(1, scheduler: MainScheduler.instance)
+            .map { _ in
+                self.fill(userModel: AKIUser())
+            }
+            .filter {
+                $0.emailValidate() && $0.passwordValidate()
+            }
+            .flatMap {
+                self.loginService.login(with: $0, service: .email, viewController: self)
+            }
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] userModel in
-                self?.showLocationViewControllerWithViewModel(userModel)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+            .bindNext { [weak self] in
+                self?.performResult(result: $0, block: {
+                    self?.segueLocationViewController(with: $0)
+                })
+            }
             .disposed(by: self.disposeBag)
     }
     
-    func showLocationViewControllerWithViewModel(_ userModel: AKIUser?) {
+    func signUpButton() {
+        self.rootView?.signUpButton?.rx.tap
+            .bindNext { [weak self] in self?.pushViewController(AKISignUpViewController()) }
+            .disposed(by: self.disposeBag)
+    }
+    
+    func loginFacebookButton() {
+        let userModel = AKIUser()
+        _ = self.rootView?.loginWithFBButton?.rx.tap
+            .debounce(1, scheduler: MainScheduler.instance)
+            .flatMap {
+                self.loginService.login(with: userModel, service: .facebook, viewController: self)
+            }
+            .observeOn(MainScheduler.instance)
+            .bindNext { [weak self] in
+                self?.performResult(result: $0, block: {
+                    self?.segueLocationViewController(with: $0)
+                })
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
+    // MARK: - Private methods
+    
+    func segueLocationViewController(with userModel: AKIUser?) {
         let controller = AKILocationViewController()
         controller.userModel = userModel
         self.pushViewController(controller)
+    }
+    
+    private func fill(userModel: AKIUser) -> AKIUser {
+        var userModel = userModel
+        let rootView = self.rootView
+        
+        userModel.password = rootView?.passwordTextField?.text ?? ""
+        userModel.email = rootView?.emailTextField?.text ?? ""
+        
+        return userModel
+    }
+    
+    private func prepareView() {
+        let tap  = self.tap
+        tap.addTarget(self, action: #selector(hideKeyboard))
+        self.view.addGestureRecognizer(tap)
+        
+        self.loginFirebaseButton()
+        self.signUpButton()
+        self.loginFacebookButton()
+    }
+    
+    @objc private func hideKeyboard() {
+        self.view.endEditing(true)
     }
 }

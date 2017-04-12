@@ -7,23 +7,19 @@
 //
 
 import UIKit
+import Result
 
-import Firebase
-import FirebaseAuth
-
-import RxSwift
-import RxCocoa
-
-extension Tappable where Self: UIViewController {
-    func tapGestureRecognizer(sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+extension ViewControllerResult where Self: UIViewController {
+    func performResult<R, E>(result: Result<R, E>, block: ((R) -> ())) {
+        switch result {
+        case let .success(user):
+            block(user)
+        case let .failure(error):
+            self.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+        }
     }
 }
 
-protocol Tappable {
-    func tapGestureRecognizer(sender: UITapGestureRecognizer)
-}
-
-protocol AKIViewController {
-    var model: AKIUser? { get set }
+protocol ViewControllerResult {
+    func performResult<R>(result: Result<R, AuthError>, block: ((R) -> ()))
 }

@@ -13,68 +13,64 @@ import GoogleMaps
 import RxCocoa
 import RxSwift
 
-protocol AKIGoogleLocationManager: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+import Result
+
+enum LocationError: Error {
+    case description(String)
 }
 
-extension AKIGoogleLocationManager {
+class AKILocationManager {
     
-    func defaultManager() -> CLLocationManager {
-        let manager = CLLocationManager()
-        manager.requestAlwaysAuthorization()
-        manager.requestWhenInUseAuthorization()
-        manager.distanceFilter = CLLocationDistance(Google.Maps.Default.distanceFilter)
-        
-        if CLLocationManager.locationServicesEnabled() {
-            manager.delegate = self
-            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            manager.startUpdatingLocation()
-        }
-        
-        return manager
-    }
-}
-
-class AKILocationManager: NSObject, AKIGoogleLocationManager {
+    // MARK: - Accessors
     
-    var replaySubject: ReplaySubject<[CLLocation]>?
+    typealias Signal = ReplaySubject<Result<[CLLocation], LocationError>>
     
-    private let defaultLatitude = 0.0
-    private let defaultLongitude = 0.0
+    var replaySubject: Signal?
+    var timerInterval: Int?
+    var locationAccuracy: CLLocationAccuracy?
+    var distanceFilter: CLLocationDistance?
+    
     private let replaySubjectBufferCount = 1
+    private let disposeBag = DisposeBag()
     
-    private var locationManager: CLLocationManager?
+    private let locationManager = CLLocationManager().defaultManager()
     
-    var location: CLLocation? {
-        return self.locationManager?.location
+    private var location: Observable<[CLLocation]>?
+    
+    // MARK: - Initializations and Deallocations
+
+    init() {
+        self.replaySubject = Signal.create(bufferSize: self.replaySubjectBufferCount)
     }
     
-    var coordinate: CLLocationCoordinate2D? {
-        return self.location?.coordinate
+    // MARK: - Public methods
+    
+    func startObserving() {
+        self.combineResults()
     }
     
-    var latitude: CLLocationDegrees? {
-        return self.unwrap(value: self.coordinate?.latitude, defaultValue: self.defaultLatitude)
+    func requestWhenInUseAuthorization() {
+        self.locationManager.requestWhenInUseAuthorization()
     }
     
-    var longitude: CLLocationDegrees? {
-        return self.unwrap(value: self.coordinate?.longitude, defaultValue: self.defaultLongitude)
+    func isAuthorizated() -> Bool {
+        let status = CLLocationManager.authorizationStatus()
+        return status != .denied && status != .notDetermined ? true : false
     }
     
-    override init() {
-        self.replaySubject = ReplaySubject<[CLLocation]>.create(bufferSize: self.replaySubjectBufferCount)
-        super.init()
-        self.locationManager = self.defaultManager()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            print("User allowed us to access location")
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        _ = self.replaySubject?.onNext(locations)
+    // MARK: - Private methods
+        
+    private func combineResults() {
+        let timer = Observable<Int>
+            .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
+            .startWith(1)
+        
+        let loc = self.locationManager.rx.didUpdateLocations
+        
+        _ = Observable.combineLatest(timer, loc) { s1, s2 in
+            return s2
+            }.subscribe(onNext: { coordinate in
+                _ = self.replaySubject?.onNext(.success(coordinate))
+            }).disposed(by: self.disposeBag)
     }
 }

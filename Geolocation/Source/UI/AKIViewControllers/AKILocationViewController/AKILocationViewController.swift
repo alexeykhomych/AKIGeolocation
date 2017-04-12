@@ -7,60 +7,43 @@
 //
 
 import UIKit
-
 import GoogleMaps
-
-import FBSDKLoginKit
-
-import Firebase
-import FirebaseAuth
-
 import RxSwift
 import RxCocoa
+import IDPRootViewGettable
+import Result
 
-protocol AKILocationViewControllerProtocol {
-    func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees)
-    func observForMoving()
-    func initTimer()
-    func logOut()
-}
-
-class AKILocationViewController: UIViewController, AKILocationViewControllerProtocol {
+class AKILocationViewController: UIViewController, RootViewGettable, ViewControllerResult {
+    
+    typealias RootViewType = AKILocationView
+    
+    // MARK: - Accessors
     
     var userModel: AKIUser?
     
-    private var timer: Disposable?
+    private var provider = AKIFirebaseAuthProvider.instance
+    private var locationManager = AKILocationManager()
     
     private let disposeBag = DisposeBag()
     
-    private var locationManager: AKILocationManager?
-    
-    private let logoutButtonText = "Log out"
-    
-    private var locationView: AKILocationView? {
-        return self.getView()
-    }
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initLeftBarButtonItem()
-        self.initTimer()
-        self.initLocationManager()
-        self.initMapView()
-        self.observForMoving()
+        let manager = self.locationManager
+        
+        if !manager.isAuthorizated() {
+            self.showWarningViewController()
+        } else {
+            self.prepareView()
+        }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
+    // MARK: - Initializations and Deallocations
     
-    private func initLocationManager() {
-        self.locationManager = AKILocationManager()
-    }
-    
-    private func initLeftBarButtonItem() {
-        let logoutButton = UIBarButtonItem.init(title: self.logoutButtonText,
+    func leftBarButtonItem() {
+        let logoutButton = UIBarButtonItem.init(title: UI.ButtonName.logOut,
                                                 style: UIBarButtonItemStyle.plain,
                                                 target: self,
                                                 action: #selector(logOut))
@@ -73,69 +56,74 @@ class AKILocationViewController: UIViewController, AKILocationViewControllerProt
             }).addDisposableTo(self.disposeBag)
     }
     
-    private func initMapView() {
-        let mapView = self.locationView?.mapView
-        mapView?.isMyLocationEnabled = true
-        mapView?.settings.myLocationButton = true
-    }
+    // MARK: - Private methods
     
-    func initTimer() {
-        _ = Observable<Int>
-            .interval(RxTimeInterval(Timer.Default.interval), scheduler: ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global()))
-            .observeOn(MainScheduler.instance).faltmap{AKICurrentPositionContext()}
-            .subscribe({ [weak self] _ in
-                let coordinate = self?.locationManager?.coordinate
-
-                guard let longitude = coordinate?.longitude,
-                    let latitude = coordinate?.latitude else
-                {
-                    return
-                }
-                
-                self?.subscribeCurrentPositionContext(longitude, latitude: latitude)
-            }).addDisposableTo(self.disposeBag)
-    }
-    
-    func subscribeCurrentPositionContext(_ longitude: CLLocationDegrees, latitude: CLLocationDegrees) {
-        guard let userModel = self.userModel else {
-            return
+    private func subscribeCurrentPositionContext(locations: [CLLocation]) {
+        let last = locations.last.map {
+            CLLocationCoordinate2D.init(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)
         }
         
-        _ = AKICurrentPositionContext(userModel, latitude: latitude, longitude: longitude).execute()
+        guard let userModel = self.userModel,
+            let coordinate = last else {
+                return
+        }
+        
+        _ = AKICurrentPositionContext(userModel: userModel, latitude: coordinate.latitude, longitude: coordinate.longitude).execute()
             .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
-            .subscribe(onError: { [weak self] error in
-                self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            .subscribe(onNext: { [weak self] result in
+                self?.performResult(result: result, block: { print("\($0)") })
             }).disposed(by: self.disposeBag)
     }
     
-    func observForMoving() {
-        _ = self.locationManager?
+    private func observForMoving() {
+        _ = self.locationManager
             .replaySubject?
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] locations in
-                self?.locationView?.cameraPosition(locations: locations)
-                }, onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
+            .subscribe(onNext: { [weak self] result in
+                self?.performResult(result: result, block: {
+                    self?.rootView?.cameraPosition(locations: $0)
+                    self?.subscribeCurrentPositionContext(locations: $0)
+                })
             }).addDisposableTo(self.disposeBag)
-        
-        self.locationManager.subs
     }
     
-    func logOut() {
-        _ = AKILoginService(self.userModel).logout(LoginServiceType.Firebase)
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe( onError: { [weak self] error in
+    @objc private func logOut() {
+        _ = self.provider.logout()
+            .observeOn(MainScheduler.instance)
+            .bindNext { [weak self] in
+                switch $0 {
+                case .success:
+                    UIApplication.shared.delegate.map { (localApp) -> Void in
+                        localApp.window??.rootViewController = UINavigationController(rootViewController: AKILoginViewController())
+                    }
+                case let .failure(error):
                     self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
+            }
+        }
+    }
+    
+    private func prepareView() {
+        let manager = self.locationManager
+        manager.timerInterval = 60
+        manager.distanceFilter = kCLLocationAccuracyHundredMeters
+        manager.startObserving()
         
-        _ = AKILoginService(self.userModel).logout(LoginServiceType.Facebook)
-            .subscribeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .background)))
-            .subscribe(onError: { [weak self] error in
-                    self?.presentAlertErrorMessage(error.localizedDescription, style: .alert)
-            })
-        
-        _ = self.navigationController?.popToRootViewController(animated: true)
+        self.leftBarButtonItem()
+        self.prepareMapView()
+        self.observForMoving()
+    }
+    
+    private func prepareMapView() {
+        let mapView = self.rootView?.mapView
+        mapView?.isMyLocationEnabled = true
+        mapView?.settings.myLocationButton = true
+        mapView?.settings.compassButton = true
+        mapView?.settings.allowScrollGesturesDuringRotateOrZoom = true
+        mapView?.settings.scrollGestures = true
+    }
+    
+    private func showWarningViewController() {
+        self.pushViewController(WarningViewController())
     }
 }

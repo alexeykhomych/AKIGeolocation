@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -18,70 +18,80 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="center" minimumFontSize="17" id="ZG7-gc-PkK">
-                    <rect key="frame" x="16" y="293" width="288" height="30"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <nil key="textColor"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" id="tLE-Iu-tAu">
-                    <rect key="frame" x="16" y="351" width="288" height="30"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <nil key="textColor"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <navigationBar contentMode="scaleToFill" id="vdY-qt-JBU">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <items>
-                        <navigationItem title="Title" id="NFz-Ph-r0x"/>
-                    </items>
-                </navigationBar>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="drS-4g-MEC">
-                    <rect key="frame" x="14" y="406" width="140" height="41"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                    <state key="normal" backgroundImage="login-button-png-15"/>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mvd-ob-Rbd">
-                    <rect key="frame" x="103" y="531" width="114" height="37"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="fb_login"/>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8aq-vk-iiD">
-                    <rect key="frame" x="166" y="405" width="140" height="42"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="SignUp" image="download">
-                        <color key="titleColor" red="1" green="0.96985571780000002" blue="0.0004047529727" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="geolocation" id="EID-51-jNv">
-                    <rect key="frame" x="0.0" y="44" width="320" height="248"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Bq1-gh-G1g" userLabel="MainStack">
+                    <rect key="frame" x="8" y="237" width="304" height="94"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="JS3-zX-x9d" userLabel="LabelsStack">
+                            <rect key="frame" x="0.0" y="0.0" width="304" height="60"/>
+                            <subviews>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZG7-gc-PkK">
+                                    <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tLE-Iu-tAu">
+                                    <rect key="frame" x="0.0" y="30" width="304" height="30"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                </textField>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHr-YQ-BoB" userLabel="ButtonsStack">
+                            <rect key="frame" x="0.0" y="60" width="304" height="34"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="drS-4g-MEC">
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="34"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                    <state key="normal" title="Login"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8aq-vk-iiD">
+                                    <rect key="frame" x="152" y="0.0" width="152" height="34"/>
+                                    <state key="normal" title="SignUp">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </state>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="8aq-vk-iiD" firstAttribute="width" secondItem="drS-4g-MEC" secondAttribute="width" id="e8D-Z6-zoD"/>
+                            </constraints>
+                        </stackView>
+                    </subviews>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="YaN-yF-cah" userLabel="BottomStack">
+                    <rect key="frame" x="57" y="518" width="206" height="50"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvd-ob-Rbd">
+                            <rect key="frame" x="0.0" y="0.0" width="206" height="50"/>
+                            <state key="normal" image="fb_login"/>
+                        </button>
+                    </subviews>
+                </stackView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="YaN-yF-cah" secondAttribute="bottom" id="KCr-uG-mCe"/>
+                <constraint firstItem="YaN-yF-cah" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="57" id="LQA-fm-gvj"/>
+                <constraint firstAttribute="trailing" secondItem="YaN-yF-cah" secondAttribute="trailing" constant="57" id="OmZ-dx-Arr"/>
+                <constraint firstItem="Bq1-gh-G1g" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="RQ8-MY-HNE"/>
+                <constraint firstItem="Bq1-gh-G1g" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="SNk-bv-4TD"/>
+                <constraint firstItem="Bq1-gh-G1g" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="Z8I-WV-MWh"/>
+                <constraint firstAttribute="trailing" secondItem="Bq1-gh-G1g" secondAttribute="trailing" constant="8" id="ZA2-be-dfn"/>
+            </constraints>
             <connections>
                 <outlet property="emailTextField" destination="ZG7-gc-PkK" id="yTQ-7m-3mX"/>
                 <outlet property="loginButton" destination="drS-4g-MEC" id="KWY-Ix-qhS"/>
                 <outlet property="loginWithFBButton" destination="mvd-ob-Rbd" id="kzt-pC-x6a"/>
                 <outlet property="passwordTextField" destination="tLE-Iu-tAu" id="me7-ng-4IC"/>
                 <outlet property="signUpButton" destination="8aq-vk-iiD" id="Itc-KQ-8z9"/>
-                <outlet property="tapGestureRecognizer" destination="Fh6-WK-RYK" id="y8t-Xh-ukc"/>
-                <outletCollection property="gestureRecognizers" destination="Fh6-WK-RYK" appends="YES" id="gCA-L0-Va8"/>
             </connections>
-            <point key="canvasLocation" x="26.5" y="52.5"/>
+            <point key="canvasLocation" x="26" y="52"/>
         </view>
-        <tapGestureRecognizer id="Fh6-WK-RYK"/>
     </objects>
     <resources>
-        <image name="download" width="382" height="132"/>
         <image name="fb_login" width="205" height="50"/>
-        <image name="geolocation" width="150" height="150"/>
-        <image name="login-button-png-15" width="300" height="116"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
