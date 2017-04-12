@@ -61,7 +61,10 @@ class AKILocationManager {
     // MARK: - Private methods
         
     private func combineResults() {
-        let timer = Observable<Int>.interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
+        let timer = Observable<Int>
+            .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
+            .startWith(1)
+        
         let loc = self.locationManager.rx.didUpdateLocations
         
         _ = Observable.combineLatest(timer, loc) { s1, s2 in
