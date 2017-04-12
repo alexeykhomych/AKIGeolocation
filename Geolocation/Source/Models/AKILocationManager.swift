@@ -45,9 +45,8 @@ class AKILocationManager {
     
     // MARK: - Public methods
     
-    func initManager() {
-        self.initTimer()
-        self.susbcribeToUpdateLocations()
+    func startObserving() {
+        self.combineResults()
     }
     
     // MARK: - Public methods
@@ -62,45 +61,15 @@ class AKILocationManager {
     }
     
     // MARK: - Private methods
-    
-    private func susbcribeToUpdateLocations() {
-        _ = self.locationManager.rx.didUpdateLocations.subscribe(onNext: { _ in
-            self.combineResults()
-        })
-    }
-    
-    private func initTimer() {
-        _ = Observable<Int>
-            .interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
-            .observeOn(MainScheduler.instance)
-            .subscribe { [weak self] time in
-//                self?.combineResults(time: time, event: nil)
-            }.addDisposableTo(self.disposeBag)
-    }
         
     private func combineResults() {
         let timer = Observable<Int>.interval(RxTimeInterval(self.timerInterval ?? Timer.Default.interval), scheduler: MainScheduler.instance)
         let loc = self.locationManager.rx.didUpdateLocations
         
-        Observable.combineLatest(Observable.just(timer), Observable.just(loc)) { s1, s2 in
+        _ = Observable.combineLatest(timer, loc) { s1, s2 in
             return s2
-            }
-            .subscribe(onNext: { coordinate in
-                guard let coordinate = coordinate else {
-                    _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
-                    return
-                }
-                
-                _ = coordinate.map { coord in
-                    _ = self.replaySubject?.onNext(.success(coord.first?.coordinate))
-                }
-                print("")
-//                guard let coordinate = coordinate else {
-//                    _ = self.replaySubject?.onNext(.failure(.description("vse polomalos")))
-//                    return
-//                }
-//                
-//                _ = self.replaySubject?.onNext(.success(coordinate))
+            }.subscribe(onNext: { coordinate in
+                _ = self.replaySubject?.onNext(.success(coordinate))
             }).disposed(by: self.disposeBag)
     }
 }

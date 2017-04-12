@@ -107,7 +107,7 @@ class AKILocationViewController: UIViewController, RootViewGettable, ViewControl
         let manager = self.locationManager
         manager.timerInterval = 60
         manager.distanceFilter = kCLLocationAccuracyHundredMeters
-        manager.initManager()
+        manager.startObserving()
         
         self.leftBarButtonItem()
         self.prepareMapView()
