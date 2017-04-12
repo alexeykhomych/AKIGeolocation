@@ -53,16 +53,16 @@ class AKIFirebaseSignUpContext: AKIContextProtocol{
                 observer?.onNext(.failure(.description(error.localizedDescription)))
                 return
             }
-
-            let userModel = self.userModel
-            let reference = self.reference
-            _ = self.query(.putUser(userId: user?.uid ?? "", name: userModel.name, email: userModel.email, password: userModel.password), reference: reference)
             
             guard let user = user else {
                 observer?.onNext(.failure(.description("Empty user")))
                 return
             }
+
+            let userModel = self.userModel.fill(user: user)
+            let reference = self.reference
             
+            _ = self.query(.putUser(user: userModel), reference: reference)
             observer?.onNext(.success(user))
         }
     }

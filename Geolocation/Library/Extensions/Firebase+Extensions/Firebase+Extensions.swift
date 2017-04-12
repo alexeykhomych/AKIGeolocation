@@ -11,10 +11,10 @@ import Firebase
 import FirebaseDatabase
 
 enum Firebase {
-    case putUser(userId: String, name: String, email: String, password: String)
-    case updateUser(userId: String, fields: [String: Any])
-    case getUser(String)
-    case currentPosition(id: String, fields: [String: Any])
+    case putUser(user: AKIUser)
+    case updateUser(user: AKIUser, fields: [String: Any])
+    case getUser(userId: String)
+    case currentPosition(user: AKIUser, coordinates: [String: Any])
 }
 
 extension Firebase {
@@ -23,29 +23,29 @@ extension Firebase {
     
     public func firebaseQuery(_ reference: FIRDatabaseReference) -> FirebaseQueryType {
         switch self {
-        case .putUser(let id, let name, let email, let password):
-            let userPath = self.composeFirebaseNodePath(Context.Request.users, id)
+        case .putUser(let user):
+            let userPath = self.composeFirebaseNodePath(Context.Request.users, user.id)
             let userRef = reference.child(userPath)
-            let user: [String : Any] = [Context.Request.name: name,
-                                       Context.Request.email: email,
-                                       Context.Request.password: password]
+            let user: [String : Any] = [Context.Request.name: user.name,
+                                       Context.Request.email: user.email,
+                                       Context.Request.password: user.password]
             userRef.updateChildValues(user)
             return userRef
             
         case .getUser(let id):
             return reference.child(Context.Request.users + "/" + id)
         
-        case .updateUser(let userId, let fields):
-            let userPath = self.composeFirebaseNodePath(Context.Request.users, userId)
+        case .updateUser(let user, let fields):
+            let userPath = self.composeFirebaseNodePath(Context.Request.users, user.id)
             let userRef = reference.child(userPath)
             let values = fields
             userRef.updateChildValues(values)
             return userRef
         
-        case .currentPosition(let userId, let fields):
-            let userPath = self.composeFirebaseNodePath(Context.Request.coordinates, userId)
+        case .currentPosition(let user, let coordinates):
+            let userPath = self.composeFirebaseNodePath(Context.Request.coordinates, user.id)
             let userRef = reference.child(userPath)
-            let values = fields
+            let values = coordinates
             userRef.updateChildValues(values)
             return userRef
         }

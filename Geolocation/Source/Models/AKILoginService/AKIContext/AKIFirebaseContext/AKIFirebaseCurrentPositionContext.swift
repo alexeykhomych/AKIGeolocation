@@ -44,7 +44,7 @@ class AKICurrentPositionContext: AKIContextProtocol {
             let values = [Context.Request.latitude: self.latitude as Any,
                           Context.Request.longitude: self.logitude as Any] as [String : Any]
             
-            _ = self.query(.currentPosition(id: self.userModel.id, fields: values), reference: self.reference)
+            _ = self.query(.currentPosition(user: self.userModel, coordinates: values), reference: self.reference)
             
             observer.onCompleted()
             
